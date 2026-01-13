@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'package:flutter/material.dart';
 
 class ColorsTheme extends ThemeExtension<ColorsTheme> {
@@ -291,49 +293,63 @@ class ColorsTheme extends ThemeExtension<ColorsTheme> {
   // factory for dark mode
   factory ColorsTheme.dark() {
     return ColorsTheme._buildTheme(
-      surfaceDefault: _plasmaPink90,
-      surfaceHovered: _plasmaPink90,
-      surfacePressed: _plasmaPink90,
-      textPlain: _plasmaPink90,
-      textPlaceholder: _plasmaPink90,
-      textInverse: _plasmaPink90,
-      textPrimary: _plasmaPink90,
-      textPrimaryHover: _plasmaPink90,
-      textSecondary: _plasmaPink90,
-      textError: _plasmaPink90,
-      textVisited: _plasmaPink90,
-      textDisabled: _plasmaPink90,
-      iconPlain: _plasmaPink90,
-      iconPlaceholder: _plasmaPink90,
-      inconInverse: _plasmaPink90,
-      iconPrimary: _plasmaPink90,
-      iconPrimaryHover: _plasmaPink90,
-      iconSecondary: _plasmaPink90,
-      iconError: _plasmaPink90,
-      iconSuccess: _plasmaPink90,
-      iconWarning: _plasmaPink90,
-      iconDisabled: _plasmaPink90,
-      borderPlain: _plasmaPink90,
-      borderPrimary: _plasmaPink90,
-      borderSecondary: _plasmaPink90,
-      borderError: _plasmaPink90,
-      borderSuccess: _plasmaPink90,
-      borderWarning: _plasmaPink90,
-      borderDisabled: _plasmaPink90,
-      dangerSignal: _plasmaPink90,
-      warningSignal: _plasmaPink90,
-      cautionSignal: _plasmaPink90,
-      userConfigurable: _plasmaPink90,
-      lineValueOutput: _plasmaPink90,
-      setpointInput: _plasmaPink90,
-      dynamicElement: _plasmaPink90,
-      historicalData: _plasmaPink90,
-      badData: _plasmaPink90,
-      delineateObjects: _plasmaPink90,
-      dataSet1: _plasmaPink90,
-      dataSet2: _plasmaPink90,
-      dataSet3: _plasmaPink90,
-      dataSet4: _plasmaPink90,
+      surfaceDefault: _vacuumGray10,
+      surfaceHovered: _beamBlue20,
+      surfacePressed: _beamBlue30,
+      textPlain: _vacuumGray90,
+      textPlaceholder: _vacuumGray80,
+      textInverse: _vacuumGray10,
+      textPrimary: _beamBlue60,
+      textPrimaryHover: _beamBlue70,
+      textSecondary: _graphiteSlate70,
+      textError: _pulseRed50,
+      textVisited: _arcPurple60,
+      textDisabled: _vacuumGray40,
+      iconPlain: _vacuumGray90,
+      iconPlaceholder: _vacuumGray70,
+      inconInverse: _vacuumGray10,
+      iconPrimary: _beamBlue60,
+      iconPrimaryHover: _beamBlue70,
+      iconSecondary: _graphiteSlate70,
+      iconError: _pulseRed50,
+      iconSuccess: _synchroGreen60,
+      iconWarning: _fluxOrange50,
+      iconDisabled: _vacuumGray40,
+      borderPlain: _vacuumGray30,
+      borderPrimary: _beamBlue60,
+      borderSecondary: _graphiteSlate70,
+      borderError: _pulseRed50,
+      borderSuccess: _synchroGreen60,
+      borderWarning: _fluxOrange50,
+      borderDisabled: _vacuumGray20,
+      dangerSignal: _pulseRed50,
+      warningSignal: _fluxOrange60,
+      cautionSignal: _burstYellow60,
+      userConfigurable: _photonCyan50,
+      lineValueOutput: _synchroGreen60,
+      setpointInput: _beamBlue60,
+      dynamicElement: _beamBlue60,
+      historicalData: _arcPurple60,
+      badData: _plasmaPink30,
+      delineateObjects: _vacuumGray100,
+      dataSet1: _ionLime50,
+      dataSet2: _burstYellow40,
+      dataSet3: _fluxOrange70,
+      dataSet4: _plasmaPink60,
     );
   }
+
+  @override
+  ThemeExtension<ColorsTheme> copyWith({bool? lightMode}) {
+    if (lightMode == null || lightMode) {
+      return ColorsTheme.light();
+    }
+    return ColorsTheme.dark();
+  }
+
+  @override
+  ThemeExtension<ColorsTheme> lerp(
+    covariant ThemeExtension<ColorsTheme>? other,
+    double t,
+  ) => this;
 }
