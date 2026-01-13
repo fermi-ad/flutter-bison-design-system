@@ -1,0 +1,27 @@
+name: design_system_catalog
+description: "A WidgetBook catalog of widgets in the design system"
+
+publish_to: "none"
+
+version: 0.0.1
+
+environment:
+  sdk: ^3.10.7
+
+dependencies:
+  flutter:
+    sdk: flutter
+  widgetbook: ^3.20.2
+  widgetbook_annotation: ^3.9.0
+  design_system:
+    path: ../
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  widgetbook_generator: ^3.20.1
+  build_runner: ^2.10.5
+
+  flutter_lints: ^6.0.0
+# flutter:
+#   uses-material-design: true
