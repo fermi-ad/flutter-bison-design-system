@@ -158,7 +158,7 @@ class ColorsTheme extends ThemeExtension<ColorsTheme> {
 
   final Color iconPlain;
   final Color iconPlaceholder;
-  final Color inconInverse;
+  final Color iconInverse;
   final Color iconPrimary;
   final Color iconPrimaryHover;
   final Color iconSecondary;
@@ -210,7 +210,7 @@ class ColorsTheme extends ThemeExtension<ColorsTheme> {
     required this.textDisabled,
     required this.iconPlain,
     required this.iconPlaceholder,
-    required this.inconInverse,
+    required this.iconInverse,
     required this.iconPrimary,
     required this.iconPrimaryHover,
     required this.iconSecondary,
@@ -258,7 +258,7 @@ class ColorsTheme extends ThemeExtension<ColorsTheme> {
       textDisabled: _vacuumGray50,
       iconPlain: _vacuumGray10,
       iconPlaceholder: _vacuumGray30,
-      inconInverse: _vacuumGray90,
+      iconInverse: _vacuumGray90,
       iconPrimary: _beamBlue40,
       iconPrimaryHover: _beamBlue30,
       iconSecondary: _graphiteSlate40,
@@ -307,7 +307,7 @@ class ColorsTheme extends ThemeExtension<ColorsTheme> {
       textDisabled: _vacuumGray40,
       iconPlain: _vacuumGray90,
       iconPlaceholder: _vacuumGray70,
-      inconInverse: _vacuumGray10,
+      iconInverse: _vacuumGray10,
       iconPrimary: _beamBlue60,
       iconPrimaryHover: _beamBlue70,
       iconSecondary: _graphiteSlate70,
