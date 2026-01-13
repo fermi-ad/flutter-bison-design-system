@@ -1,1 +1,1 @@
-export 'theme/colors_theme.dart';
+export 'src/theme/colors_theme.dart';
