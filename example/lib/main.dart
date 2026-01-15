@@ -17,8 +17,22 @@ class WidgetbookApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Widgetbook.material(
+      lightTheme: ThemeData(
+        brightness: Brightness.light,
+        extensions: [ColorsTheme.light()],
+        colorScheme: ColorsTheme.light().toColorScheme(Brightness.light),
+        scaffoldBackgroundColor: ColorsTheme.light().surfaceDefault,
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        extensions: [ColorsTheme.dark()],
+        colorScheme: ColorsTheme.dark().toColorScheme(Brightness.dark),
+        scaffoldBackgroundColor: ColorsTheme.dark().surfaceDefault,
+      ),
+      themeMode: ThemeMode.system,
       directories: directories,
       addons: [
+        AlignmentAddon(),
         MaterialThemeAddon(
           themes: [
             WidgetbookTheme(

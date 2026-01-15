@@ -17,3 +17,14 @@ class Button extends StatelessWidget {
     );
   }
 }
+
+class ButtonStyles {
+  static ButtonStyle filled(ColorsTheme colors) {
+    return ButtonStyle(
+      backgroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) return colors.textDisabled;
+        return colors.textPrimary;
+      }),
+    );
+  }
+}
