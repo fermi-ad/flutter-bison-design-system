@@ -23,10 +23,10 @@ void main() {
   // Create base tokens
   buffer.writeln("abstract class BaseTokens {");
   final baseMap = <String, String>{};
-  _extractTokens(baseData, '', baseMap);
+  _extractBaseTokens(baseData, '', baseMap);
   baseMap.forEach((key, hex) {
     buffer.writeln(
-      "  static const Color ${toCammelCase(key)} = Color(${formatHex(hex)});",
+      "  static const Color ${toCamelCase(key)} = Color(${formatHex(hex)});",
     );
   });
   buffer.writeln("}\n");
@@ -34,10 +34,10 @@ void main() {
   // create alias tokens
   buffer.writeln("abstract class AliasTokens {");
   final aliasMap = <String, String>{};
-  _extractTokens(aliasData, '', aliasMap);
+  _extractAliasTokens(aliasData, buffer, 'BaseTokens');
   aliasMap.forEach((key, hex) {
     buffer.writeln(
-      "  static const Color ${toCammelCase(key)} = Color(${formatHex(hex)});",
+      "  static const Color ${toCamelCase(key)} = Color(${formatHex(hex)});",
     );
   });
   buffer.writeln("}\n");
@@ -48,7 +48,7 @@ void main() {
   outputFile.writeAsStringSync(buffer.toString());
 }
 
-void _extractTokens(Map json, String prefix, Map<String, String> target) {
+void _extractBaseTokens(Map json, String prefix, Map<String, String> target) {
   json.forEach((key, value) {
     if (key.startsWith('\$')) return;
     final newKey = prefix.isEmpty ? key : '$prefix.$key';
@@ -61,22 +61,45 @@ void _extractTokens(Map json, String prefix, Map<String, String> target) {
           target[newKey] = val;
         }
       } else {
-        _extractTokens(value, newKey, target);
+        _extractBaseTokens(value, newKey, target);
       }
     }
   });
 }
 
-String toCammelCase(String input) {
-  final words = input
-      .replaceAll(RegExp(r'[\.\-\s]'), ' ')
-      .split(' ')
-      .where((w) => w.isNotEmpty)
+void _extractAliasTokens(Map json, StringBuffer buffer, String targetClass) {
+  void recurse(Map node, String prefix) {
+    node.forEach((key, value) {
+      if (key.startsWith('\$')) return;
+      final newKey = prefix.isEmpty ? key : '$prefix.$key';
+      if (value is Map) {
+        final extensions = value['\$extensions'];
+        if (extensions != null && extensions['com.figma.aliasData'] != null) {
+          final targetVar =
+              extensions['com.figma.aliasData']['targetVariableName'];
+          buffer.writeln(
+            "  static const Color ${toCamelCase(newKey)} = $targetClass.${toCamelCase(targetVar)};",
+          );
+        } else {
+          recurse(value, newKey);
+        }
+      }
+    });
+  }
+
+  recurse(json, '');
+}
+
+String toCamelCase(String input) {
+  // Regex handles slashes, spaces, dots, and dashes from Figma
+  final parts = input
+      .split(RegExp(r'[\.\-\s\/]'))
+      .where((p) => p.isNotEmpty)
       .toList();
-  if (words.isEmpty) return 'unknown';
-  var result = words[0].toLowerCase();
-  for (var i = 1; i < words.length; i++) {
-    result += words[i][0].toUpperCase() + words[i].substring(1).toLowerCase();
+  if (parts.isEmpty) return 'unknown';
+  var result = parts[0].toLowerCase();
+  for (var i = 1; i < parts.length; i++) {
+    result += parts[i][0].toUpperCase() + parts[i].substring(1).toLowerCase();
   }
   return result;
 }
