@@ -42,6 +42,62 @@ void main() {
   });
   buffer.writeln("}\n");
 
+  // create component tokens (and ThemeExtension)
+  buffer.writeln(
+    "class BisonThemeTokens extends ThemeExtension<BisonThemeTokens>{",
+  );
+
+  final componentKeys = <String>{};
+  final lightMap = <String, String>{};
+  final darkMap = <String, String>{};
+
+  _extractComponentTokens(lightData, '', lightMap);
+  _extractComponentTokens(darkData, '', darkMap);
+  componentKeys.addAll(lightMap.keys);
+
+  final sortedKeys = componentKeys.toList()..sort();
+
+  // build out fiels
+  for (var key in sortedKeys) {
+    buffer.writeln("  final Color ${toCamelCase(key)};");
+  }
+
+  // constructor
+  buffer.writeln("\n const BisonThemeTokens({");
+  for (var key in sortedKeys) {
+    buffer.writeln("  required this.${toCamelCase(key)},");
+  }
+  buffer.writeln(" });\n");
+
+  // Light Factory
+  buffer.writeln(
+    "  factory BisonThemeTokens.light() => const BisonThemeTokens(",
+  );
+  for (var key in sortedKeys) {
+    final aliasToken = lightMap[key]!;
+    buffer.writeln(
+      "    ${toCamelCase(key)}: AliasTokens.${toCamelCase(aliasToken)},",
+    );
+  }
+  buffer.writeln("  );\n");
+
+  // Dark Factory
+  buffer.writeln(
+    "  factory BisonThemeTokens.dark() => const BisonThemeTokens(",
+  );
+  for (var key in sortedKeys) {
+    final aliasToken = darkMap[key] ?? lightMap[key]!;
+    buffer.writeln(
+      "    ${toCamelCase(key)}: AliasTokens.${toCamelCase(aliasToken)},",
+    );
+  }
+  buffer.writeln("  );\n");
+
+  // Overrides
+  // TODO: Write overrides for copyWith and lerp
+
+  buffer.writeln("}");
+
   // create file
   final outputFile = File(outputPath);
   outputFile.parent.createSync(recursive: true);
@@ -88,6 +144,26 @@ void _extractAliasTokens(Map json, StringBuffer buffer, String targetClass) {
   }
 
   recurse(json, '');
+}
+
+void _extractComponentTokens(
+  Map json,
+  String prefix,
+  Map<String, String> target,
+) {
+  json.forEach((key, value) {
+    if (key.startsWith('\$')) return;
+    final newKey = prefix.isEmpty ? key : '$prefix.$key';
+    if (value is Map) {
+      final extensions = value['\$extensions'];
+      if (extensions != null && extensions['com.figma.aliasData'] != null) {
+        target[newKey] =
+            extensions['com.figma.aliasData']['targetVariableName'];
+      } else {
+        _extractComponentTokens(value, newKey, target);
+      }
+    }
+  });
 }
 
 String toCamelCase(String input) {
