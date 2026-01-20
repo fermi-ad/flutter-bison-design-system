@@ -19,15 +19,15 @@ class WidgetbookApp extends StatelessWidget {
     return Widgetbook.material(
       lightTheme: ThemeData(
         brightness: Brightness.light,
-        extensions: [ColorsTheme.light()],
-        colorScheme: ColorsTheme.light().toColorScheme(Brightness.light),
-        scaffoldBackgroundColor: ColorsTheme.light().surfaceDefault,
+        extensions: [BisonThemeTokens.light()],
+        colorScheme: BisonThemeTokens.light().toColorScheme(Brightness.light),
+        scaffoldBackgroundColor: BisonThemeTokens.light().surfaceDefault,
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        extensions: [ColorsTheme.dark()],
-        colorScheme: ColorsTheme.dark().toColorScheme(Brightness.dark),
-        scaffoldBackgroundColor: ColorsTheme.dark().surfaceDefault,
+        extensions: [BisonThemeTokens.dark()],
+        colorScheme: BisonThemeTokens.dark().toColorScheme(Brightness.dark),
+        scaffoldBackgroundColor: BisonThemeTokens.dark().surfaceDefault,
       ),
       themeMode: ThemeMode.system,
       directories: directories,
@@ -39,7 +39,7 @@ class WidgetbookApp extends StatelessWidget {
               name: "Light mode",
               data: Theme.of(context).copyWith(
                 extensions: [
-                  ColorsTheme.light(),
+                  BisonThemeTokens.light(),
                   // BeemTextsTheme.main(View.of(context)),
                 ],
               ),
@@ -48,7 +48,7 @@ class WidgetbookApp extends StatelessWidget {
               name: "Dark mode",
               data: Theme.of(context).copyWith(
                 extensions: [
-                  ColorsTheme.dark(),
+                  BisonThemeTokens.dark(),
                   // BeemTextsTheme.main(View.of(context)),
                 ],
               ),

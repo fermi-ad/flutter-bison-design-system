@@ -7,7 +7,7 @@ class Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context).extension<ColorsTheme>()!;
+    var theme = Theme.of(context).extension<BisonThemeTokens>()!;
     return ElevatedButton(
       style: ButtonStyle(
         backgroundColor: WidgetStatePropertyAll(theme.textPrimary),
@@ -19,7 +19,7 @@ class Button extends StatelessWidget {
 }
 
 class ButtonStyles {
-  static ButtonStyle filled(ColorsTheme colors) {
+  static ButtonStyle filled(BisonThemeTokens colors) {
     return ButtonStyle(
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.disabled)) return colors.textDisabled;
