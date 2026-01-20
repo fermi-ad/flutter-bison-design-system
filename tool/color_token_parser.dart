@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 void main() {
-  const outputPath = 'lib/src/theme/tokens.g.dart';
+  const outputPath = 'lib/src/theme/color_tokens.g.dart';
 
   // json paths
-  const baseJson = 'ColorBaseTokens.json';
-  const aliasJson = 'ColorAliasTokens.json';
-  const lightJson = 'Light.tokens.json';
-  const darkJson = 'Dark.tokens.json';
+  const baseJson = 'tokens/ColorBaseTokens.json';
+  const aliasJson = 'tokens/ColorAliasTokens.json';
+  const lightJson = 'tokens/Light.tokens.json';
+  const darkJson = 'tokens/Dark.tokens.json';
 
   // json data
   final baseData = jsonDecode(File(baseJson).readAsStringSync());
@@ -94,7 +94,7 @@ void main() {
   buffer.writeln("  );\n");
 
   // Overrides
-  // TODO: Write overrides for copyWith and lerp
+  _writeOverrides(buffer, sortedKeys);
 
   buffer.writeln("}");
 
@@ -164,6 +164,37 @@ void _extractComponentTokens(
       }
     }
   });
+}
+
+// function that creates overwritten functions copyWith and lerp
+void _writeOverrides(StringBuffer buffer, List<String> keys) {
+  // copyWith
+  buffer.writeln("  @override");
+  buffer.writeln("  BisonThemeTokens copyWith({");
+  for (var key in keys) {
+    buffer.writeln("    Color? ${toCamelCase(key)},");
+  }
+  buffer.writeln("  }) {");
+  buffer.writeln("  return BisonThemeTokens(");
+  for (var key in keys) {
+    final name = toCamelCase(key);
+    buffer.writeln("    $name: $name ?? this.$name,");
+  }
+  buffer.writeln("  );");
+  buffer.writeln("  }\n");
+
+  // lerp
+  buffer.writeln("  @override");
+  buffer.writeln(
+    "  BisonThemeTokens lerp(covariant ThemeExtension<BisonThemeTokens>? other, double t) {",
+  );
+  buffer.writeln("    if (other is! BisonThemeTokens) return this;");
+  buffer.writeln("    return BisonThemeTokens(");
+  for (var key in keys) {
+    final name = toCamelCase(key);
+    buffer.writeln("      $name: Color.lerp($name, other.$name, t)!,");
+  }
+  buffer.writeln("    );\n  }");
 }
 
 String toCamelCase(String input) {
