@@ -25,7 +25,21 @@ class Button extends StatelessWidget {
 }
 
 ButtonStyle _buttonSytle(BisonThemeTokens theme) => ButtonStyle(
-  backgroundColor: WidgetStatePropertyAll(theme.buttonPrimary),
+  backgroundColor: WidgetStateProperty.resolveWith<Color?>((
+    Set<WidgetState> states,
+  ) {
+    if (states.contains(WidgetState.hovered)) {
+      return theme.buttonPrimaryHovered;
+    }
+    if (states.contains(WidgetState.focused) ||
+        states.contains(WidgetState.pressed)) {
+      return theme.buttonPrimaryFocusedPressed;
+    }
+    if (states.contains(WidgetState.disabled)) {
+      return theme.buttonGhostDisabled;
+    }
+    return theme.buttonPrimary;
+  }),
   foregroundColor: WidgetStatePropertyAll(theme.textInverse),
   shape: WidgetStateProperty.all(
     RoundedRectangleBorder(
