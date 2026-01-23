@@ -17,6 +17,11 @@ class WidgetbookApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Widgetbook.material(
+      appBuilder: (context, child) => Title(
+        title: "Fermilab Widgetbook",
+        color: BisonThemeTokens.light().borderPrimary,
+        child: child,
+      ),
       lightTheme: ThemeData(
         brightness: Brightness.light,
         extensions: [BisonThemeTokens.light()],
