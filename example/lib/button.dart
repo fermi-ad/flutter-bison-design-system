@@ -21,5 +21,6 @@ Widget buildCoolButtonUseCase(BuildContext context) {
         ButtonType.destructive,
       ],
     ),
+    disabled: context.knobs.boolean(label: 'Disabled'),
   );
 }
