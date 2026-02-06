@@ -39,12 +39,12 @@ ButtonStyle _filledButtonStyle(BisonThemeTokens theme) => ButtonStyle(
     if (states.contains(WidgetState.disabled)) {
       return theme.buttonGhostDisabled;
     }
-    if (states.contains(WidgetState.hovered)) {
-      return theme.buttonPrimaryHovered;
-    }
     if (states.contains(WidgetState.focused) ||
         states.contains(WidgetState.pressed)) {
       return theme.buttonPrimaryFocusedPressed;
+    }
+    if (states.contains(WidgetState.hovered)) {
+      return theme.buttonPrimaryHovered;
     }
     return theme.buttonPrimary;
   }),
@@ -62,8 +62,7 @@ ButtonStyle _filledButtonStyle(BisonThemeTokens theme) => ButtonStyle(
     ),
   ),
   side: WidgetStateProperty.resolveWith<BorderSide?>((Set<WidgetState> states) {
-    if (states.contains(WidgetState.pressed) ||
-        states.contains(WidgetState.focused)) {
+    if (states.contains(WidgetState.focused)) {
       return BorderSide(color: theme.borderPrimary, width: 2.0);
     }
     return BorderSide(style: BorderStyle.none);
@@ -75,11 +74,11 @@ ButtonStyle _ghostButtonStyle(BisonThemeTokens theme) => ButtonStyle(
   backgroundColor: WidgetStateProperty.resolveWith<Color?>((
     Set<WidgetState> states,
   ) {
-    if (states.contains(WidgetState.hovered)) {
-      return theme.buttonGhostHovered;
-    }
     if (states.contains(WidgetState.pressed)) {
       return theme.buttonGhostPressed;
+    }
+    if (states.contains(WidgetState.hovered)) {
+      return theme.buttonGhostHovered;
     }
     return Colors.transparent;
   }),
@@ -97,8 +96,7 @@ ButtonStyle _ghostButtonStyle(BisonThemeTokens theme) => ButtonStyle(
     ),
   ),
   side: WidgetStateProperty.resolveWith<BorderSide?>((Set<WidgetState> states) {
-    if (states.contains(WidgetState.pressed) ||
-        states.contains(WidgetState.focused)) {
+    if (states.contains(WidgetState.focused)) {
       return BorderSide(color: theme.borderPrimary, width: 2.0);
     }
     return BorderSide(style: BorderStyle.none);
@@ -110,11 +108,11 @@ ButtonStyle _outlinedButtonStyle(BisonThemeTokens theme) => ButtonStyle(
   backgroundColor: WidgetStateProperty.resolveWith<Color?>((
     Set<WidgetState> states,
   ) {
-    if (states.contains(WidgetState.hovered)) {
-      return theme.buttonGhostHovered;
-    }
     if (states.contains(WidgetState.pressed)) {
       return theme.buttonGhostPressed;
+    }
+    if (states.contains(WidgetState.hovered)) {
+      return theme.buttonGhostHovered;
     }
     return Colors.transparent;
   }),
@@ -132,8 +130,7 @@ ButtonStyle _outlinedButtonStyle(BisonThemeTokens theme) => ButtonStyle(
     ),
   ),
   side: WidgetStateProperty.resolveWith<BorderSide?>((Set<WidgetState> states) {
-    if (states.contains(WidgetState.pressed) ||
-        states.contains(WidgetState.focused)) {
+    if (states.contains(WidgetState.focused)) {
       return BorderSide(color: theme.borderPrimary, width: 2.0);
     }
     return BorderSide(color: theme.borderPlain);
@@ -148,12 +145,12 @@ ButtonStyle _destructiveButtonStyle(BisonThemeTokens theme) => ButtonStyle(
     if (states.contains(WidgetState.disabled)) {
       return theme.buttonGhostDisabled;
     }
-    if (states.contains(WidgetState.hovered)) {
-      return theme.buttonDangerHovered;
-    }
     if (states.contains(WidgetState.focused) ||
         states.contains(WidgetState.pressed)) {
       return theme.buttonDangerFocusedPressed;
+    }
+    if (states.contains(WidgetState.hovered)) {
+      return theme.buttonDangerHovered;
     }
     return theme.buttonDanger;
   }),
@@ -171,8 +168,7 @@ ButtonStyle _destructiveButtonStyle(BisonThemeTokens theme) => ButtonStyle(
     ),
   ),
   side: WidgetStateProperty.resolveWith<BorderSide?>((Set<WidgetState> states) {
-    if (states.contains(WidgetState.pressed) ||
-        states.contains(WidgetState.focused)) {
+    if (states.contains(WidgetState.focused)) {
       return BorderSide(color: theme.borderPrimary, width: 2.0);
     }
     return BorderSide(style: BorderStyle.none);
