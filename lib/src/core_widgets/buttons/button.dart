@@ -6,13 +6,15 @@ enum ButtonType { filled, ghost, outlined, destructive }
 class Button extends StatelessWidget {
   final String buttonLabel;
   final ButtonType buttonType;
-  final bool disabled;
+  final Icon? icon;
+  final VoidCallback? onPressed;
 
   const Button({
     super.key,
     required this.buttonLabel,
+    required this.onPressed,
     this.buttonType = ButtonType.filled,
-    this.disabled = false,
+    this.icon,
   });
 
   @override
@@ -25,8 +27,27 @@ class Button extends StatelessWidget {
         ButtonType.outlined => _outlinedButtonStyle(theme),
         ButtonType.destructive => _destructiveButtonStyle(theme),
       },
-      onPressed: disabled ? null : () => print("Button PRESSED!"),
-      child: Text(buttonLabel),
+      onPressed: onPressed,
+      child: icon == null
+          ? Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24.0,
+                vertical: 10.0,
+              ),
+              child: Text(buttonLabel),
+            )
+          : Padding(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                right: 24.0,
+                top: 10.0,
+                bottom: 10.0,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [icon!, SizedBox(width: 8.0), Text(buttonLabel)],
+              ),
+            ),
     );
   }
 }
@@ -68,6 +89,8 @@ ButtonStyle _filledButtonStyle(BisonThemeTokens theme) => ButtonStyle(
     return BorderSide(style: BorderStyle.none);
   }),
   elevation: WidgetStatePropertyAll(0.0),
+  // remove default padding given to button
+  padding: WidgetStatePropertyAll(EdgeInsets.zero),
 );
 
 ButtonStyle _ghostButtonStyle(BisonThemeTokens theme) => ButtonStyle(
@@ -102,6 +125,8 @@ ButtonStyle _ghostButtonStyle(BisonThemeTokens theme) => ButtonStyle(
     return BorderSide(style: BorderStyle.none);
   }),
   elevation: WidgetStatePropertyAll(0.0),
+  // remove default padding given to button
+  padding: WidgetStatePropertyAll(EdgeInsets.zero),
 );
 
 ButtonStyle _outlinedButtonStyle(BisonThemeTokens theme) => ButtonStyle(
@@ -136,6 +161,8 @@ ButtonStyle _outlinedButtonStyle(BisonThemeTokens theme) => ButtonStyle(
     return BorderSide(color: theme.borderPlain);
   }),
   elevation: WidgetStatePropertyAll(0.0),
+  // remove default padding given to button
+  padding: WidgetStatePropertyAll(EdgeInsets.zero),
 );
 
 ButtonStyle _destructiveButtonStyle(BisonThemeTokens theme) => ButtonStyle(
@@ -174,4 +201,6 @@ ButtonStyle _destructiveButtonStyle(BisonThemeTokens theme) => ButtonStyle(
     return BorderSide(style: BorderStyle.none);
   }),
   elevation: WidgetStatePropertyAll(0.0),
+  // remove default padding given to button
+  padding: WidgetStatePropertyAll(EdgeInsets.zero),
 );
