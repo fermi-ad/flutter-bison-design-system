@@ -9,7 +9,7 @@ Widget buildCoolButtonUseCase(BuildContext context) {
   return Button(
     buttonLabel: context.knobs.string(
       label: 'Button Label',
-      initialValue: 'Button',
+      initialValue: 'Label',
     ),
     buttonType: context.knobs.object.dropdown(
       label: 'Button Type',
@@ -20,6 +20,19 @@ Widget buildCoolButtonUseCase(BuildContext context) {
         ButtonType.outlined,
         ButtonType.destructive,
       ],
+    ),
+    onPressed: context.knobs.boolean(label: 'Disabled')
+        ? null
+        : () => print("Hello!"),
+    icon: context.knobs.objectOrNull.dropdown(
+      label: 'Icon',
+      labelBuilder: (icon) => switch (icon.icon) {
+        Icons.add => "Add",
+        Icons.save => "Save",
+        Icons.delete => "Delete",
+        _ => '',
+      },
+      options: [Icon(Icons.add), Icon(Icons.save), Icon(Icons.delete)],
     ),
   );
 }
