@@ -340,7 +340,7 @@ class ColorsTheme extends ThemeExtension<ColorsTheme> {
   }
 
   @override
-  ThemeExtension<ColorsTheme> copyWith({bool? lightMode}) {
+  ThemeExtension<ColorsTheme> copyWith({final bool? lightMode}) {
     if (lightMode == null || lightMode) {
       return ColorsTheme.light();
     }
@@ -349,13 +349,13 @@ class ColorsTheme extends ThemeExtension<ColorsTheme> {
 
   @override
   ThemeExtension<ColorsTheme> lerp(
-    covariant ThemeExtension<ColorsTheme>? other,
-    double t,
+    covariant final ThemeExtension<ColorsTheme>? other,
+    final double t,
   ) => this;
 }
 
 extension ColorsThemeScheme on ColorsTheme {
-  ColorScheme toColorScheme(Brightness brightness) {
+  ColorScheme toColorScheme(final Brightness brightness) {
     return ColorScheme(
       brightness: brightness,
       primary: textPrimary,

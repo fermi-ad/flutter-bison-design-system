@@ -11,10 +11,14 @@ void main() {
   const darkJson = 'tokens/Dark.tokens.json';
 
   // json data
-  final baseData = jsonDecode(File(baseJson).readAsStringSync());
-  final aliasData = jsonDecode(File(aliasJson).readAsStringSync());
-  final lightData = jsonDecode(File(lightJson).readAsStringSync());
-  final darkData = jsonDecode(File(darkJson).readAsStringSync());
+  final baseData =
+      jsonDecode(File(baseJson).readAsStringSync()) as Map<String, dynamic>;
+  final aliasData =
+      jsonDecode(File(aliasJson).readAsStringSync()) as Map<String, dynamic>;
+  final lightData =
+      jsonDecode(File(lightJson).readAsStringSync()) as Map<String, dynamic>;
+  final darkData =
+      jsonDecode(File(darkJson).readAsStringSync()) as Map<String, dynamic>;
 
   final buffer = StringBuffer();
   buffer.writeln("// GENERATED CODE - DO NOT MODIFY BY HAND\n");
@@ -24,7 +28,7 @@ void main() {
   buffer.writeln("abstract class BaseTokens {");
   final baseMap = <String, String>{};
   _extractBaseTokens(baseData, '', baseMap);
-  baseMap.forEach((key, hex) {
+  baseMap.forEach((final key, final hex) {
     buffer.writeln(
       "  static const Color ${toCamelCase(key)} = Color(${formatHex(hex)});",
     );
@@ -35,7 +39,7 @@ void main() {
   buffer.writeln("abstract class AliasTokens {");
   final aliasMap = <String, String>{};
   _extractAliasTokens(aliasData, buffer, 'BaseTokens');
-  aliasMap.forEach((key, hex) {
+  aliasMap.forEach((final key, final hex) {
     buffer.writeln(
       "  static const Color ${toCamelCase(key)} = Color(${formatHex(hex)});",
     );
@@ -58,13 +62,13 @@ void main() {
   final sortedKeys = componentKeys.toList()..sort();
 
   // build out fiels
-  for (var key in sortedKeys) {
+  for (final key in sortedKeys) {
     buffer.writeln("  final Color ${toCamelCase(key)};");
   }
 
   // constructor
   buffer.writeln("\n const BisonThemeTokens({");
-  for (var key in sortedKeys) {
+  for (final key in sortedKeys) {
     buffer.writeln("  required this.${toCamelCase(key)},");
   }
   buffer.writeln(" });\n");
@@ -73,7 +77,7 @@ void main() {
   buffer.writeln(
     "  factory BisonThemeTokens.light() => const BisonThemeTokens(",
   );
-  for (var key in sortedKeys) {
+  for (final key in sortedKeys) {
     final aliasToken = lightMap[key]!;
     buffer.writeln(
       "    ${toCamelCase(key)}: AliasTokens.${toCamelCase(aliasToken)},",
@@ -85,7 +89,7 @@ void main() {
   buffer.writeln(
     "  factory BisonThemeTokens.dark() => const BisonThemeTokens(",
   );
-  for (var key in sortedKeys) {
+  for (final key in sortedKeys) {
     final aliasToken = darkMap[key] ?? lightMap[key]!;
     buffer.writeln(
       "    ${toCamelCase(key)}: AliasTokens.${toCamelCase(aliasToken)},",
@@ -107,11 +111,15 @@ void main() {
   outputFile.writeAsStringSync(buffer.toString());
 }
 
-void _extractBaseTokens(Map json, String prefix, Map<String, String> target) {
-  json.forEach((key, value) {
+void _extractBaseTokens(
+  final Map<String, dynamic> json,
+  final String prefix,
+  final Map<String, String> target,
+) {
+  json.forEach((final key, final value) {
     if (key.startsWith('\$')) return;
     final newKey = prefix.isEmpty ? key : '$prefix.$key';
-    if (value is Map) {
+    if (value is Map<String, dynamic>) {
       if (value.containsKey('\$value')) {
         final val = value['\$value'];
         if (val is Map && val.containsKey('hex')) {
@@ -126,16 +134,20 @@ void _extractBaseTokens(Map json, String prefix, Map<String, String> target) {
   });
 }
 
-void _extractAliasTokens(Map json, StringBuffer buffer, String targetClass) {
-  void recurse(Map node, String prefix) {
-    node.forEach((key, value) {
+void _extractAliasTokens(
+  final Map<String, dynamic> json,
+  final StringBuffer buffer,
+  final String targetClass,
+) {
+  void recurse(final Map<String, dynamic> node, final String prefix) {
+    node.forEach((final key, final value) {
       if (key.startsWith('\$')) return;
       final newKey = prefix.isEmpty ? key : '$prefix.$key';
-      if (value is Map) {
+      if (value is Map<String, dynamic>) {
         final extensions = value['\$extensions'];
         if (extensions != null && extensions['com.figma.aliasData'] != null) {
           final targetVar =
-              extensions['com.figma.aliasData']['targetVariableName'];
+              extensions['com.figma.aliasData']['targetVariableName'] as String;
           buffer.writeln(
             "  static const Color ${toCamelCase(newKey)} = $targetClass.${toCamelCase(targetVar)};",
           );
@@ -150,18 +162,18 @@ void _extractAliasTokens(Map json, StringBuffer buffer, String targetClass) {
 }
 
 void _extractComponentTokens(
-  Map json,
-  String prefix,
-  Map<String, String> target,
+  final Map<String, dynamic> json,
+  final String prefix,
+  final Map<String, String> target,
 ) {
-  json.forEach((key, value) {
+  json.forEach((final key, final value) {
     if (key.startsWith('\$')) return;
     final newKey = prefix.isEmpty ? key : '$prefix.$key';
-    if (value is Map) {
+    if (value is Map<String, dynamic>) {
       final extensions = value['\$extensions'];
       if (extensions != null && extensions['com.figma.aliasData'] != null) {
         target[newKey] =
-            extensions['com.figma.aliasData']['targetVariableName'];
+            extensions['com.figma.aliasData']['targetVariableName'] as String;
       } else {
         _extractComponentTokens(value, newKey, target);
       }
@@ -170,16 +182,16 @@ void _extractComponentTokens(
 }
 
 // function that creates overwritten functions copyWith and lerp
-void _writeOverrides(StringBuffer buffer, List<String> keys) {
+void _writeOverrides(final StringBuffer buffer, final List<String> keys) {
   // copyWith
   buffer.writeln("  @override");
   buffer.writeln("  BisonThemeTokens copyWith({");
-  for (var key in keys) {
+  for (final key in keys) {
     buffer.writeln("    Color? ${toCamelCase(key)},");
   }
   buffer.writeln("  }) {");
   buffer.writeln("  return BisonThemeTokens(");
-  for (var key in keys) {
+  for (final key in keys) {
     final name = toCamelCase(key);
     buffer.writeln("    $name: $name ?? this.$name,");
   }
@@ -193,14 +205,14 @@ void _writeOverrides(StringBuffer buffer, List<String> keys) {
   );
   buffer.writeln("    if (other is! BisonThemeTokens) return this;");
   buffer.writeln("    return BisonThemeTokens(");
-  for (var key in keys) {
+  for (final key in keys) {
     final name = toCamelCase(key);
     buffer.writeln("      $name: Color.lerp($name, other.$name, t)!,");
   }
   buffer.writeln("    );\n  }");
 }
 
-void _writeToColorScheme(StringBuffer buffer) {
+void _writeToColorScheme(final StringBuffer buffer) {
   buffer.writeln('''
   ColorScheme toColorScheme(Brightness brightness) {
     return ColorScheme(
@@ -218,11 +230,11 @@ void _writeToColorScheme(StringBuffer buffer) {
   ''');
 }
 
-String toCamelCase(String input) {
+String toCamelCase(final String input) {
   // Regex handles slashes, spaces, dots, and dashes from Figma
   final parts = input
       .split(RegExp(r'[\.\-\s\/]'))
-      .where((p) => p.isNotEmpty)
+      .where((final p) => p.isNotEmpty)
       .toList();
   if (parts.isEmpty) return 'unknown';
   var result = parts[0].toLowerCase();

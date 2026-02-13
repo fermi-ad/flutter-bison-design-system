@@ -56,7 +56,7 @@
         5037
     ],
     // Uncomment the next line to run commands after the container is created.
-    "postCreateCommand": "flutter pub get",
+    "postCreateCommand": "flutter pub get"
     // "postStartCommand": "flutter run -d web-server --web-port=5037"
     // Configure tool-specific properties.
     // "customizations": {},
