@@ -18,8 +18,8 @@ class Button extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    var theme = Theme.of(context).extension<BisonThemeTokens>()!;
+  Widget build(final BuildContext context) {
+    final theme = Theme.of(context).extension<BisonThemeTokens>()!;
     return FilledButton(
       style: switch (buttonType) {
         ButtonType.filled => _filledButtonStyle(theme),
@@ -52,10 +52,10 @@ class Button extends StatelessWidget {
   }
 }
 
-ButtonStyle _filledButtonStyle(BisonThemeTokens theme) => ButtonStyle(
+ButtonStyle _filledButtonStyle(final BisonThemeTokens theme) => ButtonStyle(
   // TODO: Add more styling for focused state
   backgroundColor: WidgetStateProperty.resolveWith<Color?>((
-    Set<WidgetState> states,
+    final Set<WidgetState> states,
   ) {
     if (states.contains(WidgetState.disabled)) {
       return theme.buttonGhostDisabled;
@@ -70,7 +70,7 @@ ButtonStyle _filledButtonStyle(BisonThemeTokens theme) => ButtonStyle(
     return theme.buttonPrimary;
   }),
   foregroundColor: WidgetStateProperty.resolveWith<Color?>((
-    Set<WidgetState> states,
+    final Set<WidgetState> states,
   ) {
     if (states.contains(WidgetState.disabled)) {
       return theme.textDisabled;
@@ -82,7 +82,9 @@ ButtonStyle _filledButtonStyle(BisonThemeTokens theme) => ButtonStyle(
       borderRadius: BorderRadius.all(Radius.circular(4.0)),
     ),
   ),
-  side: WidgetStateProperty.resolveWith<BorderSide?>((Set<WidgetState> states) {
+  side: WidgetStateProperty.resolveWith<BorderSide?>((
+    final Set<WidgetState> states,
+  ) {
     if (states.contains(WidgetState.focused)) {
       return BorderSide(color: theme.borderPrimary, width: 2.0);
     }
@@ -93,9 +95,9 @@ ButtonStyle _filledButtonStyle(BisonThemeTokens theme) => ButtonStyle(
   padding: WidgetStatePropertyAll(EdgeInsets.zero),
 );
 
-ButtonStyle _ghostButtonStyle(BisonThemeTokens theme) => ButtonStyle(
+ButtonStyle _ghostButtonStyle(final BisonThemeTokens theme) => ButtonStyle(
   backgroundColor: WidgetStateProperty.resolveWith<Color?>((
-    Set<WidgetState> states,
+    final Set<WidgetState> states,
   ) {
     if (states.contains(WidgetState.pressed)) {
       return theme.buttonGhostPressed;
@@ -106,7 +108,7 @@ ButtonStyle _ghostButtonStyle(BisonThemeTokens theme) => ButtonStyle(
     return Colors.transparent;
   }),
   foregroundColor: WidgetStateProperty.resolveWith<Color?>((
-    Set<WidgetState> states,
+    final Set<WidgetState> states,
   ) {
     if (states.contains(WidgetState.disabled)) {
       return theme.textDisabled;
@@ -118,7 +120,9 @@ ButtonStyle _ghostButtonStyle(BisonThemeTokens theme) => ButtonStyle(
       borderRadius: BorderRadius.all(Radius.circular(4.0)),
     ),
   ),
-  side: WidgetStateProperty.resolveWith<BorderSide?>((Set<WidgetState> states) {
+  side: WidgetStateProperty.resolveWith<BorderSide?>((
+    final Set<WidgetState> states,
+  ) {
     if (states.contains(WidgetState.focused)) {
       return BorderSide(color: theme.borderPrimary, width: 2.0);
     }
@@ -129,9 +133,9 @@ ButtonStyle _ghostButtonStyle(BisonThemeTokens theme) => ButtonStyle(
   padding: WidgetStatePropertyAll(EdgeInsets.zero),
 );
 
-ButtonStyle _outlinedButtonStyle(BisonThemeTokens theme) => ButtonStyle(
+ButtonStyle _outlinedButtonStyle(final BisonThemeTokens theme) => ButtonStyle(
   backgroundColor: WidgetStateProperty.resolveWith<Color?>((
-    Set<WidgetState> states,
+    final Set<WidgetState> states,
   ) {
     if (states.contains(WidgetState.pressed)) {
       return theme.buttonGhostPressed;
@@ -142,7 +146,7 @@ ButtonStyle _outlinedButtonStyle(BisonThemeTokens theme) => ButtonStyle(
     return Colors.transparent;
   }),
   foregroundColor: WidgetStateProperty.resolveWith<Color?>((
-    Set<WidgetState> states,
+    final Set<WidgetState> states,
   ) {
     if (states.contains(WidgetState.disabled)) {
       return theme.textDisabled;
@@ -154,7 +158,9 @@ ButtonStyle _outlinedButtonStyle(BisonThemeTokens theme) => ButtonStyle(
       borderRadius: BorderRadius.all(Radius.circular(4.0)),
     ),
   ),
-  side: WidgetStateProperty.resolveWith<BorderSide?>((Set<WidgetState> states) {
+  side: WidgetStateProperty.resolveWith<BorderSide?>((
+    final Set<WidgetState> states,
+  ) {
     if (states.contains(WidgetState.focused)) {
       return BorderSide(color: theme.borderPrimary, width: 2.0);
     }
@@ -165,42 +171,45 @@ ButtonStyle _outlinedButtonStyle(BisonThemeTokens theme) => ButtonStyle(
   padding: WidgetStatePropertyAll(EdgeInsets.zero),
 );
 
-ButtonStyle _destructiveButtonStyle(BisonThemeTokens theme) => ButtonStyle(
-  backgroundColor: WidgetStateProperty.resolveWith<Color?>((
-    Set<WidgetState> states,
-  ) {
-    if (states.contains(WidgetState.disabled)) {
-      return theme.buttonGhostDisabled;
-    }
-    if (states.contains(WidgetState.focused) ||
-        states.contains(WidgetState.pressed)) {
-      return theme.buttonDangerFocusedPressed;
-    }
-    if (states.contains(WidgetState.hovered)) {
-      return theme.buttonDangerHovered;
-    }
-    return theme.buttonDanger;
-  }),
-  foregroundColor: WidgetStateProperty.resolveWith<Color?>((
-    Set<WidgetState> states,
-  ) {
-    if (states.contains(WidgetState.disabled)) {
-      return theme.textDisabled;
-    }
-    return theme.textInverse;
-  }),
-  shape: WidgetStateProperty.all(
-    RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(4.0)),
-    ),
-  ),
-  side: WidgetStateProperty.resolveWith<BorderSide?>((Set<WidgetState> states) {
-    if (states.contains(WidgetState.focused)) {
-      return BorderSide(color: theme.borderPrimary, width: 2.0);
-    }
-    return BorderSide(style: BorderStyle.none);
-  }),
-  elevation: WidgetStatePropertyAll(0.0),
-  // remove default padding given to button
-  padding: WidgetStatePropertyAll(EdgeInsets.zero),
-);
+ButtonStyle _destructiveButtonStyle(final BisonThemeTokens theme) =>
+    ButtonStyle(
+      backgroundColor: WidgetStateProperty.resolveWith<Color?>((
+        final Set<WidgetState> states,
+      ) {
+        if (states.contains(WidgetState.disabled)) {
+          return theme.buttonGhostDisabled;
+        }
+        if (states.contains(WidgetState.focused) ||
+            states.contains(WidgetState.pressed)) {
+          return theme.buttonDangerFocusedPressed;
+        }
+        if (states.contains(WidgetState.hovered)) {
+          return theme.buttonDangerHovered;
+        }
+        return theme.buttonDanger;
+      }),
+      foregroundColor: WidgetStateProperty.resolveWith<Color?>((
+        final Set<WidgetState> states,
+      ) {
+        if (states.contains(WidgetState.disabled)) {
+          return theme.textDisabled;
+        }
+        return theme.textInverse;
+      }),
+      shape: WidgetStateProperty.all(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(4.0)),
+        ),
+      ),
+      side: WidgetStateProperty.resolveWith<BorderSide?>((
+        final Set<WidgetState> states,
+      ) {
+        if (states.contains(WidgetState.focused)) {
+          return BorderSide(color: theme.borderPrimary, width: 2.0);
+        }
+        return BorderSide(style: BorderStyle.none);
+      }),
+      elevation: WidgetStatePropertyAll(0.0),
+      // remove default padding given to button
+      padding: WidgetStatePropertyAll(EdgeInsets.zero),
+    );

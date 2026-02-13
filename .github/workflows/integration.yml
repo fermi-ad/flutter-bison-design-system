@@ -1,0 +1,18 @@
+name: Continuous Integration for Flutter applications
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+
+jobs:
+  test:
+    uses: fermi-ad/.github/.github/workflows/flutter-integration.yaml@b99946ba8722aeb25ac95245fa01862054748f92
+    secrets: inherit
+    with:
+      # Change to true to pull in git submodules during build
+      pull-git-submodules: false
+      coverage-exclude: "|tool/setup_git_hooks.dart"
