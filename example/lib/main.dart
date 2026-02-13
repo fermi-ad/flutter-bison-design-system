@@ -24,13 +24,21 @@ class WidgetbookApp extends StatelessWidget {
       ),
       lightTheme: ThemeData(
         brightness: Brightness.light,
-        extensions: [BisonThemeTokens.light()],
+        extensions: [
+          BisonThemeTokens.light(),
+          BisonSpacingTokens.standard(),
+          BisonCornerTokens.standard(),
+        ],
         colorScheme: BisonThemeTokens.light().toColorScheme(Brightness.light),
         scaffoldBackgroundColor: BisonThemeTokens.light().surfaceDefault,
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        extensions: [BisonThemeTokens.dark()],
+        extensions: [
+          BisonThemeTokens.dark(),
+          BisonSpacingTokens.standard(),
+          BisonCornerTokens.standard(),
+        ],
         colorScheme: BisonThemeTokens.dark().toColorScheme(Brightness.dark),
         scaffoldBackgroundColor: BisonThemeTokens.dark().surfaceDefault,
       ),
@@ -45,6 +53,8 @@ class WidgetbookApp extends StatelessWidget {
               data: Theme.of(context).copyWith(
                 extensions: [
                   BisonThemeTokens.light(),
+                  BisonSpacingTokens.standard(),
+                  BisonCornerTokens.standard(),
                   // BeemTextsTheme.main(View.of(context)),
                 ],
               ),
@@ -54,6 +64,8 @@ class WidgetbookApp extends StatelessWidget {
               data: Theme.of(context).copyWith(
                 extensions: [
                   BisonThemeTokens.dark(),
+                  BisonSpacingTokens.standard(),
+                  BisonCornerTokens.standard(),
                   // BeemTextsTheme.main(View.of(context)),
                 ],
               ),

@@ -20,39 +20,51 @@ class Button extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final theme = Theme.of(context).extension<BisonThemeTokens>()!;
+    final padding = Theme.of(context).extension<BisonSpacingTokens>()!;
+    final corners = Theme.of(context).extension<BisonCornerTokens>()!;
     return FilledButton(
       style: switch (buttonType) {
-        ButtonType.filled => _filledButtonStyle(theme),
-        ButtonType.ghost => _ghostButtonStyle(theme),
-        ButtonType.outlined => _outlinedButtonStyle(theme),
-        ButtonType.destructive => _destructiveButtonStyle(theme),
+        ButtonType.filled => _filledButtonStyle(theme, padding, corners),
+        ButtonType.ghost => _ghostButtonStyle(theme, padding, corners),
+        ButtonType.outlined => _outlinedButtonStyle(theme, padding, corners),
+        ButtonType.destructive => _destructiveButtonStyle(
+          theme,
+          padding,
+          corners,
+        ),
       },
       onPressed: onPressed,
       child: icon == null
           ? Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24.0,
-                vertical: 10.0,
+              padding: EdgeInsets.symmetric(
+                horizontal: padding.smallSpacing,
+                vertical: padding.tinySpacing,
               ),
               child: Text(buttonLabel),
             )
           : Padding(
-              padding: const EdgeInsets.only(
-                left: 16.0,
-                right: 24.0,
-                top: 10.0,
-                bottom: 10.0,
+              padding: EdgeInsets.symmetric(
+                horizontal: padding.smallSpacing,
+                vertical: padding.tinySpacing,
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
-                children: [icon!, SizedBox(width: 8.0), Text(buttonLabel)],
+                children: [
+                  icon!,
+                  SizedBox(width: padding.tinySpacing),
+                  Text(buttonLabel),
+                ],
               ),
             ),
     );
   }
 }
 
-ButtonStyle _filledButtonStyle(final BisonThemeTokens theme) => ButtonStyle(
+ButtonStyle _filledButtonStyle(
+  final BisonThemeTokens theme,
+  final BisonSpacingTokens padding,
+  final BisonCornerTokens corners,
+) => ButtonStyle(
   // TODO: Add more styling for focused state
   backgroundColor: WidgetStateProperty.resolveWith<Color?>((
     final Set<WidgetState> states,
@@ -79,7 +91,7 @@ ButtonStyle _filledButtonStyle(final BisonThemeTokens theme) => ButtonStyle(
   }),
   shape: WidgetStateProperty.all(
     RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(4.0)),
+      borderRadius: BorderRadius.all(Radius.circular(corners.cornerExtraSmall)),
     ),
   ),
   side: WidgetStateProperty.resolveWith<BorderSide?>((
@@ -95,7 +107,11 @@ ButtonStyle _filledButtonStyle(final BisonThemeTokens theme) => ButtonStyle(
   padding: WidgetStatePropertyAll(EdgeInsets.zero),
 );
 
-ButtonStyle _ghostButtonStyle(final BisonThemeTokens theme) => ButtonStyle(
+ButtonStyle _ghostButtonStyle(
+  final BisonThemeTokens theme,
+  final BisonSpacingTokens padding,
+  final BisonCornerTokens corners,
+) => ButtonStyle(
   backgroundColor: WidgetStateProperty.resolveWith<Color?>((
     final Set<WidgetState> states,
   ) {
@@ -117,7 +133,7 @@ ButtonStyle _ghostButtonStyle(final BisonThemeTokens theme) => ButtonStyle(
   }),
   shape: WidgetStateProperty.all(
     RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(4.0)),
+      borderRadius: BorderRadius.all(Radius.circular(corners.cornerExtraSmall)),
     ),
   ),
   side: WidgetStateProperty.resolveWith<BorderSide?>((
@@ -133,7 +149,11 @@ ButtonStyle _ghostButtonStyle(final BisonThemeTokens theme) => ButtonStyle(
   padding: WidgetStatePropertyAll(EdgeInsets.zero),
 );
 
-ButtonStyle _outlinedButtonStyle(final BisonThemeTokens theme) => ButtonStyle(
+ButtonStyle _outlinedButtonStyle(
+  final BisonThemeTokens theme,
+  final BisonSpacingTokens padding,
+  final BisonCornerTokens corners,
+) => ButtonStyle(
   backgroundColor: WidgetStateProperty.resolveWith<Color?>((
     final Set<WidgetState> states,
   ) {
@@ -155,7 +175,7 @@ ButtonStyle _outlinedButtonStyle(final BisonThemeTokens theme) => ButtonStyle(
   }),
   shape: WidgetStateProperty.all(
     RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(4.0)),
+      borderRadius: BorderRadius.all(Radius.circular(corners.cornerExtraSmall)),
     ),
   ),
   side: WidgetStateProperty.resolveWith<BorderSide?>((
@@ -171,45 +191,48 @@ ButtonStyle _outlinedButtonStyle(final BisonThemeTokens theme) => ButtonStyle(
   padding: WidgetStatePropertyAll(EdgeInsets.zero),
 );
 
-ButtonStyle _destructiveButtonStyle(final BisonThemeTokens theme) =>
-    ButtonStyle(
-      backgroundColor: WidgetStateProperty.resolveWith<Color?>((
-        final Set<WidgetState> states,
-      ) {
-        if (states.contains(WidgetState.disabled)) {
-          return theme.buttonGhostDisabled;
-        }
-        if (states.contains(WidgetState.focused) ||
-            states.contains(WidgetState.pressed)) {
-          return theme.buttonDangerFocusedPressed;
-        }
-        if (states.contains(WidgetState.hovered)) {
-          return theme.buttonDangerHovered;
-        }
-        return theme.buttonDanger;
-      }),
-      foregroundColor: WidgetStateProperty.resolveWith<Color?>((
-        final Set<WidgetState> states,
-      ) {
-        if (states.contains(WidgetState.disabled)) {
-          return theme.textDisabled;
-        }
-        return theme.textInverse;
-      }),
-      shape: WidgetStateProperty.all(
-        RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4.0)),
-        ),
-      ),
-      side: WidgetStateProperty.resolveWith<BorderSide?>((
-        final Set<WidgetState> states,
-      ) {
-        if (states.contains(WidgetState.focused)) {
-          return BorderSide(color: theme.borderPrimary, width: 2.0);
-        }
-        return BorderSide(style: BorderStyle.none);
-      }),
-      elevation: WidgetStatePropertyAll(0.0),
-      // remove default padding given to button
-      padding: WidgetStatePropertyAll(EdgeInsets.zero),
-    );
+ButtonStyle _destructiveButtonStyle(
+  final BisonThemeTokens theme,
+  final BisonSpacingTokens padding,
+  final BisonCornerTokens corners,
+) => ButtonStyle(
+  backgroundColor: WidgetStateProperty.resolveWith<Color?>((
+    final Set<WidgetState> states,
+  ) {
+    if (states.contains(WidgetState.disabled)) {
+      return theme.buttonGhostDisabled;
+    }
+    if (states.contains(WidgetState.focused) ||
+        states.contains(WidgetState.pressed)) {
+      return theme.buttonDangerFocusedPressed;
+    }
+    if (states.contains(WidgetState.hovered)) {
+      return theme.buttonDangerHovered;
+    }
+    return theme.buttonDanger;
+  }),
+  foregroundColor: WidgetStateProperty.resolveWith<Color?>((
+    final Set<WidgetState> states,
+  ) {
+    if (states.contains(WidgetState.disabled)) {
+      return theme.textDisabled;
+    }
+    return theme.textInverse;
+  }),
+  shape: WidgetStateProperty.all(
+    RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(4.0)),
+    ),
+  ),
+  side: WidgetStateProperty.resolveWith<BorderSide?>((
+    final Set<WidgetState> states,
+  ) {
+    if (states.contains(WidgetState.focused)) {
+      return BorderSide(color: theme.borderPrimary, width: 2.0);
+    }
+    return BorderSide(style: BorderStyle.none);
+  }),
+  elevation: WidgetStatePropertyAll(0.0),
+  // remove default padding given to button
+  padding: WidgetStatePropertyAll(EdgeInsets.zero),
+);
