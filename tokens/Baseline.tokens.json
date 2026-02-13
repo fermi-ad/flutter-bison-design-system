@@ -1,0 +1,39 @@
+{
+  "Brand": {
+    "$type": "string",
+    "$value": "Atkinson Hyperlegible Next",
+    "$extensions": {
+      "com.figma.variableId": "VariableID:55064:15503",
+      "com.figma.type": "string"
+    }
+  },
+  "Weight": {
+    "Regular": {
+      "$type": "string",
+      "$value": "Regular",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:55064:15505",
+        "com.figma.type": "string"
+      }
+    },
+    "Medium": {
+      "$type": "string",
+      "$value": "Medium",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:55064:15506",
+        "com.figma.type": "string"
+      }
+    },
+    "Bold": {
+      "$type": "string",
+      "$value": "SemiBold",
+      "$extensions": {
+        "com.figma.variableId": "VariableID:55064:15507",
+        "com.figma.type": "string"
+      }
+    }
+  },
+  "$extensions": {
+    "com.figma.modeName": "Baseline"
+  }
+}
