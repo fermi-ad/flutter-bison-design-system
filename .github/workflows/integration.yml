@@ -12,6 +12,10 @@ jobs:
   test:
     uses: fermi-ad/.github/.github/workflows/flutter-integration.yaml@ddcf9129cab74411fc2e038da2e85720d454873b
     secrets: inherit
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
     with:
       # Change to true to pull in git submodules during build
       pull-git-submodules: false
