@@ -75,15 +75,62 @@ void main() {
     buffer.writeln("      $name: lerpDouble($name, other.$name, t)!,");
   });
   buffer.writeln("    );\n  }");
-  // end of class
+  //----------- end of class
   buffer.writeln("}\n");
 
-  // create shape theme extension
-  // buffer.writeln(
-  //   "class BisonShapeTokens extends ThemeExtension<BisonShapeTokens>{",
-  // );
+  // --------create corner theme extension class------------
+  buffer.writeln(
+    "class BisonCornerTokens extends ThemeExtension<BisonCornerTokens>{",
+  );
+  _extractCornerTokens(shapeData, '', cornerMap);
+  cornerMap.forEach((key, value) {
+    buffer.writeln("  final double ${toCamelCase(key)};");
+  });
+  buffer.writeln();
 
-  // buffer.write("}\n");
+  // build contstructor
+  buffer.writeln("  const BisonCornerTokens({");
+  cornerMap.forEach((key, value) {
+    buffer.writeln("    required this.${toCamelCase(key)},");
+  });
+  buffer.writeln("  });\n");
+
+  // Factory constructor
+  buffer.writeln(
+    "  factory BisonCornerTokens.standard() => const BisonCornerTokens (",
+  );
+  cornerMap.forEach((key, value) {
+    buffer.writeln("    ${toCamelCase(key)}: $value,");
+  });
+  buffer.writeln("  );\n");
+
+  // copyWith
+  buffer.writeln("  @override\n  BisonCornerTokens copyWith({");
+  cornerMap.forEach((key, value) {
+    buffer.writeln("    double? ${toCamelCase(key)},");
+  });
+  buffer.writeln("  }) {");
+  buffer.writeln("    return BisonCornerTokens(");
+  cornerMap.forEach((key, value) {
+    final name = toCamelCase(key);
+    buffer.writeln("      $name: $name ?? this.$name,");
+  });
+  buffer.writeln("    );\n  }\n");
+
+  // lerp
+  buffer.writeln(
+    "  @override\n  BisonCornerTokens lerp(\n    covariant ThemeExtension<BisonCornerTokens>? other,\n    double t,\n  ) {",
+  );
+  buffer.writeln("    if (other is! BisonCornerTokens) return this;");
+  buffer.writeln("    return BisonCornerTokens(");
+  cornerMap.forEach((key, value) {
+    final name = toCamelCase(key);
+    buffer.writeln("      $name: lerpDouble($name, other.$name, t)!,");
+  });
+  buffer.writeln("    );\n  }");
+
+  //------------ end of class
+  buffer.writeln("}");
 
   // create file
   final outputFile = File(outputPath);
@@ -99,6 +146,21 @@ void _extractSpacingTokens(Map json, String prefix, Map<String, int> target) {
       if (value.containsKey('\$value')) {
         final val = value['\$value'];
         target[newKey] = val;
+      }
+    }
+  });
+}
+
+void _extractCornerTokens(Map json, String prefix, Map<String, int> target) {
+  json.forEach((key, value) {
+    if (key.startsWith('\$')) return;
+    final newKey = prefix.isEmpty ? key : '$prefix.$key';
+    if (value is Map) {
+      if (value.containsKey('\$value')) {
+        final val = value['\$value'];
+        target[newKey] = val;
+      } else {
+        _extractCornerTokens(value, newKey, target);
       }
     }
   });
