@@ -8,6 +8,8 @@ analyzer:
     strict-casts: true
     strict-inference: true
     strict-raw-types: true
+  exclude:
+    - lib/src/theme/*.g.dart
 
 linter:
   rules:
