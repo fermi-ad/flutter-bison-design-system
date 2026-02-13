@@ -23,7 +23,7 @@ Widget buildCoolButtonUseCase(BuildContext context) {
     ),
     onPressed: context.knobs.boolean(label: 'Disabled')
         ? null
-        : () => print("Hello!"),
+        : () => debugPrint("Hello!"),
     icon: context.knobs.objectOrNull.dropdown(
       label: 'Icon',
       labelBuilder: (icon) => switch (icon.icon) {
