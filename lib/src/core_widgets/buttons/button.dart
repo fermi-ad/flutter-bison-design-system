@@ -73,7 +73,6 @@ ButtonStyle _filledButtonStyle(
   final BisonCornerTokens corners,
   final BisonTypographyTokens typo,
 ) => ButtonStyle(
-  // TODO: Add more styling for focused state
   backgroundColor: WidgetStateProperty.resolveWith<Color?>((
     final Set<WidgetState> states,
   ) {

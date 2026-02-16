@@ -80,13 +80,6 @@ class WidgetbookApp extends StatelessWidget {
             ),
           ],
         ),
-        // DeviceFrameAddon(
-        //   devices: [
-        //     Devices.android.samsungGalaxyS20,
-        //     Devices.ios.iPhone13ProMax,
-        //   ],
-        // ),
-        // TextScaleAddon(scales: [1.0, 1.5, 2.0], initialScale: 1.0),
       ],
     );
   }
