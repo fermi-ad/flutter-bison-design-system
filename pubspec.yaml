@@ -89,7 +89,7 @@ flutter:
           weight: 800
           style: italic
 
-  dart_pre_commit:
+dart_pre_commit:
   analyze:
     ignore-unstaged-files: true
   outdated: false
