@@ -22,15 +22,22 @@ class Button extends StatelessWidget {
     final theme = Theme.of(context).extension<BisonThemeTokens>()!;
     final padding = Theme.of(context).extension<BisonSpacingTokens>()!;
     final corners = Theme.of(context).extension<BisonCornerTokens>()!;
+    final typo = Theme.of(context).extension<BisonTypographyTokens>()!;
     return FilledButton(
       style: switch (buttonType) {
-        ButtonType.filled => _filledButtonStyle(theme, padding, corners),
-        ButtonType.ghost => _ghostButtonStyle(theme, padding, corners),
-        ButtonType.outlined => _outlinedButtonStyle(theme, padding, corners),
+        ButtonType.filled => _filledButtonStyle(theme, padding, corners, typo),
+        ButtonType.ghost => _ghostButtonStyle(theme, padding, corners, typo),
+        ButtonType.outlined => _outlinedButtonStyle(
+          theme,
+          padding,
+          corners,
+          typo,
+        ),
         ButtonType.destructive => _destructiveButtonStyle(
           theme,
           padding,
           corners,
+          typo,
         ),
       },
       onPressed: onPressed,
@@ -64,6 +71,7 @@ ButtonStyle _filledButtonStyle(
   final BisonThemeTokens theme,
   final BisonSpacingTokens padding,
   final BisonCornerTokens corners,
+  final BisonTypographyTokens typo,
 ) => ButtonStyle(
   // TODO: Add more styling for focused state
   backgroundColor: WidgetStateProperty.resolveWith<Color?>((
@@ -102,6 +110,7 @@ ButtonStyle _filledButtonStyle(
     }
     return BorderSide(style: BorderStyle.none);
   }),
+  textStyle: WidgetStatePropertyAll(typo.bodyLarge),
   elevation: WidgetStatePropertyAll(0.0),
   // remove default padding given to button
   padding: WidgetStatePropertyAll(EdgeInsets.zero),
@@ -111,6 +120,7 @@ ButtonStyle _ghostButtonStyle(
   final BisonThemeTokens theme,
   final BisonSpacingTokens padding,
   final BisonCornerTokens corners,
+  final BisonTypographyTokens typo,
 ) => ButtonStyle(
   backgroundColor: WidgetStateProperty.resolveWith<Color?>((
     final Set<WidgetState> states,
@@ -144,6 +154,7 @@ ButtonStyle _ghostButtonStyle(
     }
     return BorderSide(style: BorderStyle.none);
   }),
+  textStyle: WidgetStatePropertyAll(typo.bodyLarge),
   elevation: WidgetStatePropertyAll(0.0),
   // remove default padding given to button
   padding: WidgetStatePropertyAll(EdgeInsets.zero),
@@ -153,6 +164,7 @@ ButtonStyle _outlinedButtonStyle(
   final BisonThemeTokens theme,
   final BisonSpacingTokens padding,
   final BisonCornerTokens corners,
+  final BisonTypographyTokens typo,
 ) => ButtonStyle(
   backgroundColor: WidgetStateProperty.resolveWith<Color?>((
     final Set<WidgetState> states,
@@ -186,6 +198,7 @@ ButtonStyle _outlinedButtonStyle(
     }
     return BorderSide(color: theme.borderPlain);
   }),
+  textStyle: WidgetStatePropertyAll(typo.bodyLarge),
   elevation: WidgetStatePropertyAll(0.0),
   // remove default padding given to button
   padding: WidgetStatePropertyAll(EdgeInsets.zero),
@@ -195,6 +208,7 @@ ButtonStyle _destructiveButtonStyle(
   final BisonThemeTokens theme,
   final BisonSpacingTokens padding,
   final BisonCornerTokens corners,
+  final BisonTypographyTokens typo,
 ) => ButtonStyle(
   backgroundColor: WidgetStateProperty.resolveWith<Color?>((
     final Set<WidgetState> states,
@@ -232,6 +246,7 @@ ButtonStyle _destructiveButtonStyle(
     }
     return BorderSide(style: BorderStyle.none);
   }),
+  textStyle: WidgetStatePropertyAll(typo.bodyLarge),
   elevation: WidgetStatePropertyAll(0.0),
   // remove default padding given to button
   padding: WidgetStatePropertyAll(EdgeInsets.zero),

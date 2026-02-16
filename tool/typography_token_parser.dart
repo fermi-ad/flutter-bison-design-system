@@ -54,7 +54,8 @@ void main() {
     final weightString = _resolveBaselineValue(baselineData, weightAlias);
 
     buffer.writeln("      ${_toCamelCase(style)}: TextStyle(");
-    buffer.writeln("        fontFamily: 'packages/design_system/$fontFamily',");
+    buffer.writeln("        fontFamily: '$fontFamily',");
+    buffer.writeln("        package: 'design_system',");
     buffer.writeln("        fontSize: $fontSize,");
     buffer.writeln("        fontWeight: ${_mapWeight(weightString)},");
     buffer.writeln(

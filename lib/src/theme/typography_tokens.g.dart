@@ -23,7 +23,8 @@ class BisonTypographyTokens extends ThemeExtension<BisonTypographyTokens> {
   factory BisonTypographyTokens.fromTokens(BisonThemeTokens colors) {
     return BisonTypographyTokens(
       h1: TextStyle(
-        fontFamily: 'packages/design_system/Atkinson Hyperlegible Next',
+        fontFamily: 'Atkinson Hyperlegible Next',
+        package: 'design_system',
         fontSize: 20.0,
         fontWeight: FontWeight.w400,
         height: 1.0, // Multiplier: 20.0 / 20.0
@@ -31,7 +32,8 @@ class BisonTypographyTokens extends ThemeExtension<BisonTypographyTokens> {
         color: colors.textPrimary,
       ),
       h2: TextStyle(
-        fontFamily: 'packages/design_system/Atkinson Hyperlegible Next',
+        fontFamily: 'Atkinson Hyperlegible Next',
+        package: 'design_system',
         fontSize: 18.0,
         fontWeight: FontWeight.w400,
         height: 1.1111111111111112, // Multiplier: 20.0 / 18.0
@@ -39,7 +41,8 @@ class BisonTypographyTokens extends ThemeExtension<BisonTypographyTokens> {
         color: colors.textPrimary,
       ),
       h3: TextStyle(
-        fontFamily: 'packages/design_system/Atkinson Hyperlegible Next',
+        fontFamily: 'Atkinson Hyperlegible Next',
+        package: 'design_system',
         fontSize: 16.0,
         fontWeight: FontWeight.w500,
         height: 1.125, // Multiplier: 18.0 / 16.0
@@ -47,7 +50,8 @@ class BisonTypographyTokens extends ThemeExtension<BisonTypographyTokens> {
         color: colors.textPrimary,
       ),
       bodyLarge: TextStyle(
-        fontFamily: 'packages/design_system/Atkinson Hyperlegible Next',
+        fontFamily: 'Atkinson Hyperlegible Next',
+        package: 'design_system',
         fontSize: 14.0,
         fontWeight: FontWeight.w500,
         height: 1.1428571428571428, // Multiplier: 16.0 / 14.0
@@ -55,7 +59,8 @@ class BisonTypographyTokens extends ThemeExtension<BisonTypographyTokens> {
         color: colors.textPrimary,
       ),
       bodySmall: TextStyle(
-        fontFamily: 'packages/design_system/Atkinson Hyperlegible Next',
+        fontFamily: 'Atkinson Hyperlegible Next',
+        package: 'design_system',
         fontSize: 13.0,
         fontWeight: FontWeight.w400,
         height: 1.2307692307692308, // Multiplier: 16.0 / 13.0
@@ -63,7 +68,8 @@ class BisonTypographyTokens extends ThemeExtension<BisonTypographyTokens> {
         color: colors.textPrimary,
       ),
       capitalizedLabel: TextStyle(
-        fontFamily: 'packages/design_system/Atkinson Hyperlegible Next',
+        fontFamily: 'Atkinson Hyperlegible Next',
+        package: 'design_system',
         fontSize: 12.0,
         fontWeight: FontWeight.w400,
         height: 1.3333333333333333, // Multiplier: 16.0 / 12.0
