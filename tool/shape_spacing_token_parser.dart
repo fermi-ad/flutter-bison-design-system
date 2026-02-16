@@ -11,8 +11,10 @@ void main() {
   const spacingJson = 'tokens/Spacing.json';
 
   // json data
-  final shapeData = jsonDecode(File(shapeJson).readAsStringSync());
-  final spacingData = jsonDecode(File(spacingJson).readAsStringSync());
+  final shapeData =
+      jsonDecode(File(shapeJson).readAsStringSync()) as Map<String, dynamic>;
+  final spacingData =
+      jsonDecode(File(spacingJson).readAsStringSync()) as Map<String, dynamic>;
 
   final buffer = StringBuffer();
   buffer.writeln("// GENERATED CODE - DO NOT MODIFY BY HAND\n");
@@ -28,37 +30,35 @@ void main() {
   );
 
   _extractSpacingTokens(spacingData, '', spacingMap);
-  spacingMap.forEach((key, spacing) {
+  spacingMap.forEach((final key, final spacing) {
     buffer.writeln("  final double ${toCamelCase("$key Spacing")};");
   });
   buffer.writeln();
 
   // build contstructor
   buffer.writeln("  const BisonSpacingTokens({");
-  spacingMap.forEach((key, spacing) {
+  spacingMap.forEach((final key, final spacing) {
     buffer.writeln("    required this.${toCamelCase("$key Spacing")},");
   });
   buffer.writeln("  });\n");
-
-  // TODO: build out getters that return EdgeInsets
 
   // Factory constructor
   buffer.writeln(
     "  factory BisonSpacingTokens.standard() => const BisonSpacingTokens (",
   );
-  spacingMap.forEach((key, value) {
+  spacingMap.forEach((final key, final value) {
     buffer.writeln("    ${toCamelCase("$key Spacing")}: $value,");
   });
   buffer.writeln("  );\n");
 
   // copyWith
   buffer.writeln("  @override\n  BisonSpacingTokens copyWith({");
-  spacingMap.forEach((key, value) {
-    buffer.writeln("    double? ${toCamelCase("$key Spacing")},");
+  spacingMap.forEach((final key, final value) {
+    buffer.writeln("    final double? ${toCamelCase("$key Spacing")},");
   });
   buffer.writeln("  }) {");
   buffer.writeln("    return BisonSpacingTokens(");
-  spacingMap.forEach((key, value) {
+  spacingMap.forEach((final key, final value) {
     final name = toCamelCase("$key Spacing");
     buffer.writeln("      $name: $name ?? this.$name,");
   });
@@ -70,7 +70,7 @@ void main() {
   );
   buffer.writeln("    if (other is! BisonSpacingTokens) return this;");
   buffer.writeln("    return BisonSpacingTokens(");
-  spacingMap.forEach((key, value) {
+  spacingMap.forEach((final key, final value) {
     final name = toCamelCase("$key Spacing");
     buffer.writeln("      $name: lerpDouble($name, other.$name, t)!,");
   });
@@ -83,14 +83,14 @@ void main() {
     "class BisonCornerTokens extends ThemeExtension<BisonCornerTokens>{",
   );
   _extractCornerTokens(shapeData, '', cornerMap);
-  cornerMap.forEach((key, value) {
+  cornerMap.forEach((final key, final value) {
     buffer.writeln("  final double ${toCamelCase(key)};");
   });
   buffer.writeln();
 
   // build contstructor
   buffer.writeln("  const BisonCornerTokens({");
-  cornerMap.forEach((key, value) {
+  cornerMap.forEach((final key, final value) {
     buffer.writeln("    required this.${toCamelCase(key)},");
   });
   buffer.writeln("  });\n");
@@ -99,19 +99,19 @@ void main() {
   buffer.writeln(
     "  factory BisonCornerTokens.standard() => const BisonCornerTokens (",
   );
-  cornerMap.forEach((key, value) {
+  cornerMap.forEach((final key, final value) {
     buffer.writeln("    ${toCamelCase(key)}: $value,");
   });
   buffer.writeln("  );\n");
 
   // copyWith
   buffer.writeln("  @override\n  BisonCornerTokens copyWith({");
-  cornerMap.forEach((key, value) {
+  cornerMap.forEach((final key, final value) {
     buffer.writeln("    double? ${toCamelCase(key)},");
   });
   buffer.writeln("  }) {");
   buffer.writeln("    return BisonCornerTokens(");
-  cornerMap.forEach((key, value) {
+  cornerMap.forEach((final key, final value) {
     final name = toCamelCase(key);
     buffer.writeln("      $name: $name ?? this.$name,");
   });
@@ -123,7 +123,7 @@ void main() {
   );
   buffer.writeln("    if (other is! BisonCornerTokens) return this;");
   buffer.writeln("    return BisonCornerTokens(");
-  cornerMap.forEach((key, value) {
+  cornerMap.forEach((final key, final value) {
     final name = toCamelCase(key);
     buffer.writeln("      $name: lerpDouble($name, other.$name, t)!,");
   });
@@ -138,29 +138,37 @@ void main() {
   outputFile.writeAsStringSync(buffer.toString());
 }
 
-void _extractSpacingTokens(Map json, String prefix, Map<String, int> target) {
-  json.forEach((key, value) {
+void _extractSpacingTokens(
+  final Map<String, dynamic> json,
+  final String prefix,
+  final Map<String, int> target,
+) {
+  json.forEach((final key, final value) {
     if (key.startsWith('\$')) return;
     final newKey = prefix.isEmpty ? key : '$prefix.$key';
     if (value is Map) {
       if (value.containsKey('\$value')) {
         final val = value['\$value'];
-        target[newKey] = val;
+        target[newKey] = val as int;
       }
     }
   });
 }
 
-void _extractCornerTokens(Map json, String prefix, Map<String, int> target) {
-  json.forEach((key, value) {
+void _extractCornerTokens(
+  final Map<String, dynamic> json,
+  final String prefix,
+  final Map<String, int> target,
+) {
+  json.forEach((final key, final value) {
     if (key.startsWith('\$')) return;
     final newKey = prefix.isEmpty ? key : '$prefix.$key';
     if (value is Map) {
       if (value.containsKey('\$value')) {
         final val = value['\$value'];
-        target[newKey] = val;
+        target[newKey] = val as int;
       } else {
-        _extractCornerTokens(value, newKey, target);
+        _extractCornerTokens(value as Map<String, dynamic>, newKey, target);
       }
     }
   });

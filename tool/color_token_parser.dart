@@ -187,7 +187,7 @@ void _writeOverrides(final StringBuffer buffer, final List<String> keys) {
   buffer.writeln("  @override");
   buffer.writeln("  BisonThemeTokens copyWith({");
   for (final key in keys) {
-    buffer.writeln("    Color? ${toCamelCase(key)},");
+    buffer.writeln("    final Color? ${toCamelCase(key)},");
   }
   buffer.writeln("  }) {");
   buffer.writeln("  return BisonThemeTokens(");
