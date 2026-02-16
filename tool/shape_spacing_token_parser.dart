@@ -66,7 +66,7 @@ void main() {
 
   // lerp
   buffer.writeln(
-    "  @override\n  BisonSpacingTokens lerp(\n    covariant ThemeExtension<BisonSpacingTokens>? other,\n    double t,\n  ) {",
+    "  @override\n  BisonSpacingTokens lerp(\n    covariant final ThemeExtension<BisonSpacingTokens>? other,\n    final double t,\n  ) {",
   );
   buffer.writeln("    if (other is! BisonSpacingTokens) return this;");
   buffer.writeln("    return BisonSpacingTokens(");
@@ -107,7 +107,7 @@ void main() {
   // copyWith
   buffer.writeln("  @override\n  BisonCornerTokens copyWith({");
   cornerMap.forEach((final key, final value) {
-    buffer.writeln("    double? ${toCamelCase(key)},");
+    buffer.writeln("    final double? ${toCamelCase(key)},");
   });
   buffer.writeln("  }) {");
   buffer.writeln("    return BisonCornerTokens(");
@@ -119,7 +119,7 @@ void main() {
 
   // lerp
   buffer.writeln(
-    "  @override\n  BisonCornerTokens lerp(\n    covariant ThemeExtension<BisonCornerTokens>? other,\n    double t,\n  ) {",
+    "  @override\n  BisonCornerTokens lerp(\n    covariant final ThemeExtension<BisonCornerTokens>? other,\n    final double t,\n  ) {",
   );
   buffer.writeln("    if (other is! BisonCornerTokens) return this;");
   buffer.writeln("    return BisonCornerTokens(");

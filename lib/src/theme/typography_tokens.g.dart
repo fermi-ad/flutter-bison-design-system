@@ -20,7 +20,7 @@ class BisonTypographyTokens extends ThemeExtension<BisonTypographyTokens> {
     required this.capitalizedLabel,
   });
 
-  factory BisonTypographyTokens.fromTokens(BisonThemeTokens colors) {
+  factory BisonTypographyTokens.fromTokens(final BisonThemeTokens colors) {
     return BisonTypographyTokens(
       h1: TextStyle(
         fontFamily: 'Atkinson Hyperlegible Next',
@@ -81,12 +81,12 @@ class BisonTypographyTokens extends ThemeExtension<BisonTypographyTokens> {
 
   @override
   BisonTypographyTokens copyWith({
-    TextStyle? h1,
-    TextStyle? h2,
-    TextStyle? h3,
-    TextStyle? bodyLarge,
-    TextStyle? bodySmall,
-    TextStyle? capitalizedLabel,
+    final TextStyle? h1,
+    final TextStyle? h2,
+    final TextStyle? h3,
+    final TextStyle? bodyLarge,
+    final TextStyle? bodySmall,
+    final TextStyle? capitalizedLabel,
   }) {
     return BisonTypographyTokens(
       h1: h1 ?? this.h1,
@@ -99,7 +99,7 @@ class BisonTypographyTokens extends ThemeExtension<BisonTypographyTokens> {
   }
 
   @override
-  BisonTypographyTokens lerp(covariant ThemeExtension<BisonTypographyTokens>? other, double t) {
+  BisonTypographyTokens lerp(covariant final ThemeExtension<BisonTypographyTokens>? other, final double t) {
     if (other is! BisonTypographyTokens) return this;
     return BisonTypographyTokens(
       h1: TextStyle.lerp(h1, other.h1, t)!,

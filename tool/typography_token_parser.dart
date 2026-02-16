@@ -22,8 +22,9 @@ void main() {
     "class BisonTypographyTokens extends ThemeExtension<BisonTypographyTokens> {",
   );
 
-  final List<String> styles = (typescaleData.keys as List<String>)
-      .where((final String k) => !(k).startsWith('\$'))
+  final styles = typescaleData.keys
+      .where((final k) => !(k as String).startsWith('\$'))
+      .cast<String>()
       .toList();
 
   // Fields
@@ -40,7 +41,7 @@ void main() {
 
   // Factory: The logic that links Baseline and Typescale
   buffer.writeln(
-    "  factory BisonTypographyTokens.fromTokens(BisonThemeTokens colors) {",
+    "  factory BisonTypographyTokens.fromTokens(final BisonThemeTokens colors) {",
   );
   buffer.writeln("    return BisonTypographyTokens(");
 
@@ -147,7 +148,7 @@ void _writeExtensionMethods(
 
   buffer.writeln("  @override");
   buffer.writeln(
-    "  BisonTypographyTokens lerp(covariant ThemeExtension<BisonTypographyTokens>? other, double t) {",
+    "  BisonTypographyTokens lerp(covariant final ThemeExtension<BisonTypographyTokens>? other, final double t) {",
   );
   buffer.writeln("    if (other is! BisonTypographyTokens) return this;");
   buffer.writeln("    return BisonTypographyTokens(");

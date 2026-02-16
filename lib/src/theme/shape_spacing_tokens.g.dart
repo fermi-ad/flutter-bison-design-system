@@ -37,14 +37,14 @@ class BisonSpacingTokens extends ThemeExtension<BisonSpacingTokens>{
 
   @override
   BisonSpacingTokens copyWith({
-    double? noneSpacing,
-    double? microSpacing,
-    double? tinySpacing,
-    double? smallSpacing,
-    double? standardSpacing,
-    double? mediumSpacing,
-    double? largeSpacing,
-    double? xLargeSpacing,
+    final double? noneSpacing,
+    final double? microSpacing,
+    final double? tinySpacing,
+    final double? smallSpacing,
+    final double? standardSpacing,
+    final double? mediumSpacing,
+    final double? largeSpacing,
+    final double? xLargeSpacing,
   }) {
     return BisonSpacingTokens(
       noneSpacing: noneSpacing ?? this.noneSpacing,
@@ -60,8 +60,8 @@ class BisonSpacingTokens extends ThemeExtension<BisonSpacingTokens>{
 
   @override
   BisonSpacingTokens lerp(
-    covariant ThemeExtension<BisonSpacingTokens>? other,
-    double t,
+    covariant final ThemeExtension<BisonSpacingTokens>? other,
+    final double t,
   ) {
     if (other is! BisonSpacingTokens) return this;
     return BisonSpacingTokens(
@@ -102,11 +102,11 @@ class BisonCornerTokens extends ThemeExtension<BisonCornerTokens>{
 
   @override
   BisonCornerTokens copyWith({
-    double? cornerNone,
-    double? cornerExtraSmall,
-    double? cornerSmall,
-    double? cornerMedium,
-    double? cornerLarge,
+    final double? cornerNone,
+    final double? cornerExtraSmall,
+    final double? cornerSmall,
+    final double? cornerMedium,
+    final double? cornerLarge,
   }) {
     return BisonCornerTokens(
       cornerNone: cornerNone ?? this.cornerNone,
@@ -119,8 +119,8 @@ class BisonCornerTokens extends ThemeExtension<BisonCornerTokens>{
 
   @override
   BisonCornerTokens lerp(
-    covariant ThemeExtension<BisonCornerTokens>? other,
-    double t,
+    covariant final ThemeExtension<BisonCornerTokens>? other,
+    final double t,
   ) {
     if (other is! BisonCornerTokens) return this;
     return BisonCornerTokens(
