@@ -16,37 +16,45 @@ class WidgetbookApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorsLight = BisonThemeTokens.light();
+    final colorsDark = BisonThemeTokens.dark();
+    final typographyLight = BisonTypographyTokens.fromTokens(colorsLight);
+    final typographyDark = BisonTypographyTokens.fromTokens(colorsDark);
+
+    final List<ThemeExtension<dynamic>> bisonExtensionsLight = [
+      colorsLight,
+      typographyLight,
+      BisonSpacingTokens.standard(),
+      BisonCornerTokens.standard(),
+    ];
+    final List<ThemeExtension<dynamic>> bisonExtensionsDark = [
+      colorsDark,
+      typographyDark,
+      BisonSpacingTokens.standard(),
+      BisonCornerTokens.standard(),
+    ];
+
     return Widgetbook.material(
       appBuilder: (context, child) => Title(
         title: "Fermilab Widgetbook",
-        color: BisonThemeTokens.light().borderPrimary,
+        color: colorsLight.borderPrimary,
         child: child,
       ),
       lightTheme: ThemeData(
         fontFamily: 'Atkinson Hyperlegible Next',
         package: 'design_system',
         brightness: Brightness.light,
-        extensions: [
-          BisonThemeTokens.light(),
-          BisonSpacingTokens.standard(),
-          BisonCornerTokens.standard(),
-          BisonTypographyTokens.fromTokens(BisonThemeTokens.light()),
-        ],
-        colorScheme: BisonThemeTokens.light().toColorScheme(Brightness.light),
-        scaffoldBackgroundColor: BisonThemeTokens.light().surfaceDefault,
+        extensions: bisonExtensionsLight,
+        colorScheme: colorsLight.toColorScheme(Brightness.light),
+        scaffoldBackgroundColor: colorsLight.surfaceDefault,
       ),
       darkTheme: ThemeData(
         fontFamily: 'Atkinson Hyperlegible Next',
         package: 'design_system',
         brightness: Brightness.dark,
-        extensions: [
-          BisonThemeTokens.dark(),
-          BisonSpacingTokens.standard(),
-          BisonCornerTokens.standard(),
-          BisonTypographyTokens.fromTokens(BisonThemeTokens.dark()),
-        ],
-        colorScheme: BisonThemeTokens.dark().toColorScheme(Brightness.dark),
-        scaffoldBackgroundColor: BisonThemeTokens.dark().surfaceDefault,
+        extensions: bisonExtensionsDark,
+        colorScheme: colorsDark.toColorScheme(Brightness.dark),
+        scaffoldBackgroundColor: colorsDark.surfaceDefault,
       ),
       themeMode: ThemeMode.system,
       directories: directories,
@@ -56,27 +64,13 @@ class WidgetbookApp extends StatelessWidget {
           themes: [
             WidgetbookTheme(
               name: "Light mode",
-              data: Theme.of(context).copyWith(
-                extensions: [
-                  BisonThemeTokens.light(),
-                  BisonSpacingTokens.standard(),
-                  BisonCornerTokens.standard(),
-                  BisonTypographyTokens.fromTokens(BisonThemeTokens.light()),
-                  // BeemTextsTheme.main(View.of(context)),
-                ],
-              ),
+              data: Theme.of(
+                context,
+              ).copyWith(extensions: bisonExtensionsLight),
             ),
             WidgetbookTheme(
               name: "Dark mode",
-              data: Theme.of(context).copyWith(
-                extensions: [
-                  BisonThemeTokens.dark(),
-                  BisonSpacingTokens.standard(),
-                  BisonCornerTokens.standard(),
-                  BisonTypographyTokens.fromTokens(BisonThemeTokens.dark()),
-                  // BeemTextsTheme.main(View.of(context)),
-                ],
-              ),
+              data: Theme.of(context).copyWith(extensions: bisonExtensionsDark),
             ),
           ],
         ),
