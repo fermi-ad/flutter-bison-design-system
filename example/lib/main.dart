@@ -20,18 +20,20 @@ class WidgetbookApp extends StatelessWidget {
     final colorsDark = BisonThemeTokens.dark();
     final typographyLight = BisonTypographyTokens.fromTokens(colorsLight);
     final typographyDark = BisonTypographyTokens.fromTokens(colorsDark);
+    final spacing = BisonSpacingTokens.standard();
+    final corners = BisonCornerTokens.standard();
 
     final List<ThemeExtension<dynamic>> bisonExtensionsLight = [
       colorsLight,
       typographyLight,
-      BisonSpacingTokens.standard(),
-      BisonCornerTokens.standard(),
+      spacing,
+      corners,
     ];
     final List<ThemeExtension<dynamic>> bisonExtensionsDark = [
       colorsDark,
       typographyDark,
-      BisonSpacingTokens.standard(),
-      BisonCornerTokens.standard(),
+      spacing,
+      corners,
     ];
 
     return Widgetbook.material(
