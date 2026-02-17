@@ -1,0 +1,16 @@
+name: Continuous Deployment for Flutter applications
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  build-and-deploy:
+    uses: fermi-ad/.github/.github/workflows/flutter-deploy.yaml@c8d752e4310908e55a387a31525b32285ea42a60
+    secrets: inherit
+    permissions:
+      contents: write
+    # Optional: Change to true to pull in git submodules during build
+    with:
+      pull-git-submodules: false
