@@ -187,7 +187,7 @@ void _writeOverrides(final StringBuffer buffer, final List<String> keys) {
   buffer.writeln("  @override");
   buffer.writeln("  BisonThemeTokens copyWith({");
   for (final key in keys) {
-    buffer.writeln("    Color? ${toCamelCase(key)},");
+    buffer.writeln("    final Color? ${toCamelCase(key)},");
   }
   buffer.writeln("  }) {");
   buffer.writeln("  return BisonThemeTokens(");
@@ -201,7 +201,7 @@ void _writeOverrides(final StringBuffer buffer, final List<String> keys) {
   // lerp
   buffer.writeln("  @override");
   buffer.writeln(
-    "  BisonThemeTokens lerp(covariant ThemeExtension<BisonThemeTokens>? other, double t) {",
+    "  BisonThemeTokens lerp(covariant final ThemeExtension<BisonThemeTokens>? other, final double t) {",
   );
   buffer.writeln("    if (other is! BisonThemeTokens) return this;");
   buffer.writeln("    return BisonThemeTokens(");
@@ -214,7 +214,7 @@ void _writeOverrides(final StringBuffer buffer, final List<String> keys) {
 
 void _writeToColorScheme(final StringBuffer buffer) {
   buffer.writeln('''
-  ColorScheme toColorScheme(Brightness brightness) {
+  ColorScheme toColorScheme(final Brightness brightness) {
     return ColorScheme(
       brightness: brightness,
       primary: borderPrimary,
