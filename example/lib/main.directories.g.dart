@@ -26,7 +26,7 @@ final directories = <_widgetbook.WidgetbookNode>[
             useCases: [
               _widgetbook.WidgetbookUseCase(
                 name: 'Default',
-                builder: _design_system_catalog_button.buildCoolButtonUseCase,
+                builder: _design_system_catalog_button.buildBisonButtonUseCase,
               ),
             ],
           ),

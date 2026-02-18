@@ -1,19 +1,41 @@
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 
-enum ButtonType { filled, ghost, outlined, destructive }
+/// Provides different styling options for the `BisonButton` widget.
+///
+/// The different styling options inluded
+/// - [BisonButtonType.filled] The most prominent styling option. This is the default option
+/// - [BisonButtonType.outlined]
+/// - [BisonButtonType.ghost]
+/// - [BisonButtonType.destructive]
+enum BisonButtonType {
+  /// The most prominent styling option. This is the default option
+  filled,
 
-class Button extends StatelessWidget {
+  /// An outlined button with a transparent background.
+  ghost,
+
+  /// The least prominent option. It has no outline and a transparent background
+  outlined,
+
+  /// Used to signify a destructive action such as delete
+  destructive,
+}
+
+/// Provides a set of button types
+class BisonButton extends StatelessWidget {
   final String buttonLabel;
-  final ButtonType buttonType;
+  final BisonButtonType buttonType;
   final Icon? icon;
   final VoidCallback? onPressed;
 
-  const Button({
+  /// Provides various types of button types for different use cases.
+  /// By default, a `filled` button will be returned. See [BisonButtonType] for different options
+  const BisonButton({
     super.key,
     required this.buttonLabel,
     required this.onPressed,
-    this.buttonType = ButtonType.filled,
+    this.buttonType = BisonButtonType.filled,
     this.icon,
   });
 
@@ -25,15 +47,25 @@ class Button extends StatelessWidget {
     final typo = Theme.of(context).extension<BisonTypographyTokens>()!;
     return FilledButton(
       style: switch (buttonType) {
-        ButtonType.filled => _filledButtonStyle(theme, padding, corners, typo),
-        ButtonType.ghost => _ghostButtonStyle(theme, padding, corners, typo),
-        ButtonType.outlined => _outlinedButtonStyle(
+        BisonButtonType.filled => _filledBisonButtonStyle(
           theme,
           padding,
           corners,
           typo,
         ),
-        ButtonType.destructive => _destructiveButtonStyle(
+        BisonButtonType.ghost => _ghostBisonButtonStyle(
+          theme,
+          padding,
+          corners,
+          typo,
+        ),
+        BisonButtonType.outlined => _outlinedBisonButtonStyle(
+          theme,
+          padding,
+          corners,
+          typo,
+        ),
+        BisonButtonType.destructive => _destructiveBisonButtonStyle(
           theme,
           padding,
           corners,
@@ -67,7 +99,7 @@ class Button extends StatelessWidget {
   }
 }
 
-ButtonStyle _filledButtonStyle(
+ButtonStyle _filledBisonButtonStyle(
   final BisonThemeTokens theme,
   final BisonSpacingTokens padding,
   final BisonCornerTokens corners,
@@ -115,7 +147,7 @@ ButtonStyle _filledButtonStyle(
   padding: WidgetStatePropertyAll(EdgeInsets.zero),
 );
 
-ButtonStyle _ghostButtonStyle(
+ButtonStyle _ghostBisonButtonStyle(
   final BisonThemeTokens theme,
   final BisonSpacingTokens padding,
   final BisonCornerTokens corners,
@@ -159,7 +191,7 @@ ButtonStyle _ghostButtonStyle(
   padding: WidgetStatePropertyAll(EdgeInsets.zero),
 );
 
-ButtonStyle _outlinedButtonStyle(
+ButtonStyle _outlinedBisonButtonStyle(
   final BisonThemeTokens theme,
   final BisonSpacingTokens padding,
   final BisonCornerTokens corners,
@@ -203,7 +235,7 @@ ButtonStyle _outlinedButtonStyle(
   padding: WidgetStatePropertyAll(EdgeInsets.zero),
 );
 
-ButtonStyle _destructiveButtonStyle(
+ButtonStyle _destructiveBisonButtonStyle(
   final BisonThemeTokens theme,
   final BisonSpacingTokens padding,
   final BisonCornerTokens corners,
