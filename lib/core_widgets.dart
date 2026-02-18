@@ -1,1 +1,1 @@
-export 'src/core_widgets/buttons/button.dart';
+export 'src/core_widgets/buttons/bison_button.dart';

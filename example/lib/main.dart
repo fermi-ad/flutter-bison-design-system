@@ -1,4 +1,4 @@
-import 'package:design_system/theme.dart';
+import 'package:bison_design_system/theme.dart';
 
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
