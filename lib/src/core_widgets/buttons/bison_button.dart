@@ -1,4 +1,4 @@
-import 'package:design_system/design_system.dart';
+import 'package:bison_design_system/bison_design_system.dart';
 import 'package:flutter/material.dart';
 
 /// Provides different styling options for the `BisonButton` widget.

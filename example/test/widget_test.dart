@@ -7,7 +7,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:design_system_catalog/main.dart';
+import 'package:bison_design_system_catalog/main.dart';
 
 void main() {
   testWidgets('App builds smoke test', (WidgetTester tester) async {
