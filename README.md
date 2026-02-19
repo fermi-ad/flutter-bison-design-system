@@ -30,7 +30,15 @@ $ flutter pub get
 Set up the [pre-commit hook](https://pub.dev/packages/dart_pre_commit):
 
 ```
-$ dart run tool/setup_git_hooks.dart
+$ dart tool/setup_git_hooks.dart
+```
+
+### Generated Design Tokens
+
+Design tokens are handed over from Figma through json files. Parsing files can be found in `tool/` that will generate the appropriate classes. To create the color tokens, for example, run
+
+```
+$ dart run tool/color_token_parser.dart
 ```
 
 ## Usage
