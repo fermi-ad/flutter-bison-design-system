@@ -65,7 +65,7 @@ void main() {
 
     buffer.writeln("      ${_toCamelCase(style)}: TextStyle(");
     buffer.writeln("        fontFamily: '$fontFamily',");
-    buffer.writeln("        package: 'design_system',");
+    buffer.writeln("        package: 'bison_design_system',");
     buffer.writeln("        fontSize: $fontSize,");
     buffer.writeln("        fontWeight: ${_mapWeight(weightString)},");
     buffer.writeln(
