@@ -105,7 +105,7 @@ void main() {
       final bg = style.backgroundColor?.resolve(<WidgetState>{});
       final fg = style.foregroundColor?.resolve(<WidgetState>{});
 
-      expect(bg, equals(Colors.transparent));
+      expect(bg, equals(theme.surfaceTransparent));
       expect(fg, equals(theme.textPrimary));
     });
 
@@ -133,7 +133,7 @@ void main() {
       final bg = style.backgroundColor?.resolve(<WidgetState>{});
       final fg = style.foregroundColor?.resolve(<WidgetState>{});
 
-      expect(bg, equals(Colors.transparent));
+      expect(bg, equals(theme.surfaceTransparent));
       expect(fg, equals(theme.textPrimary));
     });
 
