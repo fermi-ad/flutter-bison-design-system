@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 
 abstract class BaseTokens {
+  static const Color transparent = Color(0xFFFFFFFF);
   static const Color beamBlue0 = Color(0xFF000000);
   static const Color beamBlue10 = Color(0xFF0A1D3F);
   static const Color beamBlue20 = Color(0xFF113873);
@@ -178,6 +179,7 @@ abstract class AliasTokens {
   static const Color neutralLightest = BaseTokens.vacuumGray80;
   static const Color neutralNearWhite = BaseTokens.vacuumGray90;
   static const Color neutralWhite = BaseTokens.vacuumGray100;
+  static const Color neutralTransparent = BaseTokens.transparent;
   static const Color warningDarkest = BaseTokens.fluxOrange0;
   static const Color warningEvenDarker = BaseTokens.fluxOrange10;
   static const Color warningDarker = BaseTokens.fluxOrange20;
@@ -336,6 +338,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens>{
   final Color surfaceSlate;
   final Color surfaceSlateHovered;
   final Color surfaceSlatePressed;
+  final Color surfaceTransparent;
   final Color tableActionBar;
   final Color tableContent;
   final Color tableContentEnabled;
@@ -450,6 +453,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens>{
   required this.surfaceSlate,
   required this.surfaceSlateHovered,
   required this.surfaceSlatePressed,
+  required this.surfaceTransparent,
   required this.tableActionBar,
   required this.tableContent,
   required this.tableContentEnabled,
@@ -565,6 +569,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens>{
     surfaceSlate: AliasTokens.secondaryDarker,
     surfaceSlateHovered: AliasTokens.primaryDarker,
     surfaceSlatePressed: AliasTokens.primaryDark,
+    surfaceTransparent: AliasTokens.neutralTransparent,
     tableActionBar: AliasTokens.primaryDefault,
     tableContent: AliasTokens.neutralNearWhite,
     tableContentEnabled: AliasTokens.neutralEvenLighter,
@@ -680,6 +685,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens>{
     surfaceSlate: AliasTokens.secondaryDarker,
     surfaceSlateHovered: AliasTokens.primaryDarker,
     surfaceSlatePressed: AliasTokens.primaryDark,
+    surfaceTransparent: AliasTokens.neutralTransparent,
     tableActionBar: AliasTokens.primaryLighter,
     tableContent: AliasTokens.neutralEvenDarker,
     tableContentEnabled: AliasTokens.neutralDark,
@@ -796,6 +802,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens>{
     final Color? surfaceSlate,
     final Color? surfaceSlateHovered,
     final Color? surfaceSlatePressed,
+    final Color? surfaceTransparent,
     final Color? tableActionBar,
     final Color? tableContent,
     final Color? tableContentEnabled,
@@ -910,6 +917,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens>{
     surfaceSlate: surfaceSlate ?? this.surfaceSlate,
     surfaceSlateHovered: surfaceSlateHovered ?? this.surfaceSlateHovered,
     surfaceSlatePressed: surfaceSlatePressed ?? this.surfaceSlatePressed,
+    surfaceTransparent: surfaceTransparent ?? this.surfaceTransparent,
     tableActionBar: tableActionBar ?? this.tableActionBar,
     tableContent: tableContent ?? this.tableContent,
     tableContentEnabled: tableContentEnabled ?? this.tableContentEnabled,
@@ -1029,6 +1037,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens>{
       surfaceSlate: Color.lerp(surfaceSlate, other.surfaceSlate, t)!,
       surfaceSlateHovered: Color.lerp(surfaceSlateHovered, other.surfaceSlateHovered, t)!,
       surfaceSlatePressed: Color.lerp(surfaceSlatePressed, other.surfaceSlatePressed, t)!,
+      surfaceTransparent: Color.lerp(surfaceTransparent, other.surfaceTransparent, t)!,
       tableActionBar: Color.lerp(tableActionBar, other.tableActionBar, t)!,
       tableContent: Color.lerp(tableContent, other.tableContent, t)!,
       tableContentEnabled: Color.lerp(tableContentEnabled, other.tableContentEnabled, t)!,
