@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 abstract class BaseTokens {
-  static const Color transparent = Color(0xFFFFFFFF);
+  static const Color transparent = Color(0x00FFFFFF);
   static const Color beamBlue0 = Color(0xFF000000);
   static const Color beamBlue10 = Color(0xFF0A1D3F);
   static const Color beamBlue20 = Color(0xFF113873);
