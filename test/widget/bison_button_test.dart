@@ -172,7 +172,10 @@ void main() {
 
       await tester.pumpWidget(
         _buildOutScaffold(
-          BisonButton(buttonLabel: 'Label', onPressed: () => print('test')),
+          BisonButton(
+            buttonLabel: 'Label',
+            onPressed: () => debugPrint('test'),
+          ),
         ),
       );
 
@@ -200,7 +203,7 @@ void main() {
         _buildOutScaffold(
           BisonButton(
             buttonLabel: 'WithIcon',
-            onPressed: () => print('test'),
+            onPressed: () => debugPrint('test'),
             icon: Icon(Icons.add),
           ),
         ),
