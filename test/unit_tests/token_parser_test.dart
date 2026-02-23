@@ -2,8 +2,15 @@ import 'package:test/test.dart';
 import '../../tool/color_token_parser.dart' as parser;
 
 void main() {
-  test('Hex format returns black if hex is not 6 or 8 chars', () {
-    const hexInput = '#1234';
-    expect(parser.formatHex(hexInput), '0xFF000000');
+  group('Testing Alpha values', () {
+    test('Hex format returns transparent hex value', () {
+      final hexInput = '#f8f8f8';
+      expect(parser.formatHex(hexInput, 0), '0x00F8F8F8');
+    });
+
+    test('Hex format returns opaque hex value', () {
+      final hexInput = '#f8f8f8';
+      expect(parser.formatHex(hexInput, 1), '0xFFF8F8F8');
+    });
   });
 }

@@ -162,7 +162,7 @@ ButtonStyle _ghostBisonButtonStyle(
     if (states.contains(WidgetState.hovered)) {
       return theme.buttonGhostHovered;
     }
-    return Colors.transparent;
+    return theme.surfaceTransparent;
   }),
   foregroundColor: WidgetStateProperty.resolveWith<Color?>((
     final Set<WidgetState> states,
@@ -206,7 +206,7 @@ ButtonStyle _outlinedBisonButtonStyle(
     if (states.contains(WidgetState.hovered)) {
       return theme.buttonGhostHovered;
     }
-    return Colors.transparent;
+    return theme.surfaceTransparent;
   }),
   foregroundColor: WidgetStateProperty.resolveWith<Color?>((
     final Set<WidgetState> states,

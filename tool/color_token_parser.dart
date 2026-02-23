@@ -29,9 +29,7 @@ void main() {
   final baseMap = <String, String>{};
   _extractBaseTokens(baseData, '', baseMap);
   baseMap.forEach((final key, final hex) {
-    buffer.writeln(
-      "  static const Color ${toCamelCase(key)} = Color(${formatHex(hex)});",
-    );
+    buffer.writeln("  static const Color ${toCamelCase(key)} = Color($hex);");
   });
   buffer.writeln("}\n");
 
@@ -40,9 +38,7 @@ void main() {
   final aliasMap = <String, String>{};
   _extractAliasTokens(aliasData, buffer, 'BaseTokens');
   aliasMap.forEach((final key, final hex) {
-    buffer.writeln(
-      "  static const Color ${toCamelCase(key)} = Color(${formatHex(hex)});",
-    );
+    buffer.writeln("  static const Color ${toCamelCase(key)} = Color($hex);");
   });
   buffer.writeln("}\n");
 
@@ -119,14 +115,14 @@ void _extractBaseTokens(
   json.forEach((final key, final value) {
     if (key.startsWith('\$')) return;
     final newKey = prefix.isEmpty ? key : '$prefix.$key';
+
     if (value is Map<String, dynamic>) {
       if (value.containsKey('\$value')) {
         final val = value['\$value'];
-        if (val is Map && val.containsKey('hex')) {
-          target[newKey] = val['hex'].toString();
-        } else if (val is String) {
-          target[newKey] = val;
-        }
+        final hex = val['hex'].toString();
+        final alpha = val['alpha'];
+
+        target[newKey] = formatHex(hex, alpha is num ? alpha : null);
       } else {
         _extractBaseTokens(value, newKey, target);
       }
@@ -245,10 +241,16 @@ String toCamelCase(final String input) {
 }
 
 // format Figma hex value (#XXXXXX) for the Color function (0xXXXXXXXX)
-String formatHex(String hex) {
-  hex = hex.replaceAll("#", '');
-  if (hex.length == 6) return '0xFF${hex.toUpperCase()}';
-  if (hex.length == 8) return '0x${hex.toUpperCase()}';
-  // Return black if length is incorrect
-  return '0xFF000000';
+String formatHex(String hex, [final num? alpha]) {
+  hex = hex.toUpperCase().replaceAll("#", '');
+
+  // calculate alpha (default: 1.0.FF)
+  final double a = (alpha ?? 1.0).toDouble();
+  final int alphaInt = (a * 255).round().clamp(0, 255);
+  final String alphaHex = alphaInt
+      .toRadixString(16)
+      .padLeft(2, '0')
+      .toUpperCase();
+
+  return '0x$alphaHex$hex';
 }

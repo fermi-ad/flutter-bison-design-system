@@ -44,7 +44,7 @@ class WidgetbookApp extends StatelessWidget {
       ),
       lightTheme: ThemeData(
         fontFamily: 'Atkinson Hyperlegible Next',
-        package: 'design_system',
+        package: 'bison_design_system',
         brightness: Brightness.light,
         extensions: bisonExtensionsLight,
         colorScheme: colorsLight.toColorScheme(Brightness.light),
@@ -52,7 +52,7 @@ class WidgetbookApp extends StatelessWidget {
       ),
       darkTheme: ThemeData(
         fontFamily: 'Atkinson Hyperlegible Next',
-        package: 'design_system',
+        package: 'bison_design_system',
         brightness: Brightness.dark,
         extensions: bisonExtensionsDark,
         colorScheme: colorsDark.toColorScheme(Brightness.dark),
