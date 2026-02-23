@@ -242,7 +242,7 @@ String toCamelCase(final String input) {
 
 // format Figma hex value (#XXXXXX) for the Color function (0xXXXXXXXX)
 String formatHex(String hex, [final num? alpha]) {
-  hex = hex.replaceAll("#", '');
+  hex = hex.toUpperCase().replaceAll("#", '');
 
   // calculate alpha (default: 1.0.FF)
   final double a = (alpha ?? 1.0).toDouble();
