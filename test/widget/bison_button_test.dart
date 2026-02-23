@@ -164,6 +164,80 @@ void main() {
       expect(bg, equals(theme.buttonDanger));
       expect(fg, equals(theme.textInverse));
     });
+
+    testWidgets("Testing padding variables without icon", (
+      final WidgetTester tester,
+    ) async {
+      final spacing = BisonSpacingTokens.standard();
+
+      await tester.pumpWidget(
+        _buildOutScaffold(
+          BisonButton(buttonLabel: 'Label', onPressed: () => print('test')),
+        ),
+      );
+
+      final paddingFinder = find.byWidgetPredicate((final Widget widget) {
+        if (widget is Padding && widget.child is Text) {
+          final Text t = widget.child as Text;
+          return t.data == 'Label';
+        }
+        return false;
+      });
+      expect(paddingFinder, findsOneWidget);
+
+      final Padding paddingWidget = tester.widget<Padding>(paddingFinder);
+      final EdgeInsets padding = paddingWidget.padding as EdgeInsets;
+      expect(padding.left, equals(spacing.smallSpacing));
+      expect(padding.top, equals(spacing.tinySpacing));
+    });
+
+    testWidgets("Testing padding variables with icon", (
+      final WidgetTester tester,
+    ) async {
+      final spacing = BisonSpacingTokens.standard();
+
+      await tester.pumpWidget(
+        _buildOutScaffold(
+          BisonButton(
+            buttonLabel: 'WithIcon',
+            onPressed: () => print('test'),
+            icon: Icon(Icons.add),
+          ),
+        ),
+      );
+
+      final paddingFinder = find.byWidgetPredicate((final Widget widget) {
+        if (widget is Padding && widget.child is Row) {
+          final Row row = widget.child as Row;
+          return row.children.any(
+            (final Widget c) => c is Text && (c).data == 'WithIcon',
+          );
+        }
+        return false;
+      });
+
+      expect(paddingFinder, findsOneWidget);
+
+      final Padding paddingWidget = tester.widget<Padding>(paddingFinder);
+      final EdgeInsets padding = paddingWidget.padding as EdgeInsets;
+      expect(padding.left, equals(spacing.smallSpacing));
+      expect(padding.top, equals(spacing.tinySpacing));
+
+      final sizedBoxFinder = find.descendant(
+        of: paddingFinder,
+        matching: find.byType(SizedBox),
+      );
+
+      final sizedBoxes = tester.widgetList<SizedBox>(sizedBoxFinder).toList();
+      expect(
+        sizedBoxes.any(
+          (final sizedBox) => sizedBox.width == spacing.tinySpacing,
+        ),
+        isTrue,
+      );
+
+      expect(find.byIcon(Icons.add), findsOneWidget);
+    });
   });
 }
 
