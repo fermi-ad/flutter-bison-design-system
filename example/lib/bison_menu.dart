@@ -16,7 +16,7 @@ Widget buildBisonMenuUseCase(BuildContext context) {
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(4),
       ),
-      child: const Center(child: Text('Menu Button')),
+      child: const Center(child: Text('Open Menu')),
     ),
     items: [
       BisonMenuItem(

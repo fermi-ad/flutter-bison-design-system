@@ -62,6 +62,9 @@ class _BisonMenuState extends State<BisonMenu> {
     final typo = Theme.of(context).extension<BisonTypographyTokens>()!;
 
     return MenuAnchor(
+      style: MenuStyle(
+        backgroundColor: WidgetStatePropertyAll(theme.surfaceDefault),
+      ),
       childFocusNode: _buttonFocusNode,
       menuChildren: widget.items.map((final item) {
         return MenuItemButton(
@@ -69,13 +72,17 @@ class _BisonMenuState extends State<BisonMenu> {
             backgroundColor: WidgetStateProperty.resolveWith<Color?>((
               final Set<WidgetState> states,
             ) {
-              if (states.contains(WidgetState.pressed)) {
-                return theme.surfacePressed;
+              if (states.contains(WidgetState.selected)) {
+                return theme.navigationSelectedActive;
               }
-              if (states.contains(WidgetState.hovered)) {
+              if (states.any(
+                (final state) =>
+                    state == WidgetState.hovered ||
+                    state == WidgetState.focused,
+              )) {
                 return theme.surfaceHovered;
               }
-              return theme.surfaceDefault;
+              return theme.surfaceTransparent;
             }),
             foregroundColor: WidgetStateProperty.resolveWith<Color?>((
               final Set<WidgetState> states,
@@ -83,7 +90,15 @@ class _BisonMenuState extends State<BisonMenu> {
               if (states.contains(WidgetState.disabled)) {
                 return theme.textDisabled;
               }
-              return theme.textPrimary;
+              return theme.textPlain;
+            }),
+            iconColor: WidgetStateProperty.resolveWith<Color?>((
+              final Set<WidgetState> states,
+            ) {
+              if (states.contains(WidgetState.disabled)) {
+                return theme.iconDisabled;
+              }
+              return theme.iconPlain;
             }),
             shape: WidgetStateProperty.all(
               RoundedRectangleBorder(
