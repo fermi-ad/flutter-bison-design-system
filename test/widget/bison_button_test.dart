@@ -52,7 +52,7 @@ void main() {
     });
   });
 
-  group("Testing Styling for Button Types - light mode", () {
+  group("Testing Styling for Button Types in default state - light mode", () {
     testWidgets("Testing background and foreground for filled BisonButton", (
       final WidgetTester tester,
     ) async {
@@ -240,6 +240,146 @@ void main() {
       );
 
       expect(find.byIcon(Icons.add), findsOneWidget);
+    });
+
+    testWidgets("Testing button uses appropriate corners", (
+      final WidgetTester tester,
+    ) async {
+      final corners = BisonCornerTokens.standard();
+
+      await tester.pumpWidget(
+        _buildOutScaffold(
+          BisonButton(buttonLabel: 'Corner', onPressed: () => debugPrint("")),
+        ),
+      );
+
+      final widgetFinder = tester.widget<FilledButton>(
+        find.byType(FilledButton),
+      );
+      final shape =
+          widgetFinder.style!.shape?.resolve(<WidgetState>{})
+              as RoundedRectangleBorder;
+      final Radius radius = (shape.borderRadius as BorderRadius).topLeft;
+      expect(radius.x, equals(corners.cornerExtraSmall));
+    });
+  });
+
+  group("Testing themeing for different button states - light mode", () {
+    testWidgets("Disabled state theme testings", (
+      final WidgetTester tester,
+    ) async {
+      final theme = BisonThemeTokens.light();
+
+      await tester.pumpWidget(
+        _buildOutScaffold(
+          Column(
+            spacing: 4.0,
+            children: [
+              BisonButton(
+                buttonLabel: 'filled',
+                onPressed: null,
+                buttonType: BisonButtonType.filled,
+              ),
+              BisonButton(
+                buttonLabel: 'ghost',
+                onPressed: null,
+                buttonType: BisonButtonType.ghost,
+              ),
+              BisonButton(
+                buttonLabel: 'outlined',
+                onPressed: null,
+                buttonType: BisonButtonType.outlined,
+              ),
+              BisonButton(
+                buttonLabel: 'destructive',
+                onPressed: null,
+                buttonType: BisonButtonType.destructive,
+              ),
+            ],
+          ),
+        ),
+      );
+
+      final filledFinder = find.descendant(
+        of: find.widgetWithText(BisonButton, 'filled'),
+        matching: find.byType(FilledButton),
+      );
+      final ghostFinder = find.descendant(
+        of: find.widgetWithText(BisonButton, 'ghost'),
+        matching: find.byType(FilledButton),
+      );
+      final outlinedFinder = find.descendant(
+        of: find.widgetWithText(BisonButton, 'outlined'),
+        matching: find.byType(FilledButton),
+      );
+      final destructiveFinder = find.descendant(
+        of: find.widgetWithText(BisonButton, 'destructive'),
+        matching: find.byType(FilledButton),
+      );
+
+      expect(filledFinder, findsOneWidget);
+      expect(ghostFinder, findsOneWidget);
+      expect(outlinedFinder, findsOneWidget);
+      expect(destructiveFinder, findsOneWidget);
+
+      final FilledButton filledButton = tester.widget<FilledButton>(
+        filledFinder,
+      );
+      final FilledButton ghostButton = tester.widget<FilledButton>(ghostFinder);
+      final FilledButton outlinedButton = tester.widget<FilledButton>(
+        outlinedFinder,
+      );
+      final FilledButton destructiveButton = tester.widget<FilledButton>(
+        destructiveFinder,
+      );
+
+      // filled testing
+      final filledStyle = filledButton.style!;
+      final filledBackground = filledStyle.backgroundColor?.resolve(
+        <WidgetState>{WidgetState.disabled},
+      );
+      final filledForeground = filledStyle.foregroundColor?.resolve(
+        <WidgetState>{WidgetState.disabled},
+      );
+
+      expect(filledBackground, equals(theme.buttonGhostDisabled));
+      expect(filledForeground, equals(theme.textDisabled));
+
+      // ghost testing
+      final ghostStyle = ghostButton.style!;
+      final ghostBackground = ghostStyle.backgroundColor?.resolve(<WidgetState>{
+        WidgetState.disabled,
+      });
+      final ghostForeground = ghostStyle.foregroundColor?.resolve(<WidgetState>{
+        WidgetState.disabled,
+      });
+
+      expect(ghostBackground, equals(theme.surfaceTransparent));
+      expect(ghostForeground, equals(theme.textDisabled));
+
+      // outlined testing
+      final outlinedStyle = outlinedButton.style!;
+      final outlinedBackground = outlinedStyle.backgroundColor?.resolve(
+        <WidgetState>{WidgetState.disabled},
+      );
+      final outlinedForeground = outlinedStyle.foregroundColor?.resolve(
+        <WidgetState>{WidgetState.disabled},
+      );
+
+      expect(outlinedBackground, equals(theme.surfaceTransparent));
+      expect(outlinedForeground, equals(theme.textDisabled));
+
+      // destructive testing
+      final destructiveStyle = destructiveButton.style!;
+      final destructiveBackground = destructiveStyle.backgroundColor?.resolve(
+        <WidgetState>{WidgetState.disabled},
+      );
+      final destructiveForeground = destructiveStyle.foregroundColor?.resolve(
+        <WidgetState>{WidgetState.disabled},
+      );
+
+      expect(destructiveBackground, equals(theme.buttonGhostDisabled));
+      expect(destructiveForeground, equals(theme.textDisabled));
     });
   });
 }
