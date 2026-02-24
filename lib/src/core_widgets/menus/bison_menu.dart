@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:disable_web_context_menu/disable_web_context_menu.dart'
+    show DisableWebContextMenu;
 import 'package:bison_design_system/bison_design_system.dart'
     show
         BisonCornerTokens,
@@ -157,20 +159,23 @@ class _BisonMenuState extends State<BisonMenu> {
                 ),
               );
             }
-            // For secondary (right-click) trigger, we want to use the context menu
-            // which automatically positions at cursor location
+            // For secondary (right-click) trigger, we want to display "context
+            // menu" style, positioning menu at cursor location.
             else {
               return MouseRegion(
                 cursor: SystemMouseCursors.click,
                 child: GestureDetector(
                   onSecondaryTapDown: (final tapDetails) =>
                       controller.open(position: tapDetails.localPosition),
+                  onTapDown: (_) => controller.close(),
                   child: child,
                 ),
               );
             }
           },
-      child: widget.anchorWidget,
+      child: widget.triggerAction == BisonMenuTriggerAction.primary
+          ? widget.anchorWidget
+          : DisableWebContextMenu(child: widget.anchorWidget),
     );
   }
 }
