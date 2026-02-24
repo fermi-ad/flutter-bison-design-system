@@ -176,9 +176,12 @@ class _BisonMenuState extends State<BisonMenu> {
               );
             }
           },
-      child: widget.triggerAction == BisonMenuTriggerAction.primary
-          ? widget.anchorWidget
-          : DisableWebContextMenu(child: widget.anchorWidget),
+      child: Focus(
+        focusNode: _buttonFocusNode,
+        child: widget.triggerAction == BisonMenuTriggerAction.primary
+            ? widget.anchorWidget
+            : DisableWebContextMenu(child: widget.anchorWidget),
+      ),
     );
   }
 }
