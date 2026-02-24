@@ -46,6 +46,11 @@ final directories = <_widgetbook.WidgetbookNode>[
                 builder: _bison_design_system_catalog_bison_menu
                     .buildBisonMenuUseCase,
               ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Right Click Context Menu',
+                builder: _bison_design_system_catalog_bison_menu
+                    .buildRightClickContextMenuUseCase,
+              ),
             ],
           ),
         ],

@@ -6,6 +6,15 @@ import 'package:bison_design_system/bison_design_system.dart'
         BisonThemeTokens,
         BisonTypographyTokens;
 
+/// Specifies the type of action that triggers the menu.
+enum BisonMenuTriggerAction {
+  /// Primary (left click on web)
+  primary,
+
+  /// Secondary (right click on web)
+  secondary,
+}
+
 /// Represents a single item in a [BisonMenu].
 class BisonMenuItem {
   /// The text label for the menu item.
@@ -25,7 +34,7 @@ class BisonMenuItem {
 /// A customizable menu component that displays a list of items in a dropdown using MenuAnchor.
 class BisonMenu extends StatefulWidget {
   /// The Widget that should anchor and trigger the menu.
-  final Widget anchor;
+  final Widget anchorWidget;
 
   /// The list of menu items to display.
   final List<BisonMenuItem> items;
@@ -33,12 +42,16 @@ class BisonMenu extends StatefulWidget {
   /// The label text for the menu button.
   final String menuLabel;
 
+  /// Specifies what type of action triggers the menu.
+  final BisonMenuTriggerAction triggerAction;
+
   /// Creates a new [BisonMenu].
   const BisonMenu({
     super.key,
-    required this.anchor,
+    required this.anchorWidget,
     required this.items,
     required this.menuLabel,
+    this.triggerAction = BisonMenuTriggerAction.primary,
   });
 
   @override
@@ -133,16 +146,31 @@ class _BisonMenuState extends State<BisonMenu> {
             final MenuController controller,
             final Widget? child,
           ) {
-            return MouseRegion(
-              cursor: SystemMouseCursors.click,
-              child: InkWell(
-                onTap: () =>
-                    controller.isOpen ? controller.close() : controller.open(),
-                child: child,
-              ),
-            );
+            if (widget.triggerAction == BisonMenuTriggerAction.primary) {
+              return MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: InkWell(
+                  onTap: () => controller.isOpen
+                      ? controller.close()
+                      : controller.open(),
+                  child: child,
+                ),
+              );
+            }
+            // For secondary (right-click) trigger, we want to use the context menu
+            // which automatically positions at cursor location
+            else {
+              return MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onSecondaryTapDown: (final tapDetails) =>
+                      controller.open(position: tapDetails.localPosition),
+                  child: child,
+                ),
+              );
+            }
           },
-      child: widget.anchor,
+      child: widget.anchorWidget,
     );
   }
 }
