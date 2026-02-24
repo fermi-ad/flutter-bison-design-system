@@ -264,38 +264,18 @@ void main() {
     });
   });
 
-  group("Testing themeing for different button states - light mode", () {
-    testWidgets("Disabled state theme testings", (
+  group("Testing thememing for disabled button state - light mode", () {
+    testWidgets("Disabled state theme testings - filled button", (
       final WidgetTester tester,
     ) async {
       final theme = BisonThemeTokens.light();
 
       await tester.pumpWidget(
         _buildOutScaffold(
-          Column(
-            spacing: 4.0,
-            children: [
-              BisonButton(
-                buttonLabel: 'filled',
-                onPressed: null,
-                buttonType: BisonButtonType.filled,
-              ),
-              BisonButton(
-                buttonLabel: 'ghost',
-                onPressed: null,
-                buttonType: BisonButtonType.ghost,
-              ),
-              BisonButton(
-                buttonLabel: 'outlined',
-                onPressed: null,
-                buttonType: BisonButtonType.outlined,
-              ),
-              BisonButton(
-                buttonLabel: 'destructive',
-                onPressed: null,
-                buttonType: BisonButtonType.destructive,
-              ),
-            ],
+          BisonButton(
+            buttonLabel: 'filled',
+            onPressed: null,
+            buttonType: BisonButtonType.filled,
           ),
         ),
       );
@@ -304,36 +284,13 @@ void main() {
         of: find.widgetWithText(BisonButton, 'filled'),
         matching: find.byType(FilledButton),
       );
-      final ghostFinder = find.descendant(
-        of: find.widgetWithText(BisonButton, 'ghost'),
-        matching: find.byType(FilledButton),
-      );
-      final outlinedFinder = find.descendant(
-        of: find.widgetWithText(BisonButton, 'outlined'),
-        matching: find.byType(FilledButton),
-      );
-      final destructiveFinder = find.descendant(
-        of: find.widgetWithText(BisonButton, 'destructive'),
-        matching: find.byType(FilledButton),
-      );
 
       expect(filledFinder, findsOneWidget);
-      expect(ghostFinder, findsOneWidget);
-      expect(outlinedFinder, findsOneWidget);
-      expect(destructiveFinder, findsOneWidget);
 
       final FilledButton filledButton = tester.widget<FilledButton>(
         filledFinder,
       );
-      final FilledButton ghostButton = tester.widget<FilledButton>(ghostFinder);
-      final FilledButton outlinedButton = tester.widget<FilledButton>(
-        outlinedFinder,
-      );
-      final FilledButton destructiveButton = tester.widget<FilledButton>(
-        destructiveFinder,
-      );
 
-      // filled testing
       final filledStyle = filledButton.style!;
       final filledBackground = filledStyle.backgroundColor?.resolve(
         <WidgetState>{WidgetState.disabled},
@@ -344,8 +301,32 @@ void main() {
 
       expect(filledBackground, equals(theme.buttonGhostDisabled));
       expect(filledForeground, equals(theme.textDisabled));
+    });
 
-      // ghost testing
+    testWidgets("Disabled state theme testings - ghost buttons", (
+      final WidgetTester tester,
+    ) async {
+      final theme = BisonThemeTokens.light();
+
+      await tester.pumpWidget(
+        _buildOutScaffold(
+          BisonButton(
+            buttonLabel: 'ghost',
+            onPressed: null,
+            buttonType: BisonButtonType.ghost,
+          ),
+        ),
+      );
+
+      final ghostFinder = find.descendant(
+        of: find.widgetWithText(BisonButton, 'ghost'),
+        matching: find.byType(FilledButton),
+      );
+
+      expect(ghostFinder, findsOneWidget);
+
+      final FilledButton ghostButton = tester.widget<FilledButton>(ghostFinder);
+
       final ghostStyle = ghostButton.style!;
       final ghostBackground = ghostStyle.backgroundColor?.resolve(<WidgetState>{
         WidgetState.disabled,
@@ -356,7 +337,31 @@ void main() {
 
       expect(ghostBackground, equals(theme.surfaceTransparent));
       expect(ghostForeground, equals(theme.textDisabled));
+    });
 
+    testWidgets("Disabled state theme testings - outlinded buttons", (
+      final WidgetTester tester,
+    ) async {
+      final theme = BisonThemeTokens.light();
+
+      await tester.pumpWidget(
+        _buildOutScaffold(
+          BisonButton(
+            buttonLabel: 'outlined',
+            onPressed: null,
+            buttonType: BisonButtonType.outlined,
+          ),
+        ),
+      );
+
+      final outlinedFinder = find.descendant(
+        of: find.widgetWithText(BisonButton, 'outlined'),
+        matching: find.byType(FilledButton),
+      );
+      expect(outlinedFinder, findsOneWidget);
+      final FilledButton outlinedButton = tester.widget<FilledButton>(
+        outlinedFinder,
+      );
       // outlined testing
       final outlinedStyle = outlinedButton.style!;
       final outlinedBackground = outlinedStyle.backgroundColor?.resolve(
@@ -368,8 +373,33 @@ void main() {
 
       expect(outlinedBackground, equals(theme.surfaceTransparent));
       expect(outlinedForeground, equals(theme.textDisabled));
+    });
 
-      // destructive testing
+    testWidgets("Disabled state theme testings - destructive buttons", (
+      final WidgetTester tester,
+    ) async {
+      final theme = BisonThemeTokens.light();
+
+      await tester.pumpWidget(
+        _buildOutScaffold(
+          BisonButton(
+            buttonLabel: 'destructive',
+            onPressed: null,
+            buttonType: BisonButtonType.destructive,
+          ),
+        ),
+      );
+      final destructiveFinder = find.descendant(
+        of: find.widgetWithText(BisonButton, 'destructive'),
+        matching: find.byType(FilledButton),
+      );
+
+      expect(destructiveFinder, findsOneWidget);
+
+      final FilledButton destructiveButton = tester.widget<FilledButton>(
+        destructiveFinder,
+      );
+
       final destructiveStyle = destructiveButton.style!;
       final destructiveBackground = destructiveStyle.backgroundColor?.resolve(
         <WidgetState>{WidgetState.disabled},
