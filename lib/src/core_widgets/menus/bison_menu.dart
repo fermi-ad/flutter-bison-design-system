@@ -81,8 +81,11 @@ class _BisonMenuState extends State<BisonMenu> {
         backgroundColor: WidgetStatePropertyAll(theme.surfaceDefault),
       ),
       childFocusNode: _buttonFocusNode,
-      menuChildren: widget.items.map((final item) {
+      menuChildren: widget.items.indexed.map((final element) {
+        final (index, item) = element;
+
         return MenuItemButton(
+          autofocus: index == 0,
           style: ButtonStyle(
             backgroundColor: WidgetStateProperty.resolveWith<Color?>((
               final Set<WidgetState> states,
