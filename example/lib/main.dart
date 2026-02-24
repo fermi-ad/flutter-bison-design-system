@@ -36,47 +36,35 @@ class WidgetbookApp extends StatelessWidget {
       corners,
     ];
 
+    final ThemeData lightTheme = ThemeData(
+      fontFamily: 'Atkinson Hyperlegible Next',
+      package: 'bison_design_system',
+      brightness: Brightness.light,
+      extensions: bisonExtensionsLight,
+      colorScheme: colorsLight.toColorScheme(Brightness.light),
+      scaffoldBackgroundColor: colorsLight.surfaceDefault,
+    );
+    final ThemeData darkTheme = ThemeData(
+      fontFamily: 'Atkinson Hyperlegible Next',
+      package: 'bison_design_system',
+      brightness: Brightness.dark,
+      extensions: bisonExtensionsDark,
+      colorScheme: colorsDark.toColorScheme(Brightness.dark),
+      scaffoldBackgroundColor: colorsDark.surfaceDefault,
+    );
+
     return Widgetbook.material(
-      appBuilder: (context, child) => Title(
-        title: "Fermilab Widgetbook",
-        color: colorsLight.borderPrimary,
-        child: child,
+      appBuilder: (context, child) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: lightTheme,
+        darkTheme: darkTheme,
+        home: Material(child: child),
       ),
-      lightTheme: ThemeData(
-        fontFamily: 'Atkinson Hyperlegible Next',
-        package: 'bison_design_system',
-        brightness: Brightness.light,
-        extensions: bisonExtensionsLight,
-        colorScheme: colorsLight.toColorScheme(Brightness.light),
-        scaffoldBackgroundColor: colorsLight.surfaceDefault,
-      ),
-      darkTheme: ThemeData(
-        fontFamily: 'Atkinson Hyperlegible Next',
-        package: 'bison_design_system',
-        brightness: Brightness.dark,
-        extensions: bisonExtensionsDark,
-        colorScheme: colorsDark.toColorScheme(Brightness.dark),
-        scaffoldBackgroundColor: colorsDark.surfaceDefault,
-      ),
+      lightTheme: lightTheme,
+      darkTheme: darkTheme,
       themeMode: ThemeMode.system,
       directories: directories,
-      addons: [
-        AlignmentAddon(),
-        MaterialThemeAddon(
-          themes: [
-            WidgetbookTheme(
-              name: "Light mode",
-              data: Theme.of(
-                context,
-              ).copyWith(extensions: bisonExtensionsLight),
-            ),
-            WidgetbookTheme(
-              name: "Dark mode",
-              data: Theme.of(context).copyWith(extensions: bisonExtensionsDark),
-            ),
-          ],
-        ),
-      ],
+      addons: [AlignmentAddon()],
     );
   }
 }
