@@ -49,9 +49,19 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'BisonIconButton',
             useCases: [
               _widgetbook.WidgetbookUseCase(
-                name: 'Default',
+                name: 'Filled',
                 builder: _bison_design_system_catalog_bison_icon_button
-                    .buildBisonButtonUseCase,
+                    .buildBisonIconButtonFilledUseCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Ghost',
+                builder: _bison_design_system_catalog_bison_icon_button
+                    .buildBisonIconButtonGhostUseCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Outlined',
+                builder: _bison_design_system_catalog_bison_icon_button
+                    .buildBisonIconButtonOutlinedUseCase,
               ),
             ],
           ),
