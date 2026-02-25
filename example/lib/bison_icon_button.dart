@@ -7,7 +7,9 @@ import 'package:bison_design_system/core_widgets.dart';
 @widgetbook.UseCase(name: 'Default', type: BisonIconButton)
 Widget buildBisonButtonUseCase(BuildContext context) {
   return BisonIconButton(
-    icon: Icon(Icons.add),
-    onPressed: () => print("Hello"),
+    icon: Icon(Icons.settings_outlined),
+    onPressed: context.knobs.boolean(label: 'Disabled')
+        ? null
+        : () => debugPrint("Hello!"),
   );
 }
