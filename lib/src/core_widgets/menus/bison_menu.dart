@@ -69,16 +69,6 @@ class BisonMenu extends StatefulWidget {
   State<BisonMenu> createState() => _BisonMenuState();
 }
 
-/// Intent for focusing the first menu item.
-class _FocusFirstIntent extends Intent {
-  const _FocusFirstIntent();
-}
-
-/// Intent for focusing the last menu item.
-class _FocusLastIntent extends Intent {
-  const _FocusLastIntent();
-}
-
 class _BisonMenuState extends State<BisonMenu> {
   final FocusNode _childFocusNode = FocusNode(debugLabel: 'Menu Trigger');
 
@@ -158,25 +148,12 @@ class _BisonMenuState extends State<BisonMenu> {
       childFocusNode: _childFocusNode,
       menuChildren: [
         // Wrap the *menu panel* behavior:
-        Shortcuts(
-          shortcuts: <ShortcutActivator, Intent>{
-            SingleActivator(LogicalKeyboardKey.home): const _FocusFirstIntent(),
-            SingleActivator(LogicalKeyboardKey.end): const _FocusLastIntent(),
-          },
-          child: Actions(
-            actions: <Type, Action<Intent>>{
-              _FocusFirstIntent: CallbackAction<_FocusFirstIntent>(
-                onInvoke: (final intent) {
-                  _focusFirst();
-                  return null;
-                },
-              ),
-              _FocusLastIntent: CallbackAction<_FocusLastIntent>(
-                onInvoke: (final intent) {
-                  _focusLast();
-                  return null;
-                },
-              ),
+        FocusScope(
+          autofocus: true,
+          child: CallbackShortcuts(
+            bindings: <ShortcutActivator, VoidCallback>{
+              const SingleActivator(LogicalKeyboardKey.home): _focusFirst,
+              const SingleActivator(LogicalKeyboardKey.end): _focusLast,
             },
             child: FocusTraversalGroup(
               policy: ReadingOrderTraversalPolicy(),
