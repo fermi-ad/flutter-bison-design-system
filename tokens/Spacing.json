@@ -23,6 +23,14 @@
       "com.figma.scopes": ["ALL_SCOPES"]
     }
   },
+  "X-Small": {
+    "$type": "number",
+    "$value": 12,
+    "$extensions": {
+      "com.figma.variableId": "VariableID:60940:4628",
+      "com.figma.scopes": ["ALL_SCOPES"]
+    }
+  },
   "Small": {
     "$type": "number",
     "$value": 16,
