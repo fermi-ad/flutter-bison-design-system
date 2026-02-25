@@ -7,93 +7,97 @@ import 'package:bison_design_system/core_widgets.dart'
 
 @widgetbook.UseCase(name: 'Default', type: BisonMenu)
 Widget buildBisonMenuUseCase(BuildContext context) {
-  return BisonMenu(
-    menuLabel: context.knobs.string(label: 'Menu Label', initialValue: 'Menu'),
-    anchorWidget: Container(
-      width: 120,
-      height: 40,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(4),
+  return Center(
+    child: SizedBox(
+      width: 200,
+      height: 48,
+      child: BisonMenu(
+        builder: (_, final focusNode, {required toggleMenu, required isOpen}) {
+          return FilledButton(
+            focusNode: focusNode,
+            onPressed: toggleMenu,
+            child: Center(child: Text(isOpen ? "Close Menu" : "Open Menu")),
+          );
+        },
+        items: [
+          BisonMenuItem(
+            label: context.knobs.string(
+              label: 'Item 1 Label',
+              initialValue: 'Item 1',
+            ),
+            icon: context.knobs.objectOrNull.dropdown(
+              label: 'Item 1 Icon',
+              labelBuilder: (icon) => switch (icon.icon) {
+                Icons.add => "Add",
+                Icons.save => "Save",
+                Icons.delete => "Delete",
+                _ => '',
+              },
+              options: [Icon(Icons.add), Icon(Icons.save), Icon(Icons.delete)],
+            ),
+            onSelect: () => debugPrint("Item 1 selected"),
+          ),
+          BisonMenuItem(
+            label: context.knobs.string(
+              label: 'Item 2 Label',
+              initialValue: 'Item 2',
+            ),
+            icon: context.knobs.objectOrNull.dropdown(
+              label: 'Item 2 Icon',
+              labelBuilder: (icon) => switch (icon.icon) {
+                Icons.add => "Add",
+                Icons.save => "Save",
+                Icons.delete => "Delete",
+                _ => '',
+              },
+              options: [Icon(Icons.add), Icon(Icons.save), Icon(Icons.delete)],
+            ),
+            onSelect: () => debugPrint("Item 2 selected"),
+          ),
+          BisonMenuItem(
+            label: context.knobs.string(
+              label: 'Item 3 Label',
+              initialValue: 'Disabled Item',
+            ),
+            icon: context.knobs.objectOrNull.dropdown(
+              label: 'Item 3 Icon',
+              labelBuilder: (icon) => switch (icon.icon) {
+                Icons.add => "Add",
+                Icons.save => "Save",
+                Icons.delete => "Delete",
+                _ => '',
+              },
+              options: [Icon(Icons.add), Icon(Icons.save), Icon(Icons.delete)],
+            ),
+            // No onSelect callback makes this menu item disabled
+          ),
+        ],
       ),
-      child: const Center(child: Text('Open Menu')),
     ),
-    items: [
-      BisonMenuItem(
-        label: context.knobs.string(
-          label: 'Item 1 Label',
-          initialValue: 'Item 1',
-        ),
-        icon: context.knobs.objectOrNull.dropdown(
-          label: 'Item 1 Icon',
-          labelBuilder: (icon) => switch (icon.icon) {
-            Icons.add => "Add",
-            Icons.save => "Save",
-            Icons.delete => "Delete",
-            _ => '',
-          },
-          options: [Icon(Icons.add), Icon(Icons.save), Icon(Icons.delete)],
-        ),
-        onSelect: () => debugPrint("Item 1 selected"),
-      ),
-      BisonMenuItem(
-        label: context.knobs.string(
-          label: 'Item 2 Label',
-          initialValue: 'Item 2',
-        ),
-        icon: context.knobs.objectOrNull.dropdown(
-          label: 'Item 2 Icon',
-          labelBuilder: (icon) => switch (icon.icon) {
-            Icons.add => "Add",
-            Icons.save => "Save",
-            Icons.delete => "Delete",
-            _ => '',
-          },
-          options: [Icon(Icons.add), Icon(Icons.save), Icon(Icons.delete)],
-        ),
-        onSelect: () => debugPrint("Item 2 selected"),
-      ),
-      BisonMenuItem(
-        label: context.knobs.string(
-          label: 'Item 3 Label',
-          initialValue: 'Disabled Item',
-        ),
-        icon: context.knobs.objectOrNull.dropdown(
-          label: 'Item 3 Icon',
-          labelBuilder: (icon) => switch (icon.icon) {
-            Icons.add => "Add",
-            Icons.save => "Save",
-            Icons.delete => "Delete",
-            _ => '',
-          },
-          options: [Icon(Icons.add), Icon(Icons.save), Icon(Icons.delete)],
-        ),
-        // No onSelect callback makes this menu item disabled
-      ),
-    ],
   );
 }
 
-@widgetbook.UseCase(name: 'Right Click Context Menu', type: BisonMenu)
+@widgetbook.UseCase(name: 'Right Click Menu', type: BisonMenu)
 Widget buildRightClickContextMenuUseCase(BuildContext context) {
   return BisonMenu(
-    menuLabel: context.knobs.string(
-      label: 'Menu Label',
-      initialValue: 'Context Menu',
-    ),
-    anchorWidget: Container(
-      width: 200,
-      height: 100,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [Text('Right-click to open menu')],
-      ),
-    ),
+    builder: (_, final focusNode, {required toggleMenu, required isOpen}) {
+      return Focus(
+        focusNode: focusNode,
+        child: Container(
+          width: 200,
+          height: 100,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [Text('Right-click to open menu')],
+          ),
+        ),
+      );
+    },
     triggerAction: BisonMenuTriggerAction.secondary,
     items: [
       BisonMenuItem(

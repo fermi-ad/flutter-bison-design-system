@@ -8,12 +8,25 @@ import 'package:bison_design_system/bison_design_system.dart'
         BisonThemeTokens,
         BisonTypographyTokens;
 
+typedef BisonMenuBuilder =
+    Widget Function(
+      BuildContext context,
+      FocusNode focusNode, {
+      required VoidCallback toggleMenu,
+      required bool isOpen,
+    });
+
 /// Specifies the type of action that triggers the menu.
 enum BisonMenuTriggerAction {
-  /// Primary (left click on web)
+  /// Defer to the builder widget to trigger the menu. Use this if the widget
+  /// already has a built-in handler like `onPressed` to ensure proper
+  /// accessibility.
+  defer,
+
+  /// Primary (left click on web).
   primary,
 
-  /// Secondary (right click on web)
+  /// Secondary (right click on web).
   secondary,
 }
 
@@ -35,14 +48,10 @@ class BisonMenuItem {
 
 /// A customizable menu component that displays a list of items in a dropdown using MenuAnchor.
 class BisonMenu extends StatefulWidget {
-  /// The Widget that should anchor and trigger the menu.
-  final Widget anchorWidget;
+  final BisonMenuBuilder builder;
 
   /// The list of menu items to display.
   final List<BisonMenuItem> items;
-
-  /// The label text for the menu button.
-  final String menuLabel;
 
   /// Specifies what type of action triggers the menu.
   final BisonMenuTriggerAction triggerAction;
@@ -50,10 +59,9 @@ class BisonMenu extends StatefulWidget {
   /// Creates a new [BisonMenu].
   const BisonMenu({
     super.key,
-    required this.anchorWidget,
+    required this.builder,
     required this.items,
-    required this.menuLabel,
-    this.triggerAction = BisonMenuTriggerAction.primary,
+    this.triggerAction = BisonMenuTriggerAction.defer,
   });
 
   @override
@@ -61,11 +69,11 @@ class BisonMenu extends StatefulWidget {
 }
 
 class _BisonMenuState extends State<BisonMenu> {
-  final FocusNode _buttonFocusNode = FocusNode(debugLabel: 'Menu Button');
+  final FocusNode _childFocusNode = FocusNode(debugLabel: 'Menu Trigger');
 
   @override
   void dispose() {
-    _buttonFocusNode.dispose();
+    _childFocusNode.dispose();
     super.dispose();
   }
 
@@ -80,7 +88,7 @@ class _BisonMenuState extends State<BisonMenu> {
       style: MenuStyle(
         backgroundColor: WidgetStatePropertyAll(theme.surfaceDefault),
       ),
-      childFocusNode: _buttonFocusNode,
+      childFocusNode: _childFocusNode,
       menuChildren: widget.items.indexed.map((final element) {
         final (index, item) = element;
 
@@ -145,43 +153,39 @@ class _BisonMenuState extends State<BisonMenu> {
           ),
         );
       }).toList(),
-      builder:
-          (
-            final BuildContext context,
-            final MenuController controller,
-            final Widget? child,
-          ) {
-            if (widget.triggerAction == BisonMenuTriggerAction.primary) {
-              return MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: InkWell(
-                  onTap: () => controller.isOpen
-                      ? controller.close()
-                      : controller.open(),
-                  child: child,
-                ),
-              );
-            }
-            // For secondary (right-click) trigger, we want to display "context
-            // menu" style, positioning menu at cursor location.
-            else {
-              return MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: GestureDetector(
-                  onSecondaryTapDown: (final tapDetails) =>
-                      controller.open(position: tapDetails.localPosition),
-                  onTapDown: (_) => controller.close(),
-                  child: child,
-                ),
-              );
-            }
-          },
-      child: Focus(
-        focusNode: _buttonFocusNode,
-        child: widget.triggerAction == BisonMenuTriggerAction.primary
-            ? widget.anchorWidget
-            : DisableWebContextMenu(child: widget.anchorWidget),
-      ),
+      builder: (final context, final controller, _) {
+        void toggleMenu() =>
+            controller.isOpen ? controller.close() : controller.open();
+
+        final child = widget.builder(
+          context,
+          _childFocusNode,
+          toggleMenu: toggleMenu,
+          isOpen: controller.isOpen,
+        );
+
+        if (widget.triggerAction == BisonMenuTriggerAction.primary) {
+          return MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: InkWell(onTap: toggleMenu, child: child),
+          );
+        }
+        // For secondary (right-click) trigger, we want to display "context
+        // menu" style, positioning menu at cursor location.
+        else if (widget.triggerAction == BisonMenuTriggerAction.secondary) {
+          return MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onSecondaryTapDown: (final tapDetails) =>
+                  controller.open(position: tapDetails.localPosition),
+              onTapDown: (_) => controller.close(),
+              child: DisableWebContextMenu(child: child),
+            ),
+          );
+        } else {
+          return child;
+        }
+      },
     );
   }
 }

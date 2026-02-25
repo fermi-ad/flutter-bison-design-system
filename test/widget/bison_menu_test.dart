@@ -19,7 +19,7 @@ Widget _buildTestApp(final Widget widget) {
 
 void main() {
   group('BisonMenu basic interactions', () {
-    testWidgets('left-click opens menu and displays items', (
+    testWidgets('deferred trigger action works correctly', (
       final WidgetTester tester,
     ) async {
       final items = [
@@ -30,20 +30,88 @@ void main() {
       await tester.pumpWidget(
         _buildTestApp(
           BisonMenu(
-            anchorWidget: const Text('Open Menu'),
+            builder:
+                (
+                  final context,
+                  final focusNode, {
+                  required final toggleMenu,
+                  required final isOpen,
+                }) => FilledButton(
+                  focusNode: focusNode,
+                  onPressed: toggleMenu,
+                  child: const Text('Open Menu'),
+                ),
             items: items,
-            menuLabel: 'Test Menu',
           ),
         ),
       );
 
-      // Tap the anchor (primary click).
+      // Tap the anchor (deferred trigger action).
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      // Verify that menu items are now in the widget tree.
       expect(find.text('Item 1'), findsOneWidget);
       expect(find.text('Item 2'), findsOneWidget);
+    });
+
+    testWidgets('menu correctly handles left-click', (
+      final WidgetTester tester,
+    ) async {
+      final items = [
+        const BisonMenuItem(label: 'Primary Item 1'),
+        const BisonMenuItem(label: 'Primary Item 2'),
+      ];
+
+      await tester.pumpWidget(
+        _buildTestApp(
+          BisonMenu(
+            builder:
+                (
+                  final context,
+                  final focusNode, {
+                  required final isOpen,
+                  required final toggleMenu,
+                }) => Focus(focusNode: focusNode, child: Text('Primary Click')),
+            items: items,
+            triggerAction: BisonMenuTriggerAction.primary,
+          ),
+        ),
+      );
+
+      // Perform a primary (left) click on the anchor.
+      await tester.tap(find.text('Primary Click'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Primary Item 1'), findsOneWidget);
+      expect(find.text('Primary Item 2'), findsOneWidget);
+    });
+
+    testWidgets('right-click (secondary tap) opens context menu', (
+      final WidgetTester tester,
+    ) async {
+      final items = [const BisonMenuItem(label: 'Right Item')];
+
+      await tester.pumpWidget(
+        _buildTestApp(
+          BisonMenu(
+            builder:
+                (
+                  final context,
+                  final focusNode, {
+                  required final isOpen,
+                  required final toggleMenu,
+                }) => Focus(focusNode: focusNode, child: Text('Right Click')),
+            items: items,
+            triggerAction: BisonMenuTriggerAction.secondary,
+          ),
+        ),
+      );
+
+      // Perform a secondary tap (right‑click) on the anchor.
+      await tester.tap(find.text('Right Click'), buttons: 2);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Right Item'), findsOneWidget);
     });
 
     testWidgets('selecting a menu item triggers its callback', (
@@ -60,9 +128,18 @@ void main() {
       await tester.pumpWidget(
         _buildTestApp(
           BisonMenu(
-            anchorWidget: const Text('Open'),
+            builder:
+                (
+                  final context,
+                  final focusNode, {
+                  required final isOpen,
+                  required final toggleMenu,
+                }) => FilledButton(
+                  focusNode: focusNode,
+                  onPressed: toggleMenu,
+                  child: const Text('Open'),
+                ),
             items: items,
-            menuLabel: 'Menu',
           ),
         ),
       );
@@ -76,29 +153,6 @@ void main() {
       expect(callbackCalled, isTrue);
     });
 
-    testWidgets('right-click (secondary tap) opens menu', (
-      final WidgetTester tester,
-    ) async {
-      final items = [const BisonMenuItem(label: 'Right Item')];
-
-      await tester.pumpWidget(
-        _buildTestApp(
-          BisonMenu(
-            anchorWidget: const Text('Right Click'),
-            items: items,
-            menuLabel: 'Menu',
-            triggerAction: BisonMenuTriggerAction.secondary,
-          ),
-        ),
-      );
-
-      // Perform a secondary tap (right‑click) on the anchor.
-      await tester.tap(find.text('Right Click'), buttons: 2);
-      await tester.pumpAndSettle();
-
-      expect(find.text('Right Item'), findsOneWidget);
-    });
-
     testWidgets('menu items with icons render the icon', (
       final WidgetTester tester,
     ) async {
@@ -109,9 +163,18 @@ void main() {
       await tester.pumpWidget(
         _buildTestApp(
           BisonMenu(
-            anchorWidget: const Text('Icon Test'),
+            builder:
+                (
+                  final context,
+                  final focusNode, {
+                  required final isOpen,
+                  required final toggleMenu,
+                }) => FilledButton(
+                  focusNode: focusNode,
+                  onPressed: toggleMenu,
+                  child: const Text('Icon Test'),
+                ),
             items: items,
-            menuLabel: 'Menu',
           ),
         ),
       );
@@ -130,9 +193,18 @@ void main() {
       await tester.pumpWidget(
         _buildTestApp(
           BisonMenu(
-            anchorWidget: const Text('Focus Anchor'),
+            builder:
+                (
+                  final context,
+                  final focusNode, {
+                  required final isOpen,
+                  required final toggleMenu,
+                }) => FilledButton(
+                  focusNode: focusNode,
+                  onPressed: toggleMenu,
+                  child: const Text('Focus Anchor'),
+                ),
             items: items,
-            menuLabel: 'Menu',
           ),
         ),
       );
@@ -161,9 +233,18 @@ void main() {
       await tester.pumpWidget(
         _buildTestApp(
           BisonMenu(
-            anchorWidget: const Text('Scroll Test'),
+            builder:
+                (
+                  final context,
+                  final focusNode, {
+                  required final isOpen,
+                  required final toggleMenu,
+                }) => FilledButton(
+                  focusNode: focusNode,
+                  onPressed: toggleMenu,
+                  child: const Text('Scroll Test'),
+                ),
             items: items,
-            menuLabel: 'Menu',
           ),
         ),
       );
@@ -191,9 +272,18 @@ void main() {
       await tester.pumpWidget(
         _buildTestApp(
           BisonMenu(
-            anchorWidget: const Text('Open Menu'),
+            builder:
+                (
+                  final context,
+                  final focusNode, {
+                  required final isOpen,
+                  required final toggleMenu,
+                }) => FilledButton(
+                  focusNode: focusNode,
+                  onPressed: toggleMenu,
+                  child: const Text('Open Menu'),
+                ),
             items: items,
-            menuLabel: 'Test Menu',
           ),
         ),
       );
