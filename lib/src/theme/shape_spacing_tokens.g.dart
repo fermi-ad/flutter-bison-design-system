@@ -7,6 +7,7 @@ class BisonSpacingTokens extends ThemeExtension<BisonSpacingTokens>{
   final double noneSpacing;
   final double microSpacing;
   final double tinySpacing;
+  final double xSmallSpacing;
   final double smallSpacing;
   final double standardSpacing;
   final double mediumSpacing;
@@ -17,6 +18,7 @@ class BisonSpacingTokens extends ThemeExtension<BisonSpacingTokens>{
     required this.noneSpacing,
     required this.microSpacing,
     required this.tinySpacing,
+    required this.xSmallSpacing,
     required this.smallSpacing,
     required this.standardSpacing,
     required this.mediumSpacing,
@@ -28,6 +30,7 @@ class BisonSpacingTokens extends ThemeExtension<BisonSpacingTokens>{
     noneSpacing: 0,
     microSpacing: 4,
     tinySpacing: 8,
+    xSmallSpacing: 12,
     smallSpacing: 16,
     standardSpacing: 24,
     mediumSpacing: 36,
@@ -40,6 +43,7 @@ class BisonSpacingTokens extends ThemeExtension<BisonSpacingTokens>{
     final double? noneSpacing,
     final double? microSpacing,
     final double? tinySpacing,
+    final double? xSmallSpacing,
     final double? smallSpacing,
     final double? standardSpacing,
     final double? mediumSpacing,
@@ -50,6 +54,7 @@ class BisonSpacingTokens extends ThemeExtension<BisonSpacingTokens>{
       noneSpacing: noneSpacing ?? this.noneSpacing,
       microSpacing: microSpacing ?? this.microSpacing,
       tinySpacing: tinySpacing ?? this.tinySpacing,
+      xSmallSpacing: xSmallSpacing ?? this.xSmallSpacing,
       smallSpacing: smallSpacing ?? this.smallSpacing,
       standardSpacing: standardSpacing ?? this.standardSpacing,
       mediumSpacing: mediumSpacing ?? this.mediumSpacing,
@@ -68,6 +73,7 @@ class BisonSpacingTokens extends ThemeExtension<BisonSpacingTokens>{
       noneSpacing: lerpDouble(noneSpacing, other.noneSpacing, t)!,
       microSpacing: lerpDouble(microSpacing, other.microSpacing, t)!,
       tinySpacing: lerpDouble(tinySpacing, other.tinySpacing, t)!,
+      xSmallSpacing: lerpDouble(xSmallSpacing, other.xSmallSpacing, t)!,
       smallSpacing: lerpDouble(smallSpacing, other.smallSpacing, t)!,
       standardSpacing: lerpDouble(standardSpacing, other.standardSpacing, t)!,
       mediumSpacing: lerpDouble(mediumSpacing, other.mediumSpacing, t)!,
