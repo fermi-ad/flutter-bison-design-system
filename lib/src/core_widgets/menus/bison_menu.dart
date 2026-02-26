@@ -129,18 +129,6 @@ class _BisonMenuState extends State<BisonMenu> {
   /// of items in the menu.
   final List<FocusNode> _itemFocusNodes = [];
 
-  @override
-  void didUpdateWidget(final BisonMenu oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _syncFocusNodes();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _syncFocusNodes();
-  }
-
   /// Synchronizes the number of focus nodes with the current number of menu items.
   void _syncFocusNodes() {
     // Ensure we have exactly N nodes for current items.
@@ -227,10 +215,11 @@ class _BisonMenuState extends State<BisonMenu> {
             mainAxisSize: MainAxisSize.min,
             children: widget.items.indexed.map((final element) {
               final (index, item) = element;
+              final focusNode = _itemFocusNodes[index];
 
               return MenuItemButton(
-                focusNode: _itemFocusNodes[index],
-                autofocus: index == 0,
+                focusNode: focusNode,
+                autofocus: index == 0 && focusNode.canRequestFocus,
                 style: _buildButtonStyle(theme, padding, typo),
                 onPressed: item.onSelect,
                 leadingIcon: item.icon,
