@@ -218,15 +218,8 @@ class _BisonMenuState extends State<BisonMenu> {
                   textStyle: WidgetStatePropertyAll(typo.bodyLarge),
                 ),
                 onPressed: item.onSelect,
-                child: Row(
-                  children: [
-                    if (item.icon != null) ...[
-                      item.icon!,
-                      SizedBox(width: padding.tinySpacing),
-                    ],
-                    Text(item.label),
-                  ],
-                ),
+                leadingIcon: item.icon,
+                child: Text(item.label),
               );
             }).toList(),
           ),

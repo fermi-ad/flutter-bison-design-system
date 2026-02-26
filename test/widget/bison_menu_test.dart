@@ -404,16 +404,4 @@ void main() {
       expect(find.text('Item 1'), findsNothing);
     });
   });
-
-  // ---------------------------------------------------------------------------
-  // The following tests are placeholders for features that are not yet
-  // implemented in BisonMenu. They are included to guide future TDD work.
-  // ---------------------------------------------------------------------------
-  group('BisonMenu advanced features (TODO)', () {
-    testWidgets('appropriate ARIA roles are set via Semantics', (
-      final WidgetTester tester,
-    ) async {
-      // TODO: Use SemanticsTester to verify role = "menu" and "menuitem".
-    });
-  });
 }
