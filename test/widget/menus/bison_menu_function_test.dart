@@ -2,55 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:bison_design_system/bison_design_system.dart';
-
-/// Helper to build a minimal app with the given widget as the body.
-Widget _buildTestApp(final Widget widget) {
-  return MaterialApp(
-    theme: ThemeData(
-      extensions: [
-        BisonThemeTokens.light(),
-        BisonSpacingTokens.standard(),
-        BisonCornerTokens.standard(),
-        BisonTypographyTokens.fromTokens(BisonThemeTokens.light()),
-      ],
-    ),
-    home: Scaffold(body: Center(child: widget)),
-  );
-}
-
-/// Builds a menu with the specified list of items.
-///
-/// This helper function creates a menu with the provided items.
-Widget buildMenuWithItems(final List<BisonMenuItem> items) {
-  return _buildTestApp(
-    BisonMenu(
-      builder:
-          (
-            final context,
-            final focusNode, {
-            required final toggleMenu,
-            required final isOpen,
-          }) => FilledButton(
-            focusNode: focusNode,
-            onPressed: toggleMenu,
-            child: const Text('Open Menu'),
-          ),
-      items: items,
-    ),
-  );
-}
-
-/// Builds a standard menu with N items.
-///
-/// This helper function creates N standard menu items and builds a menu
-/// containing them.
-Widget buildStandardMenu(final int itemCount) {
-  final items = List.generate(
-    itemCount,
-    (final index) => BisonMenuItem(label: 'Item ${index + 1}', onSelect: () {}),
-  );
-  return buildMenuWithItems(items);
-}
+import '../common.dart';
+import './bison_menu_common.dart' show buildStandardMenu, buildMenuWithItems;
 
 void main() {
   group('BisonMenu basic interactions', () {
@@ -59,7 +12,7 @@ void main() {
     ) async {
       final menu = buildStandardMenu(2);
 
-      await tester.pumpWidget(_buildTestApp(menu));
+      await tester.pumpWidget(buildScaffold(menu));
 
       // Tap the anchor (deferred trigger action).
       await tester.tap(find.text('Open Menu'));
@@ -69,7 +22,7 @@ void main() {
       expect(find.text('Item 2'), findsOneWidget);
     });
 
-    testWidgets('menu correctly handles primary action', (
+    testWidgets('primary trigger action works correctly', (
       final WidgetTester tester,
     ) async {
       final items = [
@@ -78,7 +31,7 @@ void main() {
       ];
 
       await tester.pumpWidget(
-        _buildTestApp(
+        buildScaffold(
           BisonMenu(
             builder:
                 (
@@ -101,13 +54,13 @@ void main() {
       expect(find.text('Item 2'), findsOneWidget);
     });
 
-    testWidgets('secondary action correctly opens context menu', (
+    testWidgets('secondary trigger action works correctly', (
       final WidgetTester tester,
     ) async {
       final items = [const BisonMenuItem(label: 'Right Item')];
 
       await tester.pumpWidget(
-        _buildTestApp(
+        buildScaffold(
           BisonMenu(
             builder:
                 (
@@ -159,7 +112,7 @@ void main() {
       ];
 
       await tester.pumpWidget(
-        _buildTestApp(
+        buildScaffold(
           BisonMenu(
             builder:
                 (
@@ -211,60 +164,6 @@ void main() {
       await tester.pumpAndSettle();
       // The menu should contain a Scrollable widget (e.g., ListView).
       expect(find.byType(Scrollable), findsOneWidget);
-    });
-
-    /// Tests that disabled menu items are displayed correctly.
-    ///
-    /// This test verifies:
-    /// 1. Disabled menu items are displayed in the UI
-    /// 2. Disabled menu items are stylistically distinguished
-    testWidgets('disabled menu items are displayed correctly', (
-      final WidgetTester tester,
-    ) async {
-      final theme = BisonThemeTokens.light();
-
-      final items = [
-        BisonMenuItem(label: 'Enabled Item', onSelect: () => {}),
-        BisonMenuItem(label: 'Disabled Item', icon: Icon(Icons.info)),
-      ];
-
-      await tester.pumpWidget(buildMenuWithItems(items));
-
-      // Tap the anchor to open the menu
-      await tester.tap(find.text('Open Menu'));
-      await tester.pumpAndSettle();
-
-      // Verify both items are displayed
-      expect(find.text('Enabled Item'), findsOneWidget);
-      expect(find.text('Disabled Item'), findsOneWidget);
-
-      // Verify that disabled item is visually distinguishable as disabled
-      final disabledItemFinder = find.text('Disabled Item');
-      expect(disabledItemFinder, findsOneWidget);
-
-      // Find the MenuItemButton widget for the disabled item
-      final menuItemButtonFinder = find.ancestor(
-        of: disabledItemFinder,
-        matching: find.byType(MenuItemButton),
-      );
-      expect(menuItemButtonFinder, findsOneWidget);
-
-      final menuItemButton = tester.widget<MenuItemButton>(
-        menuItemButtonFinder,
-      );
-      final style = menuItemButton.style!;
-
-      // Check that the foreground color is set to the disabled color
-      final disabledForegroundColor = style.foregroundColor?.resolve(
-        <WidgetState>{WidgetState.disabled},
-      );
-      expect(disabledForegroundColor, equals(theme.textDisabled));
-
-      // Also check that the icon color is set to the disabled color
-      final disabledIconColor = style.iconColor?.resolve(<WidgetState>{
-        WidgetState.disabled,
-      });
-      expect(disabledIconColor, equals(theme.iconDisabled));
     });
   });
 

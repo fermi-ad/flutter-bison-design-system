@@ -1,27 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bison_design_system/bison_design_system.dart';
-
-/// Helper to build a minimal app with the given widget as the body.
-Widget _buildTestApp(final Widget widget) {
-  return MaterialApp(
-    theme: ThemeData(
-      extensions: [
-        BisonThemeTokens.light(),
-        BisonSpacingTokens.standard(),
-        BisonCornerTokens.standard(),
-        BisonTypographyTokens.fromTokens(BisonThemeTokens.light()),
-      ],
-    ),
-    home: Scaffold(body: Center(child: widget)),
-  );
-}
+import '../common.dart';
 
 /// Builds a menu with the specified list of items.
 ///
 /// This helper function creates a menu with the provided items.
 Widget buildMenuWithItems(final List<BisonMenuItem> items) {
-  return _buildTestApp(
+  return buildScaffold(
     BisonMenu(
       builder:
           (
