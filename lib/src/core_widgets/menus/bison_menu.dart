@@ -9,6 +9,23 @@ import 'package:bison_design_system/bison_design_system.dart'
         BisonThemeTokens,
         BisonTypographyTokens;
 
+/// A function type that builds the menu trigger widget.
+///
+/// This function is responsible for creating the widget that will trigger the
+/// menu to open. It receives the [BuildContext], a [FocusNode] for the trigger
+/// element, a callback [toggleMenu] to control the menu state, and a bool
+/// [isOpen] that conveys whether the menu is currently open.
+///
+/// Example usage:
+/// ```dart
+/// builder: (context, focusNode, {required toggleMenu, required isOpen}) {
+///   return IconButton(
+///     icon: Icon(isOpen ? Icons.arrow_drop_up : Icons.arrow_drop_down),
+///     onPressed: toggleMenu,
+///     focusNode: focusNode,
+///   );
+/// }
+/// ```
 typedef BisonMenuBuilder =
     Widget Function(
       BuildContext context,
@@ -18,37 +35,63 @@ typedef BisonMenuBuilder =
     });
 
 /// Specifies the type of action that triggers the menu.
-enum BisonMenuTriggerAction {
-  /// Defer to the builder widget to trigger the menu. Use this if the widget
-  /// already has a built-in handler like `onPressed` to ensure proper
-  /// accessibility.
-  defer,
-
-  /// Primary (left click on web).
-  primary,
-
-  /// Secondary (right click on web).
-  secondary,
-}
+///
+/// This enum determines how the menu is triggered:
+/// - [defer]: Defer to the builder widget to trigger the menu. Use this if the
+///   widget already has a built-in handler like `onPressed` to ensure proper
+///   accessibility.
+/// - [primary]: Triggered by primary mouse button (left click on web).
+/// - [secondary]: Triggered by secondary mouse button (right click on web).
+enum BisonMenuTriggerAction { defer, primary, secondary }
 
 /// Represents a single item in a [BisonMenu].
+///
+/// Each menu item consists of a label, an optional icon, and a callback function
+/// that is executed when the item is selected. If [onSelect] is null, the menu
+/// item will be disabled.
+///
+/// Example usage:
+/// ```dart
+/// BisonMenuItem(
+///   label: 'Settings',
+///   icon: Icon(Icons.settings),
+///   onSelect: () => print('Settings selected'),
+/// )
+/// ```
 class BisonMenuItem {
-  /// The text label for the menu item.
   final String label;
-
-  /// Optional icon for the menu item.
   final Icon? icon;
-
-  /// Callback function called when the menu item is selected.
-  /// If null, the menu item will be disabled.
   final VoidCallback? onSelect;
 
-  /// Creates a new [BisonMenuItem].
   const BisonMenuItem({required this.label, this.icon, this.onSelect});
 }
 
-/// A customizable menu component that displays a list of items in a dropdown using MenuAnchor.
+/// A customizable menu component that displays a list of items in a dropdown.
+///
+/// This widget provides a flexible menu solution that can be triggered by different
+/// actions and supports keyboard navigation.
+///
+/// Example usage:
+/// ```dart
+/// BisonMenu(
+///   builder: (context, focusNode, {required toggleMenu, required isOpen}) {
+///     return IconButton(
+///       icon: Icon(Icons.menu),
+///       onPressed: toggleMenu,
+///       focusNode: focusNode,
+///     );
+///   },
+///   items: [
+///     BisonMenuItem(
+///       label: 'Settings',
+///       icon: Icon(Icons.settings),
+///       onSelect: () => print('Settings selected'),
+///     ),
+///   ],
+/// )
+/// ```
 class BisonMenu extends StatefulWidget {
+  /// The builder function that creates the menu trigger widget.
   final BisonMenuBuilder builder;
 
   /// The list of menu items to display.
@@ -58,6 +101,10 @@ class BisonMenu extends StatefulWidget {
   final BisonMenuTriggerAction triggerAction;
 
   /// Creates a new [BisonMenu].
+  ///
+  /// [builder] is required and defines the widget that will trigger the menu.
+  /// [items] is required and defines the list of menu items to display.
+  /// [triggerAction] is optional and defaults to [BisonMenuTriggerAction.defer].
   const BisonMenu({
     super.key,
     required this.builder,
@@ -70,10 +117,16 @@ class BisonMenu extends StatefulWidget {
 }
 
 class _BisonMenuState extends State<BisonMenu> {
+  /// Focus node for the menu trigger element.
   final FocusNode _childFocusNode = FocusNode(debugLabel: 'Menu Trigger');
+
+  /// Controller for managing the menu's open/closed state.
   final MenuController _controller = MenuController();
 
-  // One focus node per menu item.
+  /// Focus nodes for each menu item, one per item in [widget.items].
+  ///
+  /// This list is managed by [_syncFocusNodes] to ensure it matches the number
+  /// of items in the menu.
   final List<FocusNode> _itemFocusNodes = [];
 
   @override
@@ -88,6 +141,7 @@ class _BisonMenuState extends State<BisonMenu> {
     _syncFocusNodes();
   }
 
+  /// Synchronizes the number of focus nodes with the current number of menu items.
   void _syncFocusNodes() {
     // Ensure we have exactly N nodes for current items.
     final n = widget.items.length;
@@ -120,7 +174,10 @@ class _BisonMenuState extends State<BisonMenu> {
     return null;
   }
 
+  /// Requests focus on the first focusable menu item.
   void _focusFirst() => _firstFocusable()?.requestFocus();
+
+  /// Requests focus on the last focusable menu item.
   void _focusLast() => _lastFocusable()?.requestFocus();
 
   @override
@@ -220,8 +277,12 @@ class _BisonMenuState extends State<BisonMenu> {
 
   /// Builds the button style for menu items.
   ///
-  /// This helper method extracts the button style creation logic to improve
-  /// readability and maintainability of the build method.
+  /// [theme] The theme tokens for styling.
+  /// [padding] The spacing tokens for padding.
+  /// [typo] The typography tokens for text styling.
+  ///
+  /// Returns a [ButtonStyle] object that defines the visual appearance of menu
+  /// items.
   ButtonStyle _buildButtonStyle(
     final BisonThemeTokens theme,
     final BisonSpacingTokens padding,
