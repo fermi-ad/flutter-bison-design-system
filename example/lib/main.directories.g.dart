@@ -63,6 +63,16 @@ final directories = <_widgetbook.WidgetbookNode>[
                 builder: _bison_design_system_catalog_bison_icon_button
                     .buildBisonIconButtonOutlinedUseCase,
               ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Small Ghost',
+                builder: _bison_design_system_catalog_bison_icon_button
+                    .buildBisonIconButtonSmallGhostUseCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'White Ghost',
+                builder: _bison_design_system_catalog_bison_icon_button
+                    .buildBisonIconButtonWhiteGhostUseCase,
+              ),
             ],
           ),
         ],

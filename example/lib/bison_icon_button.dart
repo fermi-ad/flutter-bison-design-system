@@ -56,6 +56,58 @@ Widget buildBisonIconButtonGhostUseCase(BuildContext context) {
   );
 }
 
+@widgetbook.UseCase(name: 'White Ghost', type: BisonIconButton)
+Widget buildBisonIconButtonWhiteGhostUseCase(BuildContext context) {
+  return BisonIconButton.whiteGhost(
+    icon: context.knobs.object.dropdown(
+      label: 'Icon',
+      initialOption: Icon(Icons.settings_outlined),
+      labelBuilder: (icon) => switch (icon.icon) {
+        Icons.add => "Add",
+        Icons.save => "Save",
+        Icons.delete => "Delete",
+        Icons.settings_outlined => "Settings",
+        _ => "Settings",
+      },
+      options: [
+        Icon(Icons.settings_outlined),
+        Icon(Icons.add),
+        Icon(Icons.save),
+        Icon(Icons.delete),
+      ],
+    ),
+    onPressed: context.knobs.boolean(label: 'Disabled')
+        ? null
+        : () => debugPrint("Hello!"),
+  );
+}
+
+@widgetbook.UseCase(name: 'Small Ghost', type: BisonIconButton)
+Widget buildBisonIconButtonSmallGhostUseCase(BuildContext context) {
+  return BisonIconButton.smallGhost(
+    icon: context.knobs.object.dropdown(
+      label: 'Icon',
+      initialOption: Icon(Icons.settings_outlined),
+      labelBuilder: (icon) => switch (icon.icon) {
+        Icons.add => "Add",
+        Icons.save => "Save",
+        Icons.delete => "Delete",
+        Icons.settings_outlined => "Settings",
+        _ => "Settings",
+      },
+      options: [
+        Icon(Icons.settings_outlined),
+        Icon(Icons.add),
+        Icon(Icons.save),
+        Icon(Icons.delete),
+      ],
+    ),
+    onPressed: context.knobs.boolean(label: 'Disabled')
+        ? null
+        : () => debugPrint("Hello!"),
+  );
+}
+
 @widgetbook.UseCase(name: 'Outlined', type: BisonIconButton)
 Widget buildBisonIconButtonOutlinedUseCase(BuildContext context) {
   return BisonIconButton.outlined(

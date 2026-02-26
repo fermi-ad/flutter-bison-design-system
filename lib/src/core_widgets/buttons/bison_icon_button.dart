@@ -1,7 +1,7 @@
 import 'package:bison_design_system/bison_design_system.dart';
 import 'package:flutter/material.dart';
 
-enum _BisonIconButtonType { filled, ghost, outlined }
+enum _BisonIconButtonType { filled, ghost, whiteGhost, smallGhost, outlined }
 
 class BisonIconButton extends StatelessWidget {
   final Icon icon;
@@ -27,6 +27,28 @@ class BisonIconButton extends StatelessWidget {
       icon: icon,
       onPressed: onPressed,
       type: _BisonIconButtonType.ghost,
+    );
+  }
+
+  factory BisonIconButton.whiteGhost({
+    required final Icon icon,
+    required final VoidCallback? onPressed,
+  }) {
+    return BisonIconButton._(
+      icon: icon,
+      onPressed: onPressed,
+      type: _BisonIconButtonType.whiteGhost,
+    );
+  }
+
+  factory BisonIconButton.smallGhost({
+    required final Icon icon,
+    required final VoidCallback? onPressed,
+  }) {
+    return BisonIconButton._(
+      icon: icon,
+      onPressed: onPressed,
+      type: _BisonIconButtonType.smallGhost,
     );
   }
 
@@ -65,6 +87,18 @@ class BisonIconButton extends StatelessWidget {
           typo,
         ),
         _BisonIconButtonType.ghost => _ghostButtonStyle(
+          theme,
+          padding,
+          corners,
+          typo,
+        ),
+        _BisonIconButtonType.whiteGhost => _whiteGhostButtonStyle(
+          theme,
+          padding,
+          corners,
+          typo,
+        ),
+        _BisonIconButtonType.smallGhost => _smallGhostButtonStyle(
           theme,
           padding,
           corners,
@@ -186,6 +220,107 @@ ButtonStyle _ghostButtonStyle(
     // remove default padding given to button
     padding: WidgetStatePropertyAll(
       EdgeInsetsGeometry.all(padding.tinySpacing),
+    ),
+    // resetting default behaviour
+    overlayColor: WidgetStatePropertyAll(theme.surfaceTransparent),
+  );
+}
+
+ButtonStyle _whiteGhostButtonStyle(
+  final BisonThemeTokens theme,
+  final BisonSpacingTokens padding,
+  final BisonCornerTokens corners,
+  final BisonTypographyTokens typo,
+) {
+  return ButtonStyle(
+    backgroundColor: WidgetStateProperty.resolveWith<Color?>((
+      final Set<WidgetState> states,
+    ) {
+      if (states.contains(WidgetState.pressed)) {
+        return theme.buttonGhostWhiteFixedPressed;
+      }
+      if (states.contains(WidgetState.hovered)) {
+        return theme.buttonGhostWhiteFixedHovered;
+      }
+      return theme.surfaceTransparent;
+    }),
+    foregroundColor: WidgetStateProperty.resolveWith<Color?>((
+      final Set<WidgetState> states,
+    ) {
+      if (states.contains(WidgetState.disabled)) {
+        return theme.iconDisabled;
+      }
+      return theme.iconWhiteFixed;
+    }),
+    shape: WidgetStateProperty.all(
+      RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(corners.cornerExtraSmall),
+        ),
+      ),
+    ),
+    side: WidgetStateProperty.resolveWith<BorderSide?>((
+      final Set<WidgetState> states,
+    ) {
+      if (states.contains(WidgetState.focused)) {
+        return BorderSide(color: theme.borderPrimary, width: 2.0);
+      }
+      return BorderSide(style: BorderStyle.none);
+    }),
+    // remove default padding given to button
+    padding: WidgetStatePropertyAll(
+      EdgeInsetsGeometry.all(padding.tinySpacing),
+    ),
+    // resetting default behaviour
+    overlayColor: WidgetStatePropertyAll(theme.surfaceTransparent),
+  );
+}
+
+ButtonStyle _smallGhostButtonStyle(
+  final BisonThemeTokens theme,
+  final BisonSpacingTokens padding,
+  final BisonCornerTokens corners,
+  final BisonTypographyTokens typo,
+) {
+  return ButtonStyle(
+    backgroundColor: WidgetStateProperty.resolveWith<Color?>((
+      final Set<WidgetState> states,
+    ) {
+      if (states.contains(WidgetState.pressed)) {
+        return theme.buttonGhostPressed;
+      }
+      return theme.surfaceTransparent;
+    }),
+    foregroundColor: WidgetStateProperty.resolveWith<Color?>((
+      final Set<WidgetState> states,
+    ) {
+      if (states.contains(WidgetState.disabled)) {
+        return theme.iconDisabled;
+      }
+      if (states.contains(WidgetState.hovered) &&
+          !states.contains(WidgetState.pressed)) {
+        return theme.iconPrimary;
+      }
+      return theme.iconPlain;
+    }),
+    shape: WidgetStateProperty.all(
+      RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(corners.cornerExtraSmall),
+        ),
+      ),
+    ),
+    side: WidgetStateProperty.resolveWith<BorderSide?>((
+      final Set<WidgetState> states,
+    ) {
+      if (states.contains(WidgetState.focused)) {
+        return BorderSide(color: theme.borderPrimary, width: 2.0);
+      }
+      return BorderSide(style: BorderStyle.none);
+    }),
+    // remove default padding given to button
+    padding: WidgetStatePropertyAll(
+      EdgeInsetsGeometry.all(padding.noneSpacing),
     ),
     // resetting default behaviour
     overlayColor: WidgetStatePropertyAll(theme.surfaceTransparent),
