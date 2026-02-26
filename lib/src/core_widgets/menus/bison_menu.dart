@@ -71,6 +71,7 @@ class BisonMenu extends StatefulWidget {
 
 class _BisonMenuState extends State<BisonMenu> {
   final FocusNode _childFocusNode = FocusNode(debugLabel: 'Menu Trigger');
+  final MenuController _controller = MenuController();
 
   // One focus node per menu item.
   final List<FocusNode> _itemFocusNodes = [];
@@ -146,11 +147,14 @@ class _BisonMenuState extends State<BisonMenu> {
         backgroundColor: WidgetStatePropertyAll(theme.surfaceDefault),
       ),
       childFocusNode: _childFocusNode,
+      controller: _controller,
       menuChildren: [
         CallbackShortcuts(
-          bindings: <ShortcutActivator, VoidCallback>{
+          bindings: {
             const SingleActivator(LogicalKeyboardKey.home): _focusFirst,
             const SingleActivator(LogicalKeyboardKey.end): _focusLast,
+            const SingleActivator(LogicalKeyboardKey.tab): () =>
+                _controller.close(),
           },
           child: Column(
             mainAxisSize: MainAxisSize.min,
