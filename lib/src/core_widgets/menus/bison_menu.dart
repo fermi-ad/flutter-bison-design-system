@@ -171,52 +171,54 @@ class _BisonMenuState extends State<BisonMenu> {
             children: widget.items.indexed.map((final element) {
               final (index, item) = element;
 
+              final buttonStyle = ButtonStyle(
+                backgroundColor: WidgetStatePropertyAll(
+                  theme.surfaceTransparent,
+                ),
+                overlayColor: WidgetStateProperty.resolveWith<Color>((
+                  final Set<WidgetState> states,
+                ) {
+                  if (states.contains(WidgetState.selected)) {
+                    return theme.navigationSelectedActive;
+                  }
+                  if (states.any(
+                    (final state) =>
+                        state == WidgetState.hovered ||
+                        state == WidgetState.focused,
+                  )) {
+                    return theme.surfaceHovered;
+                  }
+                  return theme.surfaceTransparent;
+                }),
+                foregroundColor: WidgetStateProperty.resolveWith<Color?>((
+                  final Set<WidgetState> states,
+                ) {
+                  if (states.contains(WidgetState.disabled)) {
+                    return theme.textDisabled;
+                  }
+                  return theme.textPlain;
+                }),
+                iconColor: WidgetStateProperty.resolveWith<Color?>((
+                  final Set<WidgetState> states,
+                ) {
+                  if (states.contains(WidgetState.disabled)) {
+                    return theme.iconDisabled;
+                  }
+                  return theme.iconPlain;
+                }),
+                padding: WidgetStatePropertyAll(
+                  EdgeInsets.symmetric(
+                    horizontal: padding.xSmallSpacing,
+                    vertical: padding.tinySpacing,
+                  ),
+                ),
+                textStyle: WidgetStatePropertyAll(typo.bodyLarge),
+              );
+
               return MenuItemButton(
                 focusNode: _itemFocusNodes[index],
                 autofocus: index == 0,
-                style: ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(
-                    theme.surfaceTransparent,
-                  ),
-                  overlayColor: WidgetStateProperty.resolveWith<Color>((
-                    final Set<WidgetState> states,
-                  ) {
-                    if (states.contains(WidgetState.selected)) {
-                      return theme.navigationSelectedActive;
-                    }
-                    if (states.any(
-                      (final state) =>
-                          state == WidgetState.hovered ||
-                          state == WidgetState.focused,
-                    )) {
-                      return theme.surfaceHovered;
-                    }
-                    return theme.surfaceTransparent;
-                  }),
-                  foregroundColor: WidgetStateProperty.resolveWith<Color?>((
-                    final Set<WidgetState> states,
-                  ) {
-                    if (states.contains(WidgetState.disabled)) {
-                      return theme.textDisabled;
-                    }
-                    return theme.textPlain;
-                  }),
-                  iconColor: WidgetStateProperty.resolveWith<Color?>((
-                    final Set<WidgetState> states,
-                  ) {
-                    if (states.contains(WidgetState.disabled)) {
-                      return theme.iconDisabled;
-                    }
-                    return theme.iconPlain;
-                  }),
-                  padding: WidgetStatePropertyAll(
-                    EdgeInsets.symmetric(
-                      horizontal: padding.xSmallSpacing,
-                      vertical: padding.tinySpacing,
-                    ),
-                  ),
-                  textStyle: WidgetStatePropertyAll(typo.bodyLarge),
-                ),
+                style: buttonStyle,
                 onPressed: item.onSelect,
                 leadingIcon: item.icon,
                 child: Text(item.label),
