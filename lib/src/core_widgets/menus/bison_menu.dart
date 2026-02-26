@@ -155,76 +155,73 @@ class _BisonMenuState extends State<BisonMenu> {
               const SingleActivator(LogicalKeyboardKey.home): _focusFirst,
               const SingleActivator(LogicalKeyboardKey.end): _focusLast,
             },
-            child: FocusTraversalGroup(
-              policy: ReadingOrderTraversalPolicy(),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: widget.items.indexed.map((final element) {
-                  final (index, item) = element;
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: widget.items.indexed.map((final element) {
+                final (index, item) = element;
 
-                  return MenuItemButton(
-                    focusNode: _itemFocusNodes[index],
-                    autofocus: index == 0,
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.resolveWith<Color?>((
-                        final Set<WidgetState> states,
-                      ) {
-                        if (states.contains(WidgetState.selected)) {
-                          return theme.navigationSelectedActive;
-                        }
-                        if (states.any(
-                          (final state) =>
-                              state == WidgetState.hovered ||
-                              state == WidgetState.focused,
-                        )) {
-                          return theme.surfaceHovered;
-                        }
-                        return theme.surfaceTransparent;
-                      }),
-                      foregroundColor: WidgetStateProperty.resolveWith<Color?>((
-                        final Set<WidgetState> states,
-                      ) {
-                        if (states.contains(WidgetState.disabled)) {
-                          return theme.textDisabled;
-                        }
-                        return theme.textPlain;
-                      }),
-                      iconColor: WidgetStateProperty.resolveWith<Color?>((
-                        final Set<WidgetState> states,
-                      ) {
-                        if (states.contains(WidgetState.disabled)) {
-                          return theme.iconDisabled;
-                        }
-                        return theme.iconPlain;
-                      }),
-                      shape: WidgetStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(corners.cornerExtraSmall),
-                          ),
+                return MenuItemButton(
+                  focusNode: _itemFocusNodes[index],
+                  autofocus: index == 0,
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.resolveWith<Color?>((
+                      final Set<WidgetState> states,
+                    ) {
+                      if (states.contains(WidgetState.selected)) {
+                        return theme.navigationSelectedActive;
+                      }
+                      if (states.any(
+                        (final state) =>
+                            state == WidgetState.hovered ||
+                            state == WidgetState.focused,
+                      )) {
+                        return theme.surfaceHovered;
+                      }
+                      return theme.surfaceTransparent;
+                    }),
+                    foregroundColor: WidgetStateProperty.resolveWith<Color?>((
+                      final Set<WidgetState> states,
+                    ) {
+                      if (states.contains(WidgetState.disabled)) {
+                        return theme.textDisabled;
+                      }
+                      return theme.textPlain;
+                    }),
+                    iconColor: WidgetStateProperty.resolveWith<Color?>((
+                      final Set<WidgetState> states,
+                    ) {
+                      if (states.contains(WidgetState.disabled)) {
+                        return theme.iconDisabled;
+                      }
+                      return theme.iconPlain;
+                    }),
+                    shape: WidgetStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(corners.cornerExtraSmall),
                         ),
                       ),
-                      padding: WidgetStatePropertyAll(
-                        EdgeInsets.symmetric(
-                          horizontal: padding.smallSpacing,
-                          vertical: padding.tinySpacing,
-                        ),
-                      ),
-                      textStyle: WidgetStatePropertyAll(typo.bodyLarge),
                     ),
-                    onPressed: item.onSelect,
-                    child: Row(
-                      children: [
-                        if (item.icon != null) ...[
-                          item.icon!,
-                          SizedBox(width: padding.tinySpacing),
-                        ],
-                        Text(item.label),
+                    padding: WidgetStatePropertyAll(
+                      EdgeInsets.symmetric(
+                        horizontal: padding.smallSpacing,
+                        vertical: padding.tinySpacing,
+                      ),
+                    ),
+                    textStyle: WidgetStatePropertyAll(typo.bodyLarge),
+                  ),
+                  onPressed: item.onSelect,
+                  child: Row(
+                    children: [
+                      if (item.icon != null) ...[
+                        item.icon!,
+                        SizedBox(width: padding.tinySpacing),
                       ],
-                    ),
-                  );
-                }).toList(),
-              ),
+                      Text(item.label),
+                    ],
+                  ),
+                );
+              }).toList(),
             ),
           ),
         ),
