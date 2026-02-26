@@ -171,54 +171,10 @@ class _BisonMenuState extends State<BisonMenu> {
             children: widget.items.indexed.map((final element) {
               final (index, item) = element;
 
-              final buttonStyle = ButtonStyle(
-                backgroundColor: WidgetStatePropertyAll(
-                  theme.surfaceTransparent,
-                ),
-                overlayColor: WidgetStateProperty.resolveWith<Color>((
-                  final Set<WidgetState> states,
-                ) {
-                  if (states.contains(WidgetState.selected)) {
-                    return theme.navigationSelectedActive;
-                  }
-                  if (states.any(
-                    (final state) =>
-                        state == WidgetState.hovered ||
-                        state == WidgetState.focused,
-                  )) {
-                    return theme.surfaceHovered;
-                  }
-                  return theme.surfaceTransparent;
-                }),
-                foregroundColor: WidgetStateProperty.resolveWith<Color?>((
-                  final Set<WidgetState> states,
-                ) {
-                  if (states.contains(WidgetState.disabled)) {
-                    return theme.textDisabled;
-                  }
-                  return theme.textPlain;
-                }),
-                iconColor: WidgetStateProperty.resolveWith<Color?>((
-                  final Set<WidgetState> states,
-                ) {
-                  if (states.contains(WidgetState.disabled)) {
-                    return theme.iconDisabled;
-                  }
-                  return theme.iconPlain;
-                }),
-                padding: WidgetStatePropertyAll(
-                  EdgeInsets.symmetric(
-                    horizontal: padding.xSmallSpacing,
-                    vertical: padding.tinySpacing,
-                  ),
-                ),
-                textStyle: WidgetStatePropertyAll(typo.bodyLarge),
-              );
-
               return MenuItemButton(
                 focusNode: _itemFocusNodes[index],
                 autofocus: index == 0,
-                style: buttonStyle,
+                style: _buildButtonStyle(theme, padding, typo),
                 onPressed: item.onSelect,
                 leadingIcon: item.icon,
                 child: Text(item.label),
@@ -259,6 +215,57 @@ class _BisonMenuState extends State<BisonMenu> {
           return child;
         }
       },
+    );
+  }
+
+  /// Builds the button style for menu items.
+  ///
+  /// This helper method extracts the button style creation logic to improve
+  /// readability and maintainability of the build method.
+  ButtonStyle _buildButtonStyle(
+    final BisonThemeTokens theme,
+    final BisonSpacingTokens padding,
+    final BisonTypographyTokens typo,
+  ) {
+    return ButtonStyle(
+      backgroundColor: WidgetStatePropertyAll(theme.surfaceTransparent),
+      overlayColor: WidgetStateProperty.resolveWith<Color>((
+        final Set<WidgetState> states,
+      ) {
+        if (states.contains(WidgetState.selected)) {
+          return theme.navigationSelectedActive;
+        }
+        if (states.any(
+          (final state) =>
+              state == WidgetState.hovered || state == WidgetState.focused,
+        )) {
+          return theme.surfaceHovered;
+        }
+        return theme.surfaceTransparent;
+      }),
+      foregroundColor: WidgetStateProperty.resolveWith<Color?>((
+        final Set<WidgetState> states,
+      ) {
+        if (states.contains(WidgetState.disabled)) {
+          return theme.textDisabled;
+        }
+        return theme.textPlain;
+      }),
+      iconColor: WidgetStateProperty.resolveWith<Color?>((
+        final Set<WidgetState> states,
+      ) {
+        if (states.contains(WidgetState.disabled)) {
+          return theme.iconDisabled;
+        }
+        return theme.iconPlain;
+      }),
+      padding: WidgetStatePropertyAll(
+        EdgeInsets.symmetric(
+          horizontal: padding.xSmallSpacing,
+          vertical: padding.tinySpacing,
+        ),
+      ),
+      textStyle: WidgetStatePropertyAll(typo.bodyLarge),
     );
   }
 }
