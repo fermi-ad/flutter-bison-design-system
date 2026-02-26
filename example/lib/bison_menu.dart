@@ -9,11 +9,18 @@ import 'package:bison_design_system/core_widgets.dart'
 Widget buildBisonMenuUseCase(BuildContext context) {
   return Center(
     child: SizedBox(
-      width: 200,
-      height: 48,
+      width: 130,
+      height: 32,
       child: BisonMenu(
         builder: (_, final focusNode, {required toggleMenu, required isOpen}) {
           return FilledButton(
+            style: ButtonStyle(
+              shape: WidgetStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                ),
+              ),
+            ),
             focusNode: focusNode,
             onPressed: toggleMenu,
             child: Center(child: Text(isOpen ? "Close Menu" : "Open Menu")),

@@ -145,6 +145,16 @@ class _BisonMenuState extends State<BisonMenu> {
     return MenuAnchor(
       style: MenuStyle(
         backgroundColor: WidgetStatePropertyAll(theme.surfaceDefault),
+        shape: WidgetStateProperty.all(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(corners.cornerExtraSmall),
+            ),
+          ),
+        ),
+        padding: WidgetStatePropertyAll(
+          EdgeInsets.symmetric(vertical: padding.tinySpacing),
+        ),
       ),
       childFocusNode: _childFocusNode,
       controller: _controller,
@@ -165,7 +175,10 @@ class _BisonMenuState extends State<BisonMenu> {
                 focusNode: _itemFocusNodes[index],
                 autofocus: index == 0,
                 style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.resolveWith<Color?>((
+                  backgroundColor: WidgetStatePropertyAll(
+                    theme.surfaceTransparent,
+                  ),
+                  overlayColor: WidgetStateProperty.resolveWith<Color>((
                     final Set<WidgetState> states,
                   ) {
                     if (states.contains(WidgetState.selected)) {
@@ -196,16 +209,9 @@ class _BisonMenuState extends State<BisonMenu> {
                     }
                     return theme.iconPlain;
                   }),
-                  shape: WidgetStateProperty.all(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(corners.cornerExtraSmall),
-                      ),
-                    ),
-                  ),
                   padding: WidgetStatePropertyAll(
                     EdgeInsets.symmetric(
-                      horizontal: padding.smallSpacing,
+                      horizontal: padding.xSmallSpacing,
                       vertical: padding.tinySpacing,
                     ),
                   ),
@@ -247,7 +253,6 @@ class _BisonMenuState extends State<BisonMenu> {
         // menu" style, positioning menu at cursor location.
         else if (widget.triggerAction == BisonMenuTriggerAction.secondary) {
           return MouseRegion(
-            cursor: SystemMouseCursors.click,
             child: GestureDetector(
               onSecondaryTapDown: (final tapDetails) =>
                   controller.open(position: tapDetails.localPosition),
