@@ -99,7 +99,10 @@ class BisonTypographyTokens extends ThemeExtension<BisonTypographyTokens> {
   }
 
   @override
-  BisonTypographyTokens lerp(covariant final ThemeExtension<BisonTypographyTokens>? other, final double t) {
+  BisonTypographyTokens lerp(
+    covariant final ThemeExtension<BisonTypographyTokens>? other,
+    final double t,
+  ) {
     if (other is! BisonTypographyTokens) return this;
     return BisonTypographyTokens(
       h1: TextStyle.lerp(h1, other.h1, t)!,
@@ -107,7 +110,11 @@ class BisonTypographyTokens extends ThemeExtension<BisonTypographyTokens> {
       h3: TextStyle.lerp(h3, other.h3, t)!,
       bodyLarge: TextStyle.lerp(bodyLarge, other.bodyLarge, t)!,
       bodySmall: TextStyle.lerp(bodySmall, other.bodySmall, t)!,
-      capitalizedLabel: TextStyle.lerp(capitalizedLabel, other.capitalizedLabel, t)!,
+      capitalizedLabel: TextStyle.lerp(
+        capitalizedLabel,
+        other.capitalizedLabel,
+        t,
+      )!,
     );
   }
 }

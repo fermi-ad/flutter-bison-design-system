@@ -10,8 +10,10 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:bison_design_system_catalog/bison_buton.dart'
-    as _bison_design_system_catalog_bison_buton;
+import 'package:bison_design_system_catalog/bison_button.dart'
+    as _bison_design_system_catalog_bison_button;
+import 'package:bison_design_system_catalog/bison_menu.dart'
+    as _bison_design_system_catalog_bison_menu;
 import 'package:widgetbook/widgetbook.dart' as _widgetbook;
 
 final directories = <_widgetbook.WidgetbookNode>[
@@ -26,8 +28,28 @@ final directories = <_widgetbook.WidgetbookNode>[
             useCases: [
               _widgetbook.WidgetbookUseCase(
                 name: 'Default',
-                builder: _bison_design_system_catalog_bison_buton
+                builder: _bison_design_system_catalog_bison_button
                     .buildBisonButtonUseCase,
+              ),
+            ],
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookFolder(
+        name: 'menus',
+        children: [
+          _widgetbook.WidgetbookComponent(
+            name: 'BisonMenu',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Default',
+                builder: _bison_design_system_catalog_bison_menu
+                    .buildBisonMenuUseCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Right Click (Context Menu)',
+                builder: _bison_design_system_catalog_bison_menu
+                    .buildRightClickContextMenuUseCase,
               ),
             ],
           ),

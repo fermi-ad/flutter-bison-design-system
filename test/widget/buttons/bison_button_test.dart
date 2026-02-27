@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bison_design_system/bison_design_system.dart';
 import 'package:flutter/material.dart';
+import '../common.dart';
 
 void main() {
   group("Testing callback function", () {
@@ -10,9 +11,7 @@ void main() {
       final bool callbackCalled = false;
 
       await tester.pumpWidget(
-        _buildOutScaffold(
-          BisonButton(buttonLabel: 'Test Button', onPressed: null),
-        ),
+        buildScaffold(BisonButton(buttonLabel: 'Test Button', onPressed: null)),
       );
 
       final buttonFinder = find.byType(BisonButton);
@@ -31,7 +30,7 @@ void main() {
       bool callbackCalled = false;
 
       await tester.pumpWidget(
-        _buildOutScaffold(
+        buildScaffold(
           BisonButton(
             buttonLabel: 'Test Button',
             onPressed: () {
@@ -59,7 +58,7 @@ void main() {
       final theme = BisonThemeTokens.light();
 
       await tester.pumpWidget(
-        _buildOutScaffold(
+        buildScaffold(
           BisonButton(
             buttonLabel: 'Filled',
             onPressed: () {},
@@ -87,7 +86,7 @@ void main() {
       final theme = BisonThemeTokens.light();
 
       await tester.pumpWidget(
-        _buildOutScaffold(
+        buildScaffold(
           BisonButton(
             buttonLabel: 'ghost',
             onPressed: () {},
@@ -115,7 +114,7 @@ void main() {
       final theme = BisonThemeTokens.light();
 
       await tester.pumpWidget(
-        _buildOutScaffold(
+        buildScaffold(
           BisonButton(
             buttonLabel: 'Outlined',
             onPressed: () {},
@@ -143,7 +142,7 @@ void main() {
       final theme = BisonThemeTokens.light();
 
       await tester.pumpWidget(
-        _buildOutScaffold(
+        buildScaffold(
           BisonButton(
             buttonLabel: 'Destructive',
             onPressed: () {},
@@ -171,7 +170,7 @@ void main() {
       final spacing = BisonSpacingTokens.standard();
 
       await tester.pumpWidget(
-        _buildOutScaffold(
+        buildScaffold(
           BisonButton(
             buttonLabel: 'Label',
             onPressed: () => debugPrint('test'),
@@ -200,7 +199,7 @@ void main() {
       final spacing = BisonSpacingTokens.standard();
 
       await tester.pumpWidget(
-        _buildOutScaffold(
+        buildScaffold(
           BisonButton(
             buttonLabel: 'WithIcon',
             onPressed: () => debugPrint('test'),
@@ -248,7 +247,7 @@ void main() {
       final corners = BisonCornerTokens.standard();
 
       await tester.pumpWidget(
-        _buildOutScaffold(
+        buildScaffold(
           BisonButton(buttonLabel: 'Corner', onPressed: () => debugPrint("")),
         ),
       );
@@ -271,7 +270,7 @@ void main() {
       final theme = BisonThemeTokens.light();
 
       await tester.pumpWidget(
-        _buildOutScaffold(
+        buildScaffold(
           BisonButton(
             buttonLabel: 'filled',
             onPressed: null,
@@ -309,7 +308,7 @@ void main() {
       final theme = BisonThemeTokens.light();
 
       await tester.pumpWidget(
-        _buildOutScaffold(
+        buildScaffold(
           BisonButton(
             buttonLabel: 'ghost',
             onPressed: null,
@@ -345,7 +344,7 @@ void main() {
       final theme = BisonThemeTokens.light();
 
       await tester.pumpWidget(
-        _buildOutScaffold(
+        buildScaffold(
           BisonButton(
             buttonLabel: 'outlined',
             onPressed: null,
@@ -381,7 +380,7 @@ void main() {
       final theme = BisonThemeTokens.light();
 
       await tester.pumpWidget(
-        _buildOutScaffold(
+        buildScaffold(
           BisonButton(
             buttonLabel: 'destructive',
             onPressed: null,
@@ -412,18 +411,4 @@ void main() {
       expect(destructiveForeground, equals(theme.textDisabled));
     });
   });
-}
-
-Widget _buildOutScaffold(final Widget widget) {
-  return MaterialApp(
-    theme: ThemeData(
-      extensions: [
-        BisonThemeTokens.light(),
-        BisonSpacingTokens.standard(),
-        BisonCornerTokens.standard(),
-        BisonTypographyTokens.fromTokens(BisonThemeTokens.light()),
-      ],
-    ),
-    home: Scaffold(body: Center(child: widget)),
-  );
 }
