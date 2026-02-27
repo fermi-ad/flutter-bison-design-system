@@ -91,7 +91,7 @@ Widget buildRightClickContextMenuUseCase(BuildContext context) {
       return Focus(
         focusNode: focusNode,
         child: Container(
-          width: 200,
+          width: 250,
           height: 100,
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey),
@@ -100,7 +100,7 @@ Widget buildRightClickContextMenuUseCase(BuildContext context) {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: [Text('Right-click to open menu')],
+            children: [Text('Right-click to open context menu')],
           ),
         ),
       );
