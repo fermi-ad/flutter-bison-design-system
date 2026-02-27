@@ -1,29 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bison_design_system/bison_design_system.dart';
-import '../common.dart';
-
-/// Builds a menu with the specified list of items.
-///
-/// This helper function creates a menu with the provided items.
-Widget buildMenuWithItems(final List<BisonMenuItem> items) {
-  return buildScaffold(
-    BisonMenu(
-      builder:
-          (
-            final context,
-            final focusNode, {
-            required final toggleMenu,
-            required final isOpen,
-          }) => FilledButton(
-            focusNode: focusNode,
-            onPressed: toggleMenu,
-            child: const Text('Open Menu'),
-          ),
-      items: items,
-    ),
-  );
-}
+import 'bison_menu_common.dart';
 
 void main() {
   group('BisonMenu Container Styling Tests', () {
@@ -32,9 +10,7 @@ void main() {
       (final WidgetTester tester) async {
         final theme = BisonThemeTokens.light();
 
-        await tester.pumpWidget(
-          buildMenuWithItems([const BisonMenuItem(label: 'Item 1')]),
-        );
+        await tester.pumpWidget(buildStandardMenu(3));
 
         await tester.tap(find.text('Open Menu'));
         await tester.pumpAndSettle();
@@ -53,9 +29,7 @@ void main() {
     ) async {
       final corners = BisonCornerTokens.standard();
 
-      await tester.pumpWidget(
-        buildMenuWithItems([const BisonMenuItem(label: 'Item 1')]),
-      );
+      await tester.pumpWidget(buildStandardMenu(3));
 
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
@@ -77,9 +51,7 @@ void main() {
     ) async {
       final spacing = BisonSpacingTokens.standard();
 
-      await tester.pumpWidget(
-        buildMenuWithItems([const BisonMenuItem(label: 'Item 1')]),
-      );
+      await tester.pumpWidget(buildStandardMenu(3));
 
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
@@ -100,14 +72,12 @@ void main() {
     ) async {
       final theme = BisonThemeTokens.light();
 
-      await tester.pumpWidget(
-        buildMenuWithItems([const BisonMenuItem(label: 'Item 1')]),
-      );
+      await tester.pumpWidget(buildStandardMenu(3));
 
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuItemButton = find.byType(MenuItemButton);
+      final menuItemButton = find.byType(MenuItemButton).first;
       final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
       final style = menuItemWidget.style!;
 
@@ -120,14 +90,12 @@ void main() {
     ) async {
       final theme = BisonThemeTokens.light();
 
-      await tester.pumpWidget(
-        buildMenuWithItems([const BisonMenuItem(label: 'Item 1')]),
-      );
+      await tester.pumpWidget(buildStandardMenu(3));
 
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuItemButton = find.byType(MenuItemButton);
+      final menuItemButton = find.byType(MenuItemButton).first;
       final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
       final style = menuItemWidget.style!;
 
@@ -140,16 +108,12 @@ void main() {
     ) async {
       final theme = BisonThemeTokens.light();
 
-      await tester.pumpWidget(
-        buildMenuWithItems([
-          const BisonMenuItem(label: 'Item 1', icon: Icon(Icons.add)),
-        ]),
-      );
+      await tester.pumpWidget(buildStandardMenu(3));
 
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuItemButton = find.byType(MenuItemButton);
+      final menuItemButton = find.byType(MenuItemButton).first;
       final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
       final style = menuItemWidget.style!;
 
@@ -162,14 +126,12 @@ void main() {
     ) async {
       final typo = BisonTypographyTokens.fromTokens(BisonThemeTokens.light());
 
-      await tester.pumpWidget(
-        buildMenuWithItems([const BisonMenuItem(label: 'Item 1')]),
-      );
+      await tester.pumpWidget(buildStandardMenu(3));
 
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuItemButton = find.byType(MenuItemButton);
+      final menuItemButton = find.byType(MenuItemButton).first;
       final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
       final style = menuItemWidget.style!;
 
@@ -182,14 +144,12 @@ void main() {
       (final WidgetTester tester) async {
         final spacing = BisonSpacingTokens.standard();
 
-        await tester.pumpWidget(
-          buildMenuWithItems([const BisonMenuItem(label: 'Item 1')]),
-        );
+        await tester.pumpWidget(buildStandardMenu(3));
 
         await tester.tap(find.text('Open Menu'));
         await tester.pumpAndSettle();
 
-        final menuItemButton = find.byType(MenuItemButton);
+        final menuItemButton = find.byType(MenuItemButton).first;
         final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
         final style = menuItemWidget.style!;
 
@@ -207,14 +167,12 @@ void main() {
     ) async {
       final theme = BisonThemeTokens.light();
 
-      await tester.pumpWidget(
-        buildMenuWithItems([const BisonMenuItem(label: 'Item 1')]),
-      );
+      await tester.pumpWidget(buildStandardMenu(3));
 
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuItemButton = find.byType(MenuItemButton);
+      final menuItemButton = find.byType(MenuItemButton).first;
       final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
       final style = menuItemWidget.style!;
 
@@ -229,14 +187,12 @@ void main() {
     ) async {
       final theme = BisonThemeTokens.light();
 
-      await tester.pumpWidget(
-        buildMenuWithItems([const BisonMenuItem(label: 'Item 1')]),
-      );
+      await tester.pumpWidget(buildStandardMenu(3));
 
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuItemButton = find.byType(MenuItemButton);
+      final menuItemButton = find.byType(MenuItemButton).first;
       final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
       final style = menuItemWidget.style!;
 
@@ -251,14 +207,12 @@ void main() {
       (final WidgetTester tester) async {
         final theme = BisonThemeTokens.light();
 
-        await tester.pumpWidget(
-          buildMenuWithItems([const BisonMenuItem(label: 'Item 1')]),
-        );
+        await tester.pumpWidget(buildStandardMenu(3));
 
         await tester.tap(find.text('Open Menu'));
         await tester.pumpAndSettle();
 
-        final menuItemButton = find.byType(MenuItemButton);
+        final menuItemButton = find.byType(MenuItemButton).first;
         final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
         final style = menuItemWidget.style!;
 
@@ -356,7 +310,11 @@ void main() {
 
       await tester.pumpWidget(
         buildMenuWithItems([
-          const BisonMenuItem(label: 'Item 1', icon: Icon(Icons.add)),
+          BisonMenuItem(
+            label: 'Item 1',
+            onSelect: () {},
+            icon: Icon(Icons.add),
+          ),
         ]),
       );
 
@@ -406,14 +364,12 @@ void main() {
     ) async {
       final spacing = BisonSpacingTokens.standard();
 
-      await tester.pumpWidget(
-        buildMenuWithItems([const BisonMenuItem(label: 'Item 1')]),
-      );
+      await tester.pumpWidget(buildStandardMenu(3));
 
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuItemButton = find.byType(MenuItemButton);
+      final menuItemButton = find.byType(MenuItemButton).first;
       final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
       final style = menuItemWidget.style!;
 
@@ -427,14 +383,12 @@ void main() {
     ) async {
       final spacing = BisonSpacingTokens.standard();
 
-      await tester.pumpWidget(
-        buildMenuWithItems([const BisonMenuItem(label: 'Item 1')]),
-      );
+      await tester.pumpWidget(buildStandardMenu(3));
 
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuItemButton = find.byType(MenuItemButton);
+      final menuItemButton = find.byType(MenuItemButton).first;
       final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
       final style = menuItemWidget.style!;
 
@@ -450,14 +404,12 @@ void main() {
     ) async {
       final typo = BisonTypographyTokens.fromTokens(BisonThemeTokens.light());
 
-      await tester.pumpWidget(
-        buildMenuWithItems([const BisonMenuItem(label: 'Item 1')]),
-      );
+      await tester.pumpWidget(buildStandardMenu(3));
 
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuItemButton = find.byType(MenuItemButton);
+      final menuItemButton = find.byType(MenuItemButton).first;
       final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
       final style = menuItemWidget.style!;
 

@@ -26,8 +26,8 @@ void main() {
       final WidgetTester tester,
     ) async {
       final items = [
-        const BisonMenuItem(label: 'Item 1'),
-        const BisonMenuItem(label: 'Item 2'),
+        BisonMenuItem(label: 'Item 1', onSelect: () {}),
+        BisonMenuItem(label: 'Item 2', onSelect: () {}),
       ];
 
       await tester.pumpWidget(
@@ -57,7 +57,7 @@ void main() {
     testWidgets('secondary trigger action works correctly', (
       final WidgetTester tester,
     ) async {
-      final items = [const BisonMenuItem(label: 'Right Item')];
+      final items = [BisonMenuItem(label: 'Right Item', onSelect: () {})];
 
       await tester.pumpWidget(
         buildScaffold(
@@ -108,7 +108,11 @@ void main() {
       final WidgetTester tester,
     ) async {
       final items = [
-        const BisonMenuItem(label: 'Icon Item', icon: Icon(Icons.add)),
+        BisonMenuItem(
+          label: 'Icon Item',
+          onSelect: () {},
+          icon: Icon(Icons.add),
+        ),
       ];
 
       await tester.pumpWidget(

@@ -66,6 +66,7 @@ Widget buildBisonMenuUseCase(BuildContext context) {
               label: 'Item 3 Label',
               initialValue: 'Disabled Item',
             ),
+            onSelect: null,
             icon: context.knobs.objectOrNull.dropdown(
               label: 'Item 3 Icon',
               labelBuilder: (icon) => switch (icon.icon) {
@@ -76,7 +77,6 @@ Widget buildBisonMenuUseCase(BuildContext context) {
               },
               options: [Icon(Icons.add), Icon(Icons.save), Icon(Icons.delete)],
             ),
-            // No onSelect callback makes this menu item disabled
           ),
         ],
       ),
@@ -84,7 +84,7 @@ Widget buildBisonMenuUseCase(BuildContext context) {
   );
 }
 
-@widgetbook.UseCase(name: 'Right Click Menu', type: BisonMenu)
+@widgetbook.UseCase(name: 'Right Click (Context Menu)', type: BisonMenu)
 Widget buildRightClickContextMenuUseCase(BuildContext context) {
   return BisonMenu(
     builder: (_, final focusNode, {required toggleMenu, required isOpen}) {

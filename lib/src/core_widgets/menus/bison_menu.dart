@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:disable_web_context_menu/disable_web_context_menu.dart'
     show DisableWebContextMenu;
 import 'package:bison_design_system/bison_design_system.dart'
@@ -39,9 +39,12 @@ typedef BisonMenuBuilder =
 /// This enum determines how the menu is triggered:
 /// - [defer]: Defer to the builder widget to trigger the menu. Use this if the
 ///   widget already has a built-in handler like `onPressed` to ensure proper
-///   accessibility.
-/// - [primary]: Triggered by primary mouse button (left click on web).
-/// - [secondary]: Triggered by secondary mouse button (right click on web).
+///   accessibility. This is the most common use case.
+/// - [primary]: Triggered by a primary action (left click on web) handled by
+///   the menu. This is a relatively rare use case. Make sure the builder widget
+///   can receive focus to improve accessibilty.
+/// - [secondary]: Triggered by a secondary action (right click on web) handled
+///   by the menu. Use this for context menus.
 enum BisonMenuTriggerAction { defer, primary, secondary }
 
 /// Represents a single item in a [BisonMenu].
@@ -60,10 +63,10 @@ enum BisonMenuTriggerAction { defer, primary, secondary }
 /// ```
 class BisonMenuItem {
   final String label;
-  final Icon? icon;
   final VoidCallback? onSelect;
+  final Icon? icon;
 
-  const BisonMenuItem({required this.label, this.icon, this.onSelect});
+  const BisonMenuItem({required this.label, required this.onSelect, this.icon});
 }
 
 /// A customizable menu component that displays a list of items in a dropdown.
