@@ -12,10 +12,10 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:bison_design_system_catalog/bison_button.dart'
     as _bison_design_system_catalog_bison_button;
-import 'package:bison_design_system_catalog/bison_menu.dart'
-    as _bison_design_system_catalog_bison_menu;
 import 'package:bison_design_system_catalog/bison_icon_button.dart'
     as _bison_design_system_catalog_bison_icon_button;
+import 'package:bison_design_system_catalog/bison_menu.dart'
+    as _bison_design_system_catalog_bison_menu;
 import 'package:widgetbook/widgetbook.dart' as _widgetbook;
 
 final directories = <_widgetbook.WidgetbookNode>[
@@ -31,16 +31,6 @@ final directories = <_widgetbook.WidgetbookNode>[
               _widgetbook.WidgetbookUseCase(
                 name: 'Default',
                 builder: _bison_design_system_catalog_bison_button
-                    .buildBisonButtonUseCase,
-              ),
-            ],
-          ),
-          _widgetbook.WidgetbookComponent(
-            name: 'BisonIconButton',
-            useCases: [
-              _widgetbook.WidgetbookUseCase(
-                name: 'Default',
-                builder: _bison_design_system_catalog_bison_icon_button
                     .buildBisonButtonUseCase,
               ),
             ],
