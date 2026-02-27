@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:bison_design_system/bison_design_system.dart';
-import '../common.dart';
-import './bison_menu_common.dart' show buildStandardMenu, buildMenuWithItems;
+import 'bison_menu_common.dart' show buildStandardMenu, buildMenuWithItems;
+import '../common.dart' show buildScaffold;
 
 void main() {
   group('BisonMenu basic interactions', () {
@@ -85,11 +85,16 @@ void main() {
     testWidgets('selecting a menu item triggers its callback', (
       final WidgetTester tester,
     ) async {
-      bool callbackCalled = false;
+      bool callback1Called = false;
+      bool callback2Called = false;
       final items = [
         BisonMenuItem(
           label: 'Select Me',
-          onSelect: () => callbackCalled = true,
+          onSelect: () => callback1Called = true,
+        ),
+        BisonMenuItem(
+          label: "Don't Select Me",
+          onSelect: () => callback2Called = true,
         ),
       ];
 
@@ -101,10 +106,11 @@ void main() {
       await tester.tap(find.text('Select Me'));
       await tester.pumpAndSettle();
 
-      expect(callbackCalled, isTrue);
+      expect(callback1Called, isTrue);
+      expect(callback2Called, isFalse);
     });
 
-    testWidgets('menu items with icons render the icon', (
+    testWidgets('menu item with icon renders the icon', (
       final WidgetTester tester,
     ) async {
       final items = [
@@ -115,26 +121,9 @@ void main() {
         ),
       ];
 
-      await tester.pumpWidget(
-        buildScaffold(
-          BisonMenu(
-            builder:
-                (
-                  final context,
-                  final focusNode, {
-                  required final isOpen,
-                  required final toggleMenu,
-                }) => FilledButton(
-                  focusNode: focusNode,
-                  onPressed: toggleMenu,
-                  child: const Text('Icon Test'),
-                ),
-            items: items,
-          ),
-        ),
-      );
+      await tester.pumpWidget(buildMenuWithItems(items));
 
-      await tester.tap(find.text('Icon Test'));
+      await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.add), findsOneWidget);
@@ -150,12 +139,15 @@ void main() {
       await tester.tap(menuButton);
       await tester.pumpAndSettle();
 
+      // The anchor should not have focus.
+      final focusNode = Focus.of(tester.element(menuButton));
+      expect(focusNode.hasFocus, isFalse);
+
       // Close the menu by tapping the anchor again (toggle behavior).
       await tester.tap(menuButton);
       await tester.pumpAndSettle();
 
       // The anchor should have focus now.
-      final focusNode = Focus.of(tester.element(menuButton));
       expect(focusNode.hasFocus, isTrue);
     });
 
@@ -166,8 +158,13 @@ void main() {
       await tester.pumpWidget(buildStandardMenu(30));
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
-      // The menu should contain a Scrollable widget (e.g., ListView).
-      expect(find.byType(Scrollable), findsOneWidget);
+
+      final menuAnchor = find.byType(MenuAnchor);
+      final scrollable = find.descendant(
+        of: menuAnchor,
+        matching: find.byType(Scrollable),
+      );
+      expect(scrollable, findsOneWidget);
     });
   });
 
@@ -199,15 +196,13 @@ void main() {
       final item3Element = tester.element(item3Finder);
       final item3Focus = Focus.of(item3Element);
       expect(item3Focus.hasFocus, isTrue);
+      expect(item2Focus.hasFocus, isFalse);
 
       // Test Arrow Up: Move focus to previous item
       await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
       await tester.pumpAndSettle();
       // Verify focus moves to Item 2
-      expect(item2Finder, findsOneWidget);
-      final item2Element2 = tester.element(item2Finder);
-      final item2Focus2 = Focus.of(item2Element2);
-      expect(item2Focus2.hasFocus, isTrue);
+      expect(item2Focus.hasFocus, isTrue);
     });
 
     testWidgets('home/end keys navigate to first/last items', (
@@ -243,8 +238,8 @@ void main() {
     testWidgets('enter/space keys activate menu items', (
       final WidgetTester tester,
     ) async {
-      int callback1Called = 0;
-      int callback2Called = 0;
+      var callback1Called = 0;
+      var callback2Called = 0;
       final items = [
         BisonMenuItem(label: 'Item 1', onSelect: () => callback1Called += 1),
         BisonMenuItem(label: 'Item 2', onSelect: () => callback2Called += 1),
@@ -288,7 +283,7 @@ void main() {
       // Verify menu is open
       expect(find.text('Item 1'), findsOneWidget);
 
-      // Test Esc: Close menu & return focus
+      // Test Esc: Close menu
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pumpAndSettle();
       // Verify menu is closed
@@ -300,7 +295,7 @@ void main() {
       // Verify menu is open
       expect(find.text('Item 1'), findsOneWidget);
 
-      // Test Esc: Close menu & return focus
+      // Test Tab: Close menu
       await tester.sendKeyEvent(LogicalKeyboardKey.tab);
       await tester.pumpAndSettle();
       // Verify menu is closed

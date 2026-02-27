@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bison_design_system/bison_design_system.dart';
 import '../common.dart';
 
-/// Builds a menu with the specified list of items.
-///
-/// This helper function creates a menu with the provided items.
+// Builds a menu with the specified list of items.
 Widget buildMenuWithItems(final List<BisonMenuItem> items) {
   return buildScaffold(
     BisonMenu(
@@ -24,10 +22,7 @@ Widget buildMenuWithItems(final List<BisonMenuItem> items) {
   );
 }
 
-/// Builds a standard menu with N items.
-///
-/// This helper function creates N standard menu items and builds a menu
-/// containing them.
+// Builds a standard menu with [itemCount] items.
 Widget buildStandardMenu(final int itemCount) {
   final items = List.generate(
     itemCount,

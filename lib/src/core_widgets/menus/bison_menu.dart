@@ -41,10 +41,10 @@ typedef BisonMenuBuilder =
 ///   widget already has a built-in handler like `onPressed` to ensure proper
 ///   accessibility. This is the most common use case.
 /// - [primary]: Triggered by a primary action (left click on web) handled by
-///   the menu. This is a relatively rare use case. Make sure the builder widget
-///   can receive focus to improve accessibilty.
+///   the menu widget. This is a relatively rare use case. Make sure the builder
+///   widget can receive focus to improve accessibilty.
 /// - [secondary]: Triggered by a secondary action (right click on web) handled
-///   by the menu. Use this for context menus.
+///   by the menu widget. Use this for context menus.
 enum BisonMenuTriggerAction { defer, primary, secondary }
 
 /// Represents a single item in a [BisonMenu].

@@ -108,24 +108,33 @@ Widget buildRightClickContextMenuUseCase(BuildContext context) {
     triggerAction: BisonMenuTriggerAction.secondary,
     items: [
       BisonMenuItem(
-        label: context.knobs.string(label: 'Copy', initialValue: 'Copy'),
+        label: context.knobs.string(
+          label: 'Item 1 Label',
+          initialValue: 'Copy',
+        ),
         icon: const Icon(Icons.copy),
-        onSelect: () => debugPrint("Copy selected"),
+        onSelect: () => debugPrint("Item 1 selected"),
       ),
       BisonMenuItem(
-        label: context.knobs.string(label: 'Paste', initialValue: 'Paste'),
+        label: context.knobs.string(
+          label: 'Item 2 Label',
+          initialValue: 'Paste',
+        ),
         icon: const Icon(Icons.paste),
-        onSelect: () => debugPrint("Paste selected"),
+        onSelect: () => debugPrint("Item 2 selected"),
       ),
       BisonMenuItem(
-        label: context.knobs.string(label: 'Cut', initialValue: 'Cut'),
+        label: context.knobs.string(label: 'Item 3 Label', initialValue: 'Cut'),
         icon: const Icon(Icons.cut),
-        onSelect: () => debugPrint("Cut selected"),
+        onSelect: () => debugPrint("Item 3 selected"),
       ),
       BisonMenuItem(
-        label: context.knobs.string(label: 'Delete', initialValue: 'Delete'),
+        label: context.knobs.string(
+          label: 'Item 4 Label',
+          initialValue: 'Delete',
+        ),
         icon: const Icon(Icons.delete),
-        onSelect: () => debugPrint("Delete selected"),
+        onSelect: () => debugPrint("Item 4 selected"),
       ),
     ],
   );
