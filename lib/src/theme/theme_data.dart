@@ -12,54 +12,68 @@ class BisonThemeData {
         ? BisonThemeTokens.light()
         : BisonThemeTokens.dark();
 
+    // -----------------------------------------------------------------
+    // Primary / Secondary / Tertiary groups
+    // -----------------------------------------------------------------
+    // `borderPrimary`, `borderSecondary` and `borderPlain` are the
+    // “brand” colours defined per‑brightness.  `textInverse` is the
+    // high‑contrast “on‑color” used for those groups.
+    // `surfaceDefault` / `surfaceHovered` / `surfacePressed` provide
+    // tonal variants that work well as container colours.
+    // -----------------------------------------------------------------
     return ColorScheme(
       brightness: brightness,
-      primary: themeTokens.borderPrimary,
+
+      // Primary group
+      primary: themeTokens.buttonPrimary,
       onPrimary: themeTokens.textInverse,
-      primaryContainer: themeTokens.surfaceDefault,
+      primaryContainer: themeTokens.surfaceHovered,
       onPrimaryContainer: themeTokens.textPlain,
-      primaryFixed: themeTokens.surfaceDefault,
-      primaryFixedDim: themeTokens.surfaceDefault,
-      onPrimaryFixed: themeTokens.textPlain,
-      onPrimaryFixedVariant: themeTokens.textPlain,
+
+      // Secondary group
       secondary: themeTokens.borderSecondary,
       onSecondary: themeTokens.textInverse,
-      secondaryContainer: themeTokens.surfaceDefault,
+      secondaryContainer: themeTokens.surfaceHovered,
       onSecondaryContainer: themeTokens.textPlain,
-      secondaryFixed: themeTokens.surfaceDefault,
-      secondaryFixedDim: themeTokens.surfaceDefault,
-      onSecondaryFixed: themeTokens.textPlain,
-      onSecondaryFixedVariant: themeTokens.textPlain,
+
+      // Tertiary group – use the same colour as primary for now;
+      // we can replace it with a dedicated accent token later.
       tertiary: themeTokens.borderPrimary,
       onTertiary: themeTokens.textInverse,
-      tertiaryContainer: themeTokens.surfaceDefault,
+      tertiaryContainer: themeTokens.surfaceHovered,
       onTertiaryContainer: themeTokens.textPlain,
-      tertiaryFixed: themeTokens.surfaceDefault,
-      tertiaryFixedDim: themeTokens.surfaceDefault,
-      onTertiaryFixed: themeTokens.textPlain,
-      onTertiaryFixedVariant: themeTokens.textPlain,
+
+      // Error group.
       error: themeTokens.borderError,
       onError: themeTokens.textInverse,
-      errorContainer: themeTokens.surfaceDefault,
+      errorContainer: themeTokens.surfaceHovered,
       onErrorContainer: themeTokens.textPlain,
+
+      // Surface hierarchy – the various surface tokens give depth.
       surface: themeTokens.surfaceDefault,
       onSurface: themeTokens.textPlain,
-      surfaceDim: themeTokens.surfaceDefault,
-      surfaceBright: themeTokens.surfaceDefault,
-      surfaceContainerLowest: themeTokens.surfaceDefault,
+      surfaceDim: themeTokens.surfacePressed,
+      surfaceBright: themeTokens.surfaceHovered,
+      surfaceContainerLowest: themeTokens.surfaceTransparent,
       surfaceContainerLow: themeTokens.surfaceDefault,
-      surfaceContainer: themeTokens.surfaceDefault,
-      surfaceContainerHigh: themeTokens.surfaceDefault,
-      surfaceContainerHighest: themeTokens.surfaceDefault,
-      onSurfaceVariant: themeTokens.textPlain,
+      surfaceContainer: themeTokens.surfaceHovered,
+      surfaceContainerHigh: themeTokens.surfacePressed,
+      surfaceContainerHighest: themeTokens.surfacePressed,
+
+      // Outline & variants
       outline: themeTokens.borderPlain,
-      outlineVariant: themeTokens.borderPlain,
-      shadow: themeTokens.textPlain,
-      scrim: themeTokens.surfaceDefault,
-      inverseSurface: themeTokens.surfaceDefault,
-      onInverseSurface: themeTokens.textPlain,
+      outlineVariant: themeTokens.borderSecondary,
+
+      // Shadows & scrims – use black with the recommended opacity.
+      shadow: const Color(0x33000000), // 20 % opacity
+      scrim: const Color(0x80000000), // 50 % opacity
+      // Inverse colours – simply invert the surface palette.
+      inverseSurface: themeTokens.surfacePressed,
+      onInverseSurface: themeTokens.textInverse,
       inversePrimary: themeTokens.borderPrimary,
-      surfaceTint: themeTokens.borderPrimary,
+
+      // Surface tint – usually the primary colour.
+      surfaceTint: themeTokens.buttonPrimary,
     );
   }
 
