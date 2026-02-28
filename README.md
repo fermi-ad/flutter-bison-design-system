@@ -43,12 +43,25 @@ $ dart run tool/color_token_parser.dart
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+To use the Bison design system's master theme, simply pass the ThemeData returned by `BisonThemeData.light()` or `BisonThemeData.dark()` to your MaterialApp's theme property.
 
 ```dart
-const like = 'sample';
+import 'package:bison_design_system/bison_design_system.dart';
+
+MaterialApp(
+  theme: BisonThemeData.light(),
+  darkTheme: BisonThemeData.dark(),
+  home: MyHomePage(),
+);
 ```
+
+This will automatically apply all the design tokens to Flutter's built-in widgets, ensuring consistent styling throughout your application.
+
+## Additional information
+
+TODO: Tell users more about the package: where to find more information, how to
+contribute to the package, how to file issues, what response they can expect
+from the package authors, and more.
 
 ## Additional information
 

@@ -1397,18 +1397,4 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
       textWhiteFixed: Color.lerp(textWhiteFixed, other.textWhiteFixed, t)!,
     );
   }
-
-  ColorScheme toColorScheme(final Brightness brightness) {
-    return ColorScheme(
-      brightness: brightness,
-      primary: borderPrimary,
-      onPrimary: textInverse,
-      secondary: borderSecondary,
-      onSecondary: textInverse,
-      error: borderError,
-      onError: textInverse,
-      surface: surfaceDefault,
-      onSurface: textPlain,
-    );
-  }
 }
