@@ -77,6 +77,7 @@ class BisonIconButton extends StatelessWidget {
     final typo = Theme.of(context).extension<BisonTypographyTokens>()!;
     return IconButton(
       onPressed: onPressed,
+      constraints: const BoxConstraints(), // allows for smaller buttons
       icon: icon,
       iconSize: 24.0,
       style: switch (_bisonIconButtonType) {
