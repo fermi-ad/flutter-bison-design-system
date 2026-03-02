@@ -379,26 +379,150 @@ void main() {
     );
   });
   group("Testing BisonIconButton pressed state styling - light mode", () {
-    testWidgets(
-      "Styling test for BisonIconButton.filled",
-      (final WidgetTester tester) async {},
-    );
-    testWidgets(
-      "Styling test for BisonIconButton.outlined",
-      (final WidgetTester tester) async {},
-    );
-    testWidgets(
-      "Styling test for BisonIconButton.ghost",
-      (final WidgetTester tester) async {},
-    );
-    testWidgets(
-      "Styling test for BisonIconButton.whiteGhost",
-      (final WidgetTester tester) async {},
-    );
-    testWidgets(
-      "Styling test for BisonIconButton.smallGhost",
-      (final WidgetTester tester) async {},
-    );
+    testWidgets("Styling test for BisonIconButton.filled", (
+      final WidgetTester tester,
+    ) async {
+      final theme = BisonThemeTokens.light();
+
+      await tester.pumpWidget(
+        buildScaffold(
+          BisonIconButton.filled(icon: Icon(Icons.add), onPressed: () {}),
+        ),
+      );
+
+      // BisonIconButton builds off of [IconButton]
+      // finding [IconButton] allows use of style getters
+      final iconWidget = find.byType(IconButton);
+      await tester.tap(iconWidget);
+
+      final buttonStyle = (tester.widget<IconButton>(iconWidget)).style!;
+
+      final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
+        WidgetState.pressed,
+      });
+      final foreground = buttonStyle.foregroundColor?.resolve(<WidgetState>{
+        WidgetState.pressed,
+      });
+
+      expect(background, equals(theme.buttonPrimaryFocusedPressed));
+      expect(foreground, equals(theme.iconPrimary));
+    });
+    testWidgets("Styling test for BisonIconButton.outlined", (
+      final WidgetTester tester,
+    ) async {
+      final theme = BisonThemeTokens.light();
+
+      await tester.pumpWidget(
+        buildScaffold(
+          BisonIconButton.outlined(icon: Icon(Icons.add), onPressed: () {}),
+        ),
+      );
+
+      // BisonIconButton builds off of [IconButton]
+      // finding [IconButton] allows use of style getters
+      final iconWidget = find.byType(IconButton);
+      await tester.tap(iconWidget);
+
+      final buttonStyle = (tester.widget<IconButton>(iconWidget)).style!;
+
+      final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
+        WidgetState.pressed,
+      });
+      final foreground = buttonStyle.foregroundColor?.resolve(<WidgetState>{
+        WidgetState.pressed,
+      });
+      final outline = buttonStyle.side?.resolve(<WidgetState>{
+        WidgetState.pressed,
+      });
+
+      expect(background, equals(theme.buttonGhostPressed));
+      expect(foreground, equals(theme.iconPrimary));
+      expect(outline!.color, equals(theme.borderPlain));
+    });
+    testWidgets("Styling test for BisonIconButton.ghost", (
+      final WidgetTester tester,
+    ) async {
+      final theme = BisonThemeTokens.light();
+
+      await tester.pumpWidget(
+        buildScaffold(
+          BisonIconButton.ghost(icon: Icon(Icons.add), onPressed: () {}),
+        ),
+      );
+
+      // BisonIconButton builds off of [IconButton]
+      // finding [IconButton] allows use of style getters
+      final iconWidget = find.byType(IconButton);
+      await tester.tap(iconWidget);
+
+      final buttonStyle = (tester.widget<IconButton>(iconWidget)).style!;
+
+      final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
+        WidgetState.pressed,
+      });
+      final foreground = buttonStyle.foregroundColor?.resolve(<WidgetState>{
+        WidgetState.pressed,
+      });
+
+      expect(background, equals(theme.buttonGhostPressed));
+      expect(foreground, equals(theme.iconPlain));
+    });
+    testWidgets("Styling test for BisonIconButton.whiteGhost", (
+      final WidgetTester tester,
+    ) async {
+      final theme = BisonThemeTokens.light();
+
+      await tester.pumpWidget(
+        buildScaffold(
+          BisonIconButton.whiteGhost(icon: Icon(Icons.add), onPressed: () {}),
+        ),
+      );
+
+      // BisonIconButton builds off of [IconButton]
+      // finding [IconButton] allows use of style getters
+      final iconWidget = find.byType(IconButton);
+      await tester.tap(iconWidget);
+
+      final buttonStyle = (tester.widget<IconButton>(iconWidget)).style!;
+
+      final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
+        WidgetState.pressed,
+      });
+      final foreground = buttonStyle.foregroundColor?.resolve(<WidgetState>{
+        WidgetState.pressed,
+      });
+
+      expect(background, equals(theme.buttonGhostWhiteFixedPressed));
+      expect(foreground, equals(theme.iconWhiteFixed));
+    });
+    testWidgets("Styling test for BisonIconButton.smallGhost", (
+      final WidgetTester tester,
+    ) async {
+      final theme = BisonThemeTokens.light();
+
+      await tester.pumpWidget(
+        buildScaffold(
+          BisonIconButton.smallGhost(icon: Icon(Icons.add), onPressed: () {}),
+        ),
+      );
+
+      // BisonIconButton builds off of [IconButton]
+      // finding [IconButton] allows use of style getters
+      final iconWidget = find.byType(IconButton);
+      await tester.tap(iconWidget);
+
+      final buttonStyle = (tester.widget<IconButton>(iconWidget)).style!;
+
+      final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
+        WidgetState.pressed,
+      });
+      final foreground = buttonStyle.foregroundColor?.resolve(<WidgetState>{
+        WidgetState.pressed,
+      });
+
+      expect(background, equals(theme.buttonGhostPressed));
+      expect(foreground, equals(theme.iconPlain));
+    });
   });
   group("Testing BisonIconButton disabled state styling - light mode", () {
     testWidgets("Styling test for BisonIconButton.filled", (
