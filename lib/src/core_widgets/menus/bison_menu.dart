@@ -281,7 +281,6 @@ class _BisonMenuState extends State<BisonMenu> {
     final BisonTypographyTokens typo,
   ) {
     return ButtonStyle(
-      backgroundColor: WidgetStatePropertyAll(theme.surfaceTransparent),
       overlayColor: WidgetStateProperty.resolveWith<Color>((
         final Set<WidgetState> states,
       ) {

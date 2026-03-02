@@ -3,6 +3,25 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:bison_design_system/bison_design_system.dart';
 import 'bison_menu_common.dart' show buildMenuWithItems, buildStandardMenu;
 
+MenuStyle getMenuStyle(
+  final BuildContext context,
+  final MenuAnchor menuAnchor,
+) {
+  final MenuStyle widgetStyle = menuAnchor.style ?? const MenuStyle();
+  final MenuStyle? themeStyle = MenuTheme.of(context).style;
+  return widgetStyle.merge(themeStyle);
+}
+
+ButtonStyle getMenuItemButtonStyle(
+  final BuildContext context,
+  final MenuItemButton menuItem,
+) {
+  final ButtonStyle widgetStyle = menuItem.style ?? const ButtonStyle();
+  final ButtonStyle? themeStyle = menuItem.themeStyleOf(context);
+  final ButtonStyle defaults = menuItem.defaultStyleOf(context);
+  return widgetStyle.merge(themeStyle).merge(defaults);
+}
+
 void main() {
   group('BisonMenu Container Styling Tests', () {
     testWidgets('Menu container background color is correct', (
@@ -15,9 +34,9 @@ void main() {
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuAnchor = find.byType(MenuAnchor);
-      final menuAnchorWidget = tester.widget<MenuAnchor>(menuAnchor);
-      final style = menuAnchorWidget.style!;
+      final element = tester.element(find.byType(MenuAnchor));
+      final menuAnchorWidget = element.widget as MenuAnchor;
+      final style = getMenuStyle(element, menuAnchorWidget);
 
       final backgroundColor = style.backgroundColor?.resolve(<WidgetState>{});
       expect(backgroundColor, equals(theme.surfaceDefault));
@@ -69,19 +88,17 @@ void main() {
     testWidgets('Default background color is correct', (
       final WidgetTester tester,
     ) async {
-      final theme = BisonThemeTokens.light();
-
       await tester.pumpWidget(buildStandardMenu(3));
 
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuItemButton = find.byType(MenuItemButton).first;
-      final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
-      final style = menuItemWidget.style!;
+      final element = tester.element(find.byType(MenuItemButton).first);
+      final menuItemWidget = element.widget as MenuItemButton;
+      final style = getMenuItemButtonStyle(element, menuItemWidget);
 
       final backgroundColor = style.backgroundColor?.resolve(<WidgetState>{});
-      expect(backgroundColor, equals(theme.surfaceTransparent));
+      expect(backgroundColor?.a, isZero);
     });
 
     testWidgets('Default foreground color is correct', (
@@ -94,9 +111,9 @@ void main() {
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuItemButton = find.byType(MenuItemButton).first;
-      final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
-      final style = menuItemWidget.style!;
+      final element = tester.element(find.byType(MenuItemButton).first);
+      final menuItemWidget = element.widget as MenuItemButton;
+      final style = getMenuItemButtonStyle(element, menuItemWidget);
 
       final foregroundColor = style.foregroundColor?.resolve(<WidgetState>{});
       expect(foregroundColor, equals(theme.textPlain));
@@ -112,9 +129,9 @@ void main() {
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuItemButton = find.byType(MenuItemButton).first;
-      final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
-      final style = menuItemWidget.style!;
+      final element = tester.element(find.byType(MenuItemButton).first);
+      final menuItemWidget = element.widget as MenuItemButton;
+      final style = getMenuItemButtonStyle(element, menuItemWidget);
 
       final iconColor = style.iconColor?.resolve(<WidgetState>{});
       expect(iconColor, equals(theme.iconPlain));
@@ -130,9 +147,9 @@ void main() {
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuItemButton = find.byType(MenuItemButton).first;
-      final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
-      final style = menuItemWidget.style!;
+      final element = tester.element(find.byType(MenuItemButton).first);
+      final menuItemWidget = element.widget as MenuItemButton;
+      final style = getMenuItemButtonStyle(element, menuItemWidget);
 
       final textStyle = style.textStyle?.resolve(<WidgetState>{});
       expect(textStyle, equals(typo.bodyLarge));
@@ -148,9 +165,9 @@ void main() {
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuItemButton = find.byType(MenuItemButton).first;
-      final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
-      final style = menuItemWidget.style!;
+      final element = tester.element(find.byType(MenuItemButton).first);
+      final menuItemWidget = element.widget as MenuItemButton;
+      final style = getMenuItemButtonStyle(element, menuItemWidget);
 
       final padding = style.padding?.resolve(<WidgetState>{});
 
@@ -160,7 +177,7 @@ void main() {
   });
 
   group('BisonMenu Menu Item Styling Tests - Interactive States', () {
-    testWidgets('Hover background color is correct', (
+    testWidgets('Hover overlay color is correct', (
       final WidgetTester tester,
     ) async {
       final theme = BisonThemeTokens.light();
@@ -170,17 +187,17 @@ void main() {
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuItemButton = find.byType(MenuItemButton).first;
-      final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
-      final style = menuItemWidget.style!;
+      final element = tester.element(find.byType(MenuItemButton).first);
+      final menuItemWidget = element.widget as MenuItemButton;
+      final style = getMenuItemButtonStyle(element, menuItemWidget);
 
-      final backgroundColor = style.overlayColor?.resolve(<WidgetState>{
+      final overlayColor = style.overlayColor?.resolve(<WidgetState>{
         WidgetState.hovered,
       });
-      expect(backgroundColor, equals(theme.surfaceHovered));
+      expect(overlayColor, equals(theme.surfaceHovered));
     });
 
-    testWidgets('Focus background color is correct', (
+    testWidgets('Focus overlay color is correct', (
       final WidgetTester tester,
     ) async {
       final theme = BisonThemeTokens.light();
@@ -190,17 +207,17 @@ void main() {
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuItemButton = find.byType(MenuItemButton).first;
-      final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
-      final style = menuItemWidget.style!;
+      final element = tester.element(find.byType(MenuItemButton).first);
+      final menuItemWidget = element.widget as MenuItemButton;
+      final style = getMenuItemButtonStyle(element, menuItemWidget);
 
-      final backgroundColor = style.overlayColor?.resolve(<WidgetState>{
+      final overlayColor = style.overlayColor?.resolve(<WidgetState>{
         WidgetState.focused,
       });
-      expect(backgroundColor, equals(theme.surfaceHovered));
+      expect(overlayColor, equals(theme.surfaceHovered));
     });
 
-    testWidgets('Selected background color is correct', (
+    testWidgets('Selected overlay color is correct', (
       final WidgetTester tester,
     ) async {
       final theme = BisonThemeTokens.light();
@@ -210,14 +227,14 @@ void main() {
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuItemButton = find.byType(MenuItemButton).first;
-      final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
-      final style = menuItemWidget.style!;
+      final element = tester.element(find.byType(MenuItemButton).first);
+      final menuItemWidget = element.widget as MenuItemButton;
+      final style = getMenuItemButtonStyle(element, menuItemWidget);
 
-      final backgroundColor = style.overlayColor?.resolve(<WidgetState>{
+      final overlayColor = style.overlayColor?.resolve(<WidgetState>{
         WidgetState.selected,
       });
-      expect(backgroundColor, equals(theme.navigationSelectedActive));
+      expect(overlayColor, equals(theme.navigationSelectedActive));
     });
   });
 
@@ -225,8 +242,6 @@ void main() {
     testWidgets('Disabled background color is correct', (
       final WidgetTester tester,
     ) async {
-      final theme = BisonThemeTokens.light();
-
       await tester.pumpWidget(
         buildMenuWithItems([
           const BisonMenuItem(label: 'Item 1', onSelect: null),
@@ -236,14 +251,14 @@ void main() {
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuItemButton = find.byType(MenuItemButton);
-      final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
-      final style = menuItemWidget.style!;
+      final element = tester.element(find.byType(MenuItemButton));
+      final menuItemWidget = element.widget as MenuItemButton;
+      final style = getMenuItemButtonStyle(element, menuItemWidget);
 
       final backgroundColor = style.backgroundColor?.resolve(<WidgetState>{
         WidgetState.disabled,
       });
-      expect(backgroundColor, equals(theme.surfaceTransparent));
+      expect(backgroundColor?.a, isZero);
     });
 
     testWidgets('Disabled foreground color is correct', (
@@ -260,42 +275,14 @@ void main() {
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuItemButton = find.byType(MenuItemButton);
-      final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
-      final style = menuItemWidget.style!;
+      final element = tester.element(find.byType(MenuItemButton));
+      final menuItemWidget = element.widget as MenuItemButton;
+      final style = getMenuItemButtonStyle(element, menuItemWidget);
 
       final foregroundColor = style.foregroundColor?.resolve(<WidgetState>{
         WidgetState.disabled,
       });
       expect(foregroundColor, equals(theme.textDisabled));
-    });
-
-    testWidgets('Disabled icon color is correct', (
-      final WidgetTester tester,
-    ) async {
-      final theme = BisonThemeTokens.light();
-
-      await tester.pumpWidget(
-        buildMenuWithItems([
-          const BisonMenuItem(
-            label: 'Item 1',
-            icon: Icon(Icons.add),
-            onSelect: null,
-          ),
-        ]),
-      );
-
-      await tester.tap(find.text('Open Menu'));
-      await tester.pumpAndSettle();
-
-      final menuItemButton = find.byType(MenuItemButton);
-      final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
-      final style = menuItemWidget.style!;
-
-      final iconColor = style.iconColor?.resolve(<WidgetState>{
-        WidgetState.disabled,
-      });
-      expect(iconColor, equals(theme.iconDisabled));
     });
   });
 
@@ -318,9 +305,9 @@ void main() {
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuItemButton = find.byType(MenuItemButton);
-      final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
-      final style = menuItemWidget.style!;
+      final element = tester.element(find.byType(MenuItemButton));
+      final menuItemWidget = element.widget as MenuItemButton;
+      final style = getMenuItemButtonStyle(element, menuItemWidget);
 
       final iconColor = style.iconColor?.resolve(<WidgetState>{});
       expect(iconColor, equals(theme.iconPlain));
@@ -344,9 +331,9 @@ void main() {
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuItemButton = find.byType(MenuItemButton);
-      final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
-      final style = menuItemWidget.style!;
+      final element = tester.element(find.byType(MenuItemButton));
+      final menuItemWidget = element.widget as MenuItemButton;
+      final style = getMenuItemButtonStyle(element, menuItemWidget);
 
       final iconColor = style.iconColor?.resolve(<WidgetState>{
         WidgetState.disabled,
@@ -366,9 +353,9 @@ void main() {
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuItemButton = find.byType(MenuItemButton).first;
-      final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
-      final style = menuItemWidget.style!;
+      final element = tester.element(find.byType(MenuItemButton).first);
+      final menuItemWidget = element.widget as MenuItemButton;
+      final style = getMenuItemButtonStyle(element, menuItemWidget);
 
       final padding = style.padding?.resolve(<WidgetState>{});
 
@@ -385,9 +372,9 @@ void main() {
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuItemButton = find.byType(MenuItemButton).first;
-      final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
-      final style = menuItemWidget.style!;
+      final element = tester.element(find.byType(MenuItemButton).first);
+      final menuItemWidget = element.widget as MenuItemButton;
+      final style = getMenuItemButtonStyle(element, menuItemWidget);
 
       final padding = style.padding?.resolve(<WidgetState>{});
 
@@ -404,9 +391,9 @@ void main() {
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuItemButton = find.byType(MenuItemButton).first;
-      final menuItemWidget = tester.widget<MenuItemButton>(menuItemButton);
-      final style = menuItemWidget.style!;
+      final element = tester.element(find.byType(MenuItemButton).first);
+      final menuItemWidget = element.widget as MenuItemButton;
+      final style = getMenuItemButtonStyle(element, menuItemWidget);
 
       final textStyle = style.textStyle?.resolve(<WidgetState>{});
       expect(textStyle, equals(typo.bodyLarge));

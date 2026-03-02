@@ -3,6 +3,16 @@ import 'package:bison_design_system/bison_design_system.dart';
 import 'package:flutter/material.dart';
 import '../common.dart';
 
+ButtonStyle getButtonStyle(
+  final BuildContext context,
+  final FilledButton button,
+) {
+  final ButtonStyle widgetStyle = button.style ?? const ButtonStyle();
+  final ButtonStyle? themeStyle = button.themeStyleOf(context);
+  final ButtonStyle defaults = button.defaultStyleOf(context);
+  return widgetStyle.merge(themeStyle).merge(defaults);
+}
+
 void main() {
   group("Testing callback function", () {
     testWidgets('Disabled Button should not call function', (
@@ -69,10 +79,9 @@ void main() {
 
       // BisonButton builds off of [FilledButton]
       // finding [FilledButton] allows use of style getters provided by [FilledButton]
-      final filledWidget = tester.widget<FilledButton>(
-        find.byType(FilledButton),
-      );
-      final style = filledWidget.style!;
+      final element = tester.element(find.byType(FilledButton));
+      final filledWidget = element.widget as FilledButton;
+      final style = getButtonStyle(element, filledWidget);
       final bg = style.backgroundColor?.resolve(<WidgetState>{});
       final fg = style.foregroundColor?.resolve(<WidgetState>{});
 
@@ -97,10 +106,9 @@ void main() {
 
       // BisonButton builds off of [FilledButton]
       // finding [FilledButton] allows use of style getters provided by [FilledButton]
-      final filledWidget = tester.widget<FilledButton>(
-        find.byType(FilledButton),
-      );
-      final style = filledWidget.style!;
+      final element = tester.element(find.byType(FilledButton));
+      final filledWidget = element.widget as FilledButton;
+      final style = getButtonStyle(element, filledWidget);
       final bg = style.backgroundColor?.resolve(<WidgetState>{});
       final fg = style.foregroundColor?.resolve(<WidgetState>{});
 
@@ -125,10 +133,9 @@ void main() {
 
       // BisonButton builds off of [FilledButton]
       // finding [FilledButton] allows use of style getters provided by [FilledButton]
-      final filledWidget = tester.widget<FilledButton>(
-        find.byType(FilledButton),
-      );
-      final style = filledWidget.style!;
+      final element = tester.element(find.byType(FilledButton));
+      final filledWidget = element.widget as FilledButton;
+      final style = getButtonStyle(element, filledWidget);
       final bg = style.backgroundColor?.resolve(<WidgetState>{});
       final fg = style.foregroundColor?.resolve(<WidgetState>{});
 
@@ -153,10 +160,9 @@ void main() {
 
       // BisonButton builds off of [FilledButton]
       // finding [FilledButton] allows use of style getters provided by [FilledButton]
-      final filledWidget = tester.widget<FilledButton>(
-        find.byType(FilledButton),
-      );
-      final style = filledWidget.style!;
+      final element = tester.element(find.byType(FilledButton));
+      final filledWidget = element.widget as FilledButton;
+      final style = getButtonStyle(element, filledWidget);
       final bg = style.backgroundColor?.resolve(<WidgetState>{});
       final fg = style.foregroundColor?.resolve(<WidgetState>{});
 
@@ -252,12 +258,11 @@ void main() {
         ),
       );
 
-      final widgetFinder = tester.widget<FilledButton>(
-        find.byType(FilledButton),
-      );
+      final element = tester.element(find.byType(FilledButton));
+      final widgetFinder = element.widget as FilledButton;
+      final style = getButtonStyle(element, widgetFinder);
       final shape =
-          widgetFinder.style!.shape?.resolve(<WidgetState>{})
-              as RoundedRectangleBorder;
+          style.shape?.resolve(<WidgetState>{}) as RoundedRectangleBorder;
       final Radius radius = (shape.borderRadius as BorderRadius).topLeft;
       expect(radius.x, equals(corners.cornerExtraSmall));
     });
@@ -286,11 +291,9 @@ void main() {
 
       expect(filledFinder, findsOneWidget);
 
-      final FilledButton filledButton = tester.widget<FilledButton>(
-        filledFinder,
-      );
-
-      final filledStyle = filledButton.style!;
+      final element = tester.element(filledFinder);
+      final filledButton = element.widget as FilledButton;
+      final filledStyle = getButtonStyle(element, filledButton);
       final filledBackground = filledStyle.backgroundColor?.resolve(
         <WidgetState>{WidgetState.disabled},
       );
@@ -324,9 +327,9 @@ void main() {
 
       expect(ghostFinder, findsOneWidget);
 
-      final FilledButton ghostButton = tester.widget<FilledButton>(ghostFinder);
-
-      final ghostStyle = ghostButton.style!;
+      final element = tester.element(ghostFinder);
+      final ghostButton = element.widget as FilledButton;
+      final ghostStyle = getButtonStyle(element, ghostButton);
       final ghostBackground = ghostStyle.backgroundColor?.resolve(<WidgetState>{
         WidgetState.disabled,
       });
@@ -358,11 +361,10 @@ void main() {
         matching: find.byType(FilledButton),
       );
       expect(outlinedFinder, findsOneWidget);
-      final FilledButton outlinedButton = tester.widget<FilledButton>(
-        outlinedFinder,
-      );
+      final element = tester.element(outlinedFinder);
+      final outlinedButton = element.widget as FilledButton;
       // outlined testing
-      final outlinedStyle = outlinedButton.style!;
+      final outlinedStyle = getButtonStyle(element, outlinedButton);
       final outlinedBackground = outlinedStyle.backgroundColor?.resolve(
         <WidgetState>{WidgetState.disabled},
       );
@@ -395,11 +397,9 @@ void main() {
 
       expect(destructiveFinder, findsOneWidget);
 
-      final FilledButton destructiveButton = tester.widget<FilledButton>(
-        destructiveFinder,
-      );
-
-      final destructiveStyle = destructiveButton.style!;
+      final element = tester.element(destructiveFinder);
+      final destructiveButton = element.widget as FilledButton;
+      final destructiveStyle = getButtonStyle(element, destructiveButton);
       final destructiveBackground = destructiveStyle.backgroundColor?.resolve(
         <WidgetState>{WidgetState.disabled},
       );
