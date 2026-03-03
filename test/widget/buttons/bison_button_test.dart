@@ -1,17 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bison_design_system/bison_design_system.dart';
-import 'package:flutter/material.dart';
-import '../common.dart';
-
-ButtonStyle getButtonStyle(
-  final BuildContext context,
-  final FilledButton button,
-) {
-  final ButtonStyle widgetStyle = button.style ?? const ButtonStyle();
-  final ButtonStyle? themeStyle = button.themeStyleOf(context);
-  final ButtonStyle defaults = button.defaultStyleOf(context);
-  return widgetStyle.merge(themeStyle).merge(defaults);
-}
+import '../common.dart' show buildScaffold, getButtonStyle;
 
 void main() {
   group("Testing callback function", () {
