@@ -111,41 +111,7 @@ class BisonThemeData {
   /// - Standard [BisonCornerTokens]
   /// - Appropriate [ColorScheme] and [TextTheme] defaults
   static ThemeData light() {
-    final brightness = Brightness.light;
-    final themeTokens = BisonThemeTokens.light();
-    final spacingTokens = BisonSpacingTokens.standard();
-    final cornerTokens = BisonCornerTokens.standard();
-    final typographyTokens = BisonTypographyTokens.fromTokens(themeTokens);
-
-    return ThemeData(
-      brightness: brightness,
-      colorScheme: getColorScheme(brightness),
-      textTheme: getTextTheme(typographyTokens),
-      filledButtonTheme: FilledButtonThemeData(
-        style: getFilledBisonButtonStyle(
-          themeTokens,
-          spacingTokens,
-          cornerTokens,
-          typographyTokens,
-        ),
-      ),
-      menuTheme: MenuThemeData(
-        style: getBisonMenuStyle(themeTokens, spacingTokens, cornerTokens),
-      ),
-      menuButtonTheme: MenuButtonThemeData(
-        style: getBisonMenuButtonStyle(
-          themeTokens,
-          spacingTokens,
-          typographyTokens,
-        ),
-      ),
-      extensions: [
-        themeTokens,
-        BisonSpacingTokens.standard(),
-        typographyTokens,
-        BisonCornerTokens.standard(),
-      ],
-    );
+    return _createTheme(Brightness.light);
   }
 
   /// Creates a [ThemeData] for dark mode with all required extensions.
@@ -157,8 +123,14 @@ class BisonThemeData {
   /// - Standard [BisonCornerTokens]
   /// - Appropriate [ColorScheme] and [TextTheme] defaults
   static ThemeData dark() {
-    final brightness = Brightness.dark;
-    final themeTokens = BisonThemeTokens.dark();
+    return _createTheme(Brightness.dark);
+  }
+
+  /// Helper method to create ThemeData with common configuration
+  static ThemeData _createTheme(final Brightness brightness) {
+    final themeTokens = brightness == Brightness.light
+        ? BisonThemeTokens.light()
+        : BisonThemeTokens.dark();
     final spacingTokens = BisonSpacingTokens.standard();
     final cornerTokens = BisonCornerTokens.standard();
     final typographyTokens = BisonTypographyTokens.fromTokens(themeTokens);
