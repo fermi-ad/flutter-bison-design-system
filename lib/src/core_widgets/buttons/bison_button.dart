@@ -47,25 +47,25 @@ class BisonButton extends StatelessWidget {
     final typo = Theme.of(context).extension<BisonTypographyTokens>()!;
     return FilledButton(
       style: switch (buttonType) {
-        BisonButtonType.filled => _filledBisonButtonStyle(
+        BisonButtonType.filled => getFilledBisonButtonStyle(
           theme,
           padding,
           corners,
           typo,
         ),
-        BisonButtonType.ghost => _ghostBisonButtonStyle(
+        BisonButtonType.ghost => getGhostBisonButtonStyle(
           theme,
           padding,
           corners,
           typo,
         ),
-        BisonButtonType.outlined => _outlinedBisonButtonStyle(
+        BisonButtonType.outlined => getOutlinedBisonButtonStyle(
           theme,
           padding,
           corners,
           typo,
         ),
-        BisonButtonType.destructive => _destructiveBisonButtonStyle(
+        BisonButtonType.destructive => getDestructiveBisonButtonStyle(
           theme,
           padding,
           corners,
@@ -99,7 +99,7 @@ class BisonButton extends StatelessWidget {
   }
 }
 
-ButtonStyle _filledBisonButtonStyle(
+ButtonStyle getFilledBisonButtonStyle(
   final BisonThemeTokens theme,
   final BisonSpacingTokens padding,
   final BisonCornerTokens corners,
@@ -147,7 +147,7 @@ ButtonStyle _filledBisonButtonStyle(
   padding: WidgetStatePropertyAll(EdgeInsets.zero),
 );
 
-ButtonStyle _ghostBisonButtonStyle(
+ButtonStyle getGhostBisonButtonStyle(
   final BisonThemeTokens theme,
   final BisonSpacingTokens padding,
   final BisonCornerTokens corners,
@@ -191,7 +191,7 @@ ButtonStyle _ghostBisonButtonStyle(
   padding: WidgetStatePropertyAll(EdgeInsets.zero),
 );
 
-ButtonStyle _outlinedBisonButtonStyle(
+ButtonStyle getOutlinedBisonButtonStyle(
   final BisonThemeTokens theme,
   final BisonSpacingTokens padding,
   final BisonCornerTokens corners,
@@ -235,7 +235,7 @@ ButtonStyle _outlinedBisonButtonStyle(
   padding: WidgetStatePropertyAll(EdgeInsets.zero),
 );
 
-ButtonStyle _destructiveBisonButtonStyle(
+ButtonStyle getDestructiveBisonButtonStyle(
   final BisonThemeTokens theme,
   final BisonSpacingTokens padding,
   final BisonCornerTokens corners,

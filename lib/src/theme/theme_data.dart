@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'color_tokens.g.dart';
-import 'shape_spacing_tokens.g.dart';
-import 'typography_tokens.g.dart';
+import 'color_tokens.g.dart' show BisonThemeTokens;
+import 'shape_spacing_tokens.g.dart' show BisonSpacingTokens, BisonCornerTokens;
+import 'typography_tokens.g.dart' show BisonTypographyTokens;
+
+import '../core_widgets/buttons/bison_button.dart'
+    show getFilledBisonButtonStyle;
+import '../core_widgets/menus/bison_menu.dart'
+    show getBisonMenuStyle, getBisonMenuButtonStyle;
 
 /// Master theme data class that provides pre-configured ThemeData objects
 /// with all necessary extensions for the Bison design system.
@@ -64,7 +69,7 @@ class BisonThemeData {
       outline: themeTokens.borderPlain,
       outlineVariant: themeTokens.borderSecondary,
 
-      // Shadows & scrims – use black with the recommended opacity.
+      // Shadows & scrims – use black with opacity.
       shadow: const Color(0x33000000), // 20 % opacity
       scrim: const Color(0x80000000), // 50 % opacity
       // Inverse colours – simply invert the surface palette.
@@ -108,12 +113,32 @@ class BisonThemeData {
   static ThemeData light() {
     final brightness = Brightness.light;
     final themeTokens = BisonThemeTokens.light();
+    final spacingTokens = BisonSpacingTokens.standard();
+    final cornerTokens = BisonCornerTokens.standard();
     final typographyTokens = BisonTypographyTokens.fromTokens(themeTokens);
 
     return ThemeData(
       brightness: brightness,
       colorScheme: getColorScheme(brightness),
       textTheme: getTextTheme(typographyTokens),
+      filledButtonTheme: FilledButtonThemeData(
+        style: getFilledBisonButtonStyle(
+          themeTokens,
+          spacingTokens,
+          cornerTokens,
+          typographyTokens,
+        ),
+      ),
+      menuTheme: MenuThemeData(
+        style: getBisonMenuStyle(themeTokens, spacingTokens, cornerTokens),
+      ),
+      menuButtonTheme: MenuButtonThemeData(
+        style: getBisonMenuButtonStyle(
+          themeTokens,
+          spacingTokens,
+          typographyTokens,
+        ),
+      ),
       extensions: [
         themeTokens,
         BisonSpacingTokens.standard(),
@@ -134,12 +159,32 @@ class BisonThemeData {
   static ThemeData dark() {
     final brightness = Brightness.dark;
     final themeTokens = BisonThemeTokens.dark();
+    final spacingTokens = BisonSpacingTokens.standard();
+    final cornerTokens = BisonCornerTokens.standard();
     final typographyTokens = BisonTypographyTokens.fromTokens(themeTokens);
 
     return ThemeData(
       brightness: brightness,
       colorScheme: getColorScheme(brightness),
       textTheme: getTextTheme(typographyTokens),
+      filledButtonTheme: FilledButtonThemeData(
+        style: getFilledBisonButtonStyle(
+          themeTokens,
+          spacingTokens,
+          cornerTokens,
+          typographyTokens,
+        ),
+      ),
+      menuTheme: MenuThemeData(
+        style: getBisonMenuStyle(themeTokens, spacingTokens, cornerTokens),
+      ),
+      menuButtonTheme: MenuButtonThemeData(
+        style: getBisonMenuButtonStyle(
+          themeTokens,
+          spacingTokens,
+          typographyTokens,
+        ),
+      ),
       extensions: [
         themeTokens,
         BisonSpacingTokens.standard(),

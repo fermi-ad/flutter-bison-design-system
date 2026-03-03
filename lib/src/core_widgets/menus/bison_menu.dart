@@ -191,19 +191,7 @@ class _BisonMenuState extends State<BisonMenu> {
     _syncFocusNodes();
 
     return MenuAnchor(
-      style: MenuStyle(
-        backgroundColor: WidgetStatePropertyAll(theme.surfaceDefault),
-        shape: WidgetStateProperty.all(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(corners.cornerExtraSmall),
-            ),
-          ),
-        ),
-        padding: WidgetStatePropertyAll(
-          EdgeInsets.symmetric(vertical: padding.tinySpacing),
-        ),
-      ),
+      style: getBisonMenuStyle(theme, padding, corners),
       childFocusNode: _childFocusNode,
       controller: _controller,
       menuChildren: [
@@ -223,7 +211,7 @@ class _BisonMenuState extends State<BisonMenu> {
               return MenuItemButton(
                 focusNode: focusNode,
                 autofocus: index == 0 && focusNode.canRequestFocus,
-                style: _buildButtonStyle(theme, padding, typo),
+                style: getBisonMenuButtonStyle(theme, padding, typo),
                 onPressed: item.onSelect,
                 leadingIcon: item.icon,
                 child: Text(item.label),
@@ -266,58 +254,79 @@ class _BisonMenuState extends State<BisonMenu> {
       },
     );
   }
+}
 
-  /// Builds the button style for menu items.
-  ///
-  /// [theme] The theme tokens for styling.
-  /// [padding] The spacing tokens for padding.
-  /// [typo] The typography tokens for text styling.
-  ///
-  /// Returns a [ButtonStyle] object that defines the visual appearance of menu
-  /// items.
-  ButtonStyle _buildButtonStyle(
-    final BisonThemeTokens theme,
-    final BisonSpacingTokens padding,
-    final BisonTypographyTokens typo,
-  ) {
-    return ButtonStyle(
-      overlayColor: WidgetStateProperty.resolveWith<Color>((
-        final Set<WidgetState> states,
-      ) {
-        if (states.contains(WidgetState.selected)) {
-          return theme.navigationSelectedActive;
-        }
-        if (states.any(
-          (final state) =>
-              state == WidgetState.hovered || state == WidgetState.focused,
-        )) {
-          return theme.surfaceHovered;
-        }
-        return theme.surfaceTransparent;
-      }),
-      foregroundColor: WidgetStateProperty.resolveWith<Color?>((
-        final Set<WidgetState> states,
-      ) {
-        if (states.contains(WidgetState.disabled)) {
-          return theme.textDisabled;
-        }
-        return theme.textPlain;
-      }),
-      iconColor: WidgetStateProperty.resolveWith<Color?>((
-        final Set<WidgetState> states,
-      ) {
-        if (states.contains(WidgetState.disabled)) {
-          return theme.iconDisabled;
-        }
-        return theme.iconPlain;
-      }),
-      padding: WidgetStatePropertyAll(
-        EdgeInsets.symmetric(
-          horizontal: padding.xSmallSpacing,
-          vertical: padding.tinySpacing,
+MenuStyle getBisonMenuStyle(
+  final BisonThemeTokens theme,
+  final BisonSpacingTokens padding,
+  final BisonCornerTokens corners,
+) {
+  return MenuStyle(
+    backgroundColor: WidgetStatePropertyAll(theme.surfaceDefault),
+    shape: WidgetStateProperty.all(
+      RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(corners.cornerExtraSmall),
         ),
       ),
-      textStyle: WidgetStatePropertyAll(typo.bodyLarge),
-    );
-  }
+    ),
+    padding: WidgetStatePropertyAll(
+      EdgeInsets.symmetric(vertical: padding.tinySpacing),
+    ),
+  );
+}
+
+/// Builds the button style for menu items.
+///
+/// [theme] The theme tokens for styling.
+/// [padding] The spacing tokens for padding.
+/// [typo] The typography tokens for text styling.
+///
+/// Returns a [ButtonStyle] object that defines the visual appearance of menu
+/// items.
+ButtonStyle getBisonMenuButtonStyle(
+  final BisonThemeTokens theme,
+  final BisonSpacingTokens padding,
+  final BisonTypographyTokens typo,
+) {
+  return ButtonStyle(
+    backgroundColor: WidgetStatePropertyAll(theme.surfaceTransparent),
+    overlayColor: WidgetStateProperty.resolveWith<Color>((
+      final Set<WidgetState> states,
+    ) {
+      if (states.contains(WidgetState.selected)) {
+        return theme.navigationSelectedActive;
+      }
+      if (states.any(
+        (final state) =>
+            state == WidgetState.hovered || state == WidgetState.focused,
+      )) {
+        return theme.surfaceHovered;
+      }
+      return theme.surfaceTransparent;
+    }),
+    foregroundColor: WidgetStateProperty.resolveWith<Color?>((
+      final Set<WidgetState> states,
+    ) {
+      if (states.contains(WidgetState.disabled)) {
+        return theme.textDisabled;
+      }
+      return theme.textPlain;
+    }),
+    iconColor: WidgetStateProperty.resolveWith<Color?>((
+      final Set<WidgetState> states,
+    ) {
+      if (states.contains(WidgetState.disabled)) {
+        return theme.iconDisabled;
+      }
+      return theme.iconPlain;
+    }),
+    padding: WidgetStatePropertyAll(
+      EdgeInsets.symmetric(
+        horizontal: padding.xSmallSpacing,
+        vertical: padding.tinySpacing,
+      ),
+    ),
+    textStyle: WidgetStatePropertyAll(typo.bodyLarge),
+  );
 }
