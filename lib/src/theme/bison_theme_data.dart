@@ -36,7 +36,7 @@ class BisonThemeData {
     return _createTheme(Brightness.dark);
   }
 
-  /// Helper method to create ThemeData with common configuration
+  /// Helper method to create ThemeData with common configuration.
   static ThemeData _createTheme(final Brightness brightness) {
     final themeTokens = brightness == Brightness.light
         ? BisonThemeTokens.light()
@@ -49,6 +49,9 @@ class BisonThemeData {
       brightness: brightness,
       colorScheme: getColorScheme(brightness),
       textTheme: getTextTheme(typographyTokens),
+      // These presets allow us to style base Material widgets like we do in our
+      // custom Bison widgets. As we add new Bison widgets, consider setting the
+      // appropriate base Material widget styles here as well.
       filledButtonTheme: FilledButtonThemeData(
         style: getFilledBisonButtonStyle(
           themeTokens,
@@ -81,43 +84,30 @@ class BisonThemeData {
         ? BisonThemeTokens.light()
         : BisonThemeTokens.dark();
 
-    // -----------------------------------------------------------------
-    // Primary / Secondary / Tertiary groups
-    // -----------------------------------------------------------------
-    // `borderPrimary`, `borderSecondary` and `borderPlain` are the
-    // “brand” colours defined per‑brightness.  `textInverse` is the
-    // high‑contrast “on‑color” used for those groups.
-    // `surfaceDefault` / `surfaceHovered` / `surfacePressed` provide
-    // tonal variants that work well as container colours.
-    // -----------------------------------------------------------------
     return ColorScheme(
       brightness: brightness,
 
-      // Primary group
+      // Primary group.
       primary: themeTokens.buttonPrimary,
       onPrimary: themeTokens.textInverse,
       primaryContainer: themeTokens.surfaceHovered,
       onPrimaryContainer: themeTokens.textPlain,
-
-      // Secondary group
+      // Secondary group.
       secondary: themeTokens.borderSecondary,
       onSecondary: themeTokens.textInverse,
       secondaryContainer: themeTokens.surfaceHovered,
       onSecondaryContainer: themeTokens.textPlain,
-
-      // Tertiary group – use the same colour as primary for now;
+      // Tertiary group – use the same color as primary for now;
       // we can replace it with a dedicated accent token later.
       tertiary: themeTokens.borderPrimary,
       onTertiary: themeTokens.textInverse,
       tertiaryContainer: themeTokens.surfaceHovered,
       onTertiaryContainer: themeTokens.textPlain,
-
       // Error group.
       error: themeTokens.borderError,
       onError: themeTokens.textInverse,
       errorContainer: themeTokens.surfaceHovered,
       onErrorContainer: themeTokens.textPlain,
-
       // Surface hierarchy – the various surface tokens give depth.
       surface: themeTokens.surfaceDefault,
       onSurface: themeTokens.textPlain,
@@ -128,38 +118,40 @@ class BisonThemeData {
       surfaceContainer: themeTokens.surfaceHovered,
       surfaceContainerHigh: themeTokens.surfacePressed,
       surfaceContainerHighest: themeTokens.surfacePressed,
-
-      // Outline & variants
+      // Outline & variants.
       outline: themeTokens.borderPlain,
       outlineVariant: themeTokens.borderSecondary,
-
       // Shadows & scrims – use black with opacity.
-      shadow: const Color(0x33000000), // 20 % opacity
-      scrim: const Color(0x80000000), // 50 % opacity
-      // Inverse colours – simply invert the surface palette.
+      shadow: Color.fromARGB((0.2 * 255).round(), 0, 0, 0), // 20 % opacity
+      scrim: Color.fromARGB((0.5 * 255).round(), 0, 0, 0), // 50 % opacity
+      // Inverse colors – simply invert the surface palette.
       inverseSurface: themeTokens.surfacePressed,
       onInverseSurface: themeTokens.textInverse,
       inversePrimary: themeTokens.borderPrimary,
-
-      // Surface tint – usually the primary colour.
+      // Surface tint – usually the primary color.
       surfaceTint: themeTokens.buttonPrimary,
     );
   }
 
   static TextTheme getTextTheme(final BisonTypographyTokens typo) {
     return TextTheme(
+      // Display.
       displayLarge: typo.h1,
       displayMedium: typo.h1,
       displaySmall: typo.h1,
+      // Headline.
       headlineLarge: typo.h2,
       headlineMedium: typo.h2,
       headlineSmall: typo.h2,
+      // Title.
       titleLarge: typo.h3,
       titleMedium: typo.h3,
       titleSmall: typo.h3,
+      // Body.
       bodyLarge: typo.bodyLarge,
       bodyMedium: typo.bodyLarge,
       bodySmall: typo.bodySmall,
+      // Label.
       labelLarge: typo.capitalizedLabel,
       labelMedium: typo.capitalizedLabel,
       labelSmall: typo.capitalizedLabel,
