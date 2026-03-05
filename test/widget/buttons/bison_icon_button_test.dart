@@ -22,7 +22,7 @@ void main() {
       expect(callbackCalled, isFalse);
     });
 
-    testWidgets("Taping button will trigger callback", (
+    testWidgets("tapping button will trigger callback", (
       final WidgetTester tester,
     ) async {
       bool callbackCalled = false;
@@ -161,7 +161,7 @@ void main() {
       expect(background, equals(theme.surfaceTransparent));
       expect(foreground, equals(theme.iconPlain));
     });
-    testWidgets("Pading test for BisonIconButton.filled", (
+    testWidgets("padding test for BisonIconButton.filled", (
       final WidgetTester tester,
     ) async {
       final spacing = BisonSpacingTokens.standard();
@@ -180,7 +180,7 @@ void main() {
 
       expect(padding, equals(EdgeInsets.all(spacing.tinySpacing)));
     });
-    testWidgets("Pading test for BisonIconButton.smallGhost", (
+    testWidgets("padding test for BisonIconButton.smallGhost", (
       final WidgetTester tester,
     ) async {
       final spacing = BisonSpacingTokens.standard();
