@@ -1,7 +1,13 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:bison_design_system/bison_design_system.dart';
 import 'package:flutter/material.dart';
-import '../common.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:bison_design_system/bison_design_system.dart'
+    show
+        BisonButton,
+        BisonButtonType,
+        BisonThemeTokens,
+        BisonSpacingTokens,
+        BisonCornerTokens;
+import '../common.dart' show buildScaffold;
 
 void main() {
   group("Testing callback function", () {
@@ -263,7 +269,7 @@ void main() {
     });
   });
 
-  group("Testing thememing for disabled button state - light mode", () {
+  group("Testing theming for disabled button state - light mode", () {
     testWidgets("Disabled state theme testings - filled button", (
       final WidgetTester tester,
     ) async {
@@ -338,7 +344,7 @@ void main() {
       expect(ghostForeground, equals(theme.textDisabled));
     });
 
-    testWidgets("Disabled state theme testings - outlinded buttons", (
+    testWidgets("Disabled state theme testings - outlined buttons", (
       final WidgetTester tester,
     ) async {
       final theme = BisonThemeTokens.light();
