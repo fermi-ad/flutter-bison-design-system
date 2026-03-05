@@ -21,7 +21,7 @@ linter:
 
 plugins:
   explicit_imports:
-    version: ^1.0.3
+    version: ^1.0.4
     diagnostics:
       explicit_dart_imports: true
       explicit_flutter_imports: false
