@@ -1,3 +1,4 @@
+import 'package:bison_design_system/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
@@ -58,27 +59,31 @@ Widget buildBisonIconButtonGhostUseCase(BuildContext context) {
 
 @widgetbook.UseCase(name: 'White Ghost', type: BisonIconButton)
 Widget buildBisonIconButtonWhiteGhostUseCase(BuildContext context) {
-  return BisonIconButton.whiteGhost(
-    icon: context.knobs.object.dropdown(
-      label: 'Icon',
-      initialOption: Icon(Icons.settings_outlined),
-      labelBuilder: (icon) => switch (icon.icon) {
-        Icons.add => "Add",
-        Icons.save => "Save",
-        Icons.delete => "Delete",
-        Icons.settings_outlined => "Settings",
-        _ => "Settings",
-      },
-      options: [
-        Icon(Icons.settings_outlined),
-        Icon(Icons.add),
-        Icon(Icons.save),
-        Icon(Icons.delete),
-      ],
+  return Container(
+    padding: EdgeInsets.all(200),
+    color: Theme.of(context).extension<BisonThemeTokens>()!.surfaceSlate,
+    child: BisonIconButton.whiteGhost(
+      icon: context.knobs.object.dropdown(
+        label: 'Icon',
+        initialOption: Icon(Icons.settings_outlined),
+        labelBuilder: (icon) => switch (icon.icon) {
+          Icons.add => "Add",
+          Icons.save => "Save",
+          Icons.delete => "Delete",
+          Icons.settings_outlined => "Settings",
+          _ => "Settings",
+        },
+        options: [
+          Icon(Icons.settings_outlined),
+          Icon(Icons.add),
+          Icon(Icons.save),
+          Icon(Icons.delete),
+        ],
+      ),
+      onPressed: context.knobs.boolean(label: 'Disabled')
+          ? null
+          : () => debugPrint("Hello!"),
     ),
-    onPressed: context.knobs.boolean(label: 'Disabled')
-        ? null
-        : () => debugPrint("Hello!"),
   );
 }
 
