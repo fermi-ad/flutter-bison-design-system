@@ -1,7 +1,7 @@
-import 'dart:convert';
-import 'dart:io';
+import 'dart:convert' show jsonDecode;
+import 'dart:io' show File;
 
-import 'color_token_parser.dart';
+import 'color_token_parser.dart' show toCamelCase;
 
 void main() {
   const outputPath = 'lib/src/theme/shape_spacing_tokens.g.dart';
@@ -35,7 +35,7 @@ void main() {
   });
   buffer.writeln();
 
-  // build contstructor
+  // build constructor
   buffer.writeln("  const BisonSpacingTokens({");
   spacingMap.forEach((final key, final spacing) {
     buffer.writeln("    required this.${toCamelCase("$key Spacing")},");
@@ -88,7 +88,7 @@ void main() {
   });
   buffer.writeln();
 
-  // build contstructor
+  // build constructor
   buffer.writeln("  const BisonCornerTokens({");
   cornerMap.forEach((final key, final value) {
     buffer.writeln("    required this.${toCamelCase(key)},");

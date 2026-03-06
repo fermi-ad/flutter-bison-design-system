@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:bison_design_system/bison_design_system.dart';
-import '../common.dart';
+import 'package:bison_design_system/bison_design_system.dart'
+    show BisonMenuItem, BisonMenu;
+import '../common.dart' show buildScaffold;
 
 // Builds a menu with the specified list of items.
 Widget buildMenuWithItems(final List<BisonMenuItem> items) {
