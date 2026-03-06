@@ -1,5 +1,5 @@
-import 'dart:convert';
-import 'dart:io';
+import 'dart:convert' show jsonDecode;
+import 'dart:io' show File;
 
 void main() {
   const outputPath = 'lib/src/theme/color_tokens.g.dart';
@@ -57,7 +57,7 @@ void main() {
 
   final sortedKeys = componentKeys.toList()..sort();
 
-  // build out fiels
+  // build out fields
   for (final key in sortedKeys) {
     buffer.writeln("  final Color ${toCamelCase(key)};");
   }
@@ -221,7 +221,7 @@ String toCamelCase(final String input) {
 
 // format Figma hex value (#XXXXXX) for the Color function (0xXXXXXXXX)
 String formatHex(String hex, [final num? alpha]) {
-  hex = hex.toUpperCase().replaceAll("#", '');
+  final rgbHex = hex.toUpperCase().replaceAll("#", '');
 
   // calculate alpha (default: 1.0.FF)
   final double a = (alpha ?? 1.0).toDouble();
@@ -231,5 +231,5 @@ String formatHex(String hex, [final num? alpha]) {
       .padLeft(2, '0')
       .toUpperCase();
 
-  return '0x$alphaHex$hex';
+  return '0x$alphaHex$rgbHex';
 }

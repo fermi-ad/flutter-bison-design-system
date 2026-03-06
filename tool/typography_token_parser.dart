@@ -1,5 +1,5 @@
-import 'dart:convert';
-import 'dart:io';
+import 'dart:convert' show jsonDecode;
+import 'dart:io' show File;
 
 void main() {
   const typescalePath = 'tokens/TypescaleTokens.json';

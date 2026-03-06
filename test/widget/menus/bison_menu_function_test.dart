@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart' show LogicalKeyboardKey;
-import 'package:bison_design_system/bison_design_system.dart';
+import 'package:bison_design_system/bison_design_system.dart'
+    show BisonMenuItem, BisonMenu, BisonMenuTriggerAction;
 import 'bison_menu_common.dart' show buildStandardMenu, buildMenuWithItems;
 import '../common.dart' show buildScaffold;
 

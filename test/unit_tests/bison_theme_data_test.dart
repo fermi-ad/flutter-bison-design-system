@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:bison_design_system/bison_design_system.dart';
+import 'package:bison_design_system/bison_design_system.dart'
+    show BisonThemeData, BisonThemeTokens, BisonTypographyTokens;
 
 void main() {
   group('BisonThemeData', () {

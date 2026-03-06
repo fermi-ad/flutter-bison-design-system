@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:bison_design_system/bison_design_system.dart';
+import 'package:bison_design_system/bison_design_system.dart'
+    show
+        BisonThemeTokens,
+        BisonSpacingTokens,
+        BisonCornerTokens,
+        BisonTypographyTokens,
+        BisonMenuItem;
 import 'bison_menu_common.dart' show buildMenuWithItems, buildStandardMenu;
 import '../common.dart' show getMenuStyle, getMenuItemButtonStyle;
 
