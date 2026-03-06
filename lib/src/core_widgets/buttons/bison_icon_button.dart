@@ -1,4 +1,9 @@
-import 'package:bison_design_system/bison_design_system.dart';
+import 'package:bison_design_system/bison_design_system.dart'
+    show
+        BisonThemeTokens,
+        BisonSpacingTokens,
+        BisonCornerTokens,
+        BisonTypographyTokens;
 import 'package:flutter/material.dart';
 
 enum _BisonIconButtonType { filled, ghost, whiteGhost, smallGhost, outlined }
@@ -8,6 +13,7 @@ class BisonIconButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final _BisonIconButtonType _bisonIconButtonType;
 
+  /// An icon button with a filled background.
   factory BisonIconButton.filled({
     required final Icon icon,
     required final VoidCallback? onPressed,
@@ -19,6 +25,9 @@ class BisonIconButton extends StatelessWidget {
     );
   }
 
+  /// An icon button with a transparent background.
+  ///
+  ///
   factory BisonIconButton.ghost({
     required final Icon icon,
     required final VoidCallback? onPressed,
@@ -30,6 +39,9 @@ class BisonIconButton extends StatelessWidget {
     );
   }
 
+  /// An icon button with a transparent background and fixed white icon color.
+  ///
+  /// It is recommended to use with dark background.
   factory BisonIconButton.whiteGhost({
     required final Icon icon,
     required final VoidCallback? onPressed,
@@ -41,6 +53,7 @@ class BisonIconButton extends StatelessWidget {
     );
   }
 
+  /// An icon button with a transparent background and zero padding.
   factory BisonIconButton.smallGhost({
     required final Icon icon,
     required final VoidCallback? onPressed,
@@ -52,6 +65,7 @@ class BisonIconButton extends StatelessWidget {
     );
   }
 
+  /// An icon button with a transparent background and outline
   factory BisonIconButton.outlined({
     required final Icon icon,
     required final VoidCallback? onPressed,
