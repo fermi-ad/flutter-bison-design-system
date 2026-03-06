@@ -47,6 +47,8 @@ class BisonThemeData {
 
     return ThemeData(
       brightness: brightness,
+      fontFamily: 'Atkinson Hyperlegible Next',
+      package: 'bison_design_system',
       colorScheme: getColorScheme(brightness),
       textTheme: getTextTheme(typographyTokens),
       // These presets allow us to style base Material widgets like we do in our
