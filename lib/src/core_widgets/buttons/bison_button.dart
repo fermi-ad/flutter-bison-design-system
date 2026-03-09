@@ -1,5 +1,10 @@
-import 'package:bison_design_system/bison_design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:bison_design_system/bison_design_system.dart'
+    show
+        BisonThemeTokens,
+        BisonSpacingTokens,
+        BisonCornerTokens,
+        BisonTypographyTokens;
 
 /// Provides different styling options for the `BisonButton` widget.
 ///

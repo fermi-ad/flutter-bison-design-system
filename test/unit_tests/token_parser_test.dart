@@ -1,4 +1,4 @@
-import 'package:test/test.dart';
+import 'package:test/test.dart' show group, test, expect;
 import '../../tool/color_token_parser.dart' as parser;
 
 void main() {

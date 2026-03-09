@@ -16,4 +16,14 @@ linter:
     # The team determined that 'final' should be used wherever relevant (for any variable that does not change after initialization). See PR #2.
     prefer_final_locals: true
     prefer_final_in_for_each: true
-    prefer_final_parameters: true
+    # Replaces prefer_final_parameters.
+    parameter_assignments: true
+
+plugins:
+  explicit_imports:
+    version: ^1.0.4
+    diagnostics:
+      explicit_dart_imports: true
+      explicit_flutter_imports: false
+      explicit_package_imports: true
+      explicit_relative_imports: true

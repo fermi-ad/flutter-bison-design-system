@@ -4,9 +4,9 @@ import 'package:disable_web_context_menu/disable_web_context_menu.dart'
     show DisableWebContextMenu;
 import 'package:bison_design_system/bison_design_system.dart'
     show
-        BisonCornerTokens,
-        BisonSpacingTokens,
         BisonThemeTokens,
+        BisonSpacingTokens,
+        BisonCornerTokens,
         BisonTypographyTokens;
 
 /// A function type that builds the menu trigger widget.
