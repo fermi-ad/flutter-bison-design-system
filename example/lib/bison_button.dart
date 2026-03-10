@@ -7,7 +7,7 @@ import 'package:bison_design_system/core_widgets.dart'
 
 @widgetbook.UseCase(name: 'Default', type: BisonButton)
 Widget buildBisonButtonUseCase(BuildContext context) {
-  return BisonButton(
+  return bisonWidgetType(
     buttonLabel: context.knobs.string(
       label: 'Button Label',
       initialValue: 'Label',
@@ -22,9 +22,7 @@ Widget buildBisonButtonUseCase(BuildContext context) {
         BisonButtonType.destructive,
       ],
     ),
-    onPressed: context.knobs.boolean(label: 'Disabled')
-        ? null
-        : () => debugPrint("Hello!"),
+    onPressed: context.knobs.boolean(label: 'Disabled') ? null : () => {},
     icon: context.knobs.objectOrNull.dropdown(
       label: 'Icon',
       labelBuilder: (icon) => switch (icon.icon) {
@@ -36,4 +34,36 @@ Widget buildBisonButtonUseCase(BuildContext context) {
       options: [Icon(Icons.add), Icon(Icons.save), Icon(Icons.delete)],
     ),
   );
+}
+
+enum BisonButtonType { filled, ghost, outlined, destructive }
+
+BisonButton bisonWidgetType({
+  required String buttonLabel,
+  required BisonButtonType buttonType,
+  required onPressed,
+  icon,
+}) {
+  return switch (buttonType) {
+    BisonButtonType.filled => BisonButton.filled(
+      buttonLabel: buttonLabel,
+      onPressed: onPressed,
+      icon: icon,
+    ),
+    BisonButtonType.outlined => BisonButton.outlined(
+      buttonLabel: buttonLabel,
+      onPressed: onPressed,
+      icon: icon,
+    ),
+    BisonButtonType.ghost => BisonButton.ghost(
+      buttonLabel: buttonLabel,
+      onPressed: onPressed,
+      icon: icon,
+    ),
+    BisonButtonType.destructive => BisonButton.destructive(
+      buttonLabel: buttonLabel,
+      onPressed: onPressed,
+      icon: icon,
+    ),
+  };
 }

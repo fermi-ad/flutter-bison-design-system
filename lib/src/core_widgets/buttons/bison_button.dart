@@ -13,7 +13,7 @@ import 'package:bison_design_system/bison_design_system.dart'
 /// - [BisonButtonType.outlined]
 /// - [BisonButtonType.ghost]
 /// - [BisonButtonType.destructive]
-enum BisonButtonType {
+enum _BisonButtonType {
   /// The most prominent styling option. This is the default option
   filled,
 
@@ -30,19 +30,72 @@ enum BisonButtonType {
 /// Provides a set of button types
 class BisonButton extends StatelessWidget {
   final String buttonLabel;
-  final BisonButtonType buttonType;
+  final _BisonButtonType _buttonType;
   final Icon? icon;
   final VoidCallback? onPressed;
 
-  /// Provides various types of button types for different use cases.
-  /// By default, a `filled` button will be returned. See [BisonButtonType] for different options
-  const BisonButton({
-    super.key,
+  const BisonButton._({
     required this.buttonLabel,
     required this.onPressed,
-    this.buttonType = BisonButtonType.filled,
+    required _BisonButtonType buttonType,
     this.icon,
-  });
+  }) : _buttonType = buttonType;
+
+  /// A Filled button with the primary color. The most promininent styling option.
+  factory BisonButton.filled({
+    required String buttonLabel,
+    required VoidCallback? onPressed,
+    Icon? icon,
+  }) {
+    return BisonButton._(
+      buttonLabel: buttonLabel,
+      onPressed: onPressed,
+      buttonType: _BisonButtonType.filled,
+      icon: icon,
+    );
+  }
+
+  /// A transparent button without an outline. The least prominent option
+  factory BisonButton.ghost({
+    required String buttonLabel,
+    required VoidCallback? onPressed,
+    Icon? icon,
+  }) {
+    return BisonButton._(
+      buttonLabel: buttonLabel,
+      onPressed: onPressed,
+      buttonType: _BisonButtonType.ghost,
+      icon: icon,
+    );
+  }
+
+  /// A transparent button with an outline
+  factory BisonButton.outlined({
+    required String buttonLabel,
+    required VoidCallback? onPressed,
+    Icon? icon,
+  }) {
+    return BisonButton._(
+      buttonLabel: buttonLabel,
+      onPressed: onPressed,
+      buttonType: _BisonButtonType.outlined,
+      icon: icon,
+    );
+  }
+
+  /// A button to signify a destructive action
+  factory BisonButton.destructive({
+    required String buttonLabel,
+    required VoidCallback? onPressed,
+    Icon? icon,
+  }) {
+    return BisonButton._(
+      buttonLabel: buttonLabel,
+      onPressed: onPressed,
+      buttonType: _BisonButtonType.destructive,
+      icon: icon,
+    );
+  }
 
   @override
   Widget build(final BuildContext context) {
@@ -50,27 +103,28 @@ class BisonButton extends StatelessWidget {
     final padding = Theme.of(context).extension<BisonSpacingTokens>()!;
     final corners = Theme.of(context).extension<BisonCornerTokens>()!;
     final typo = Theme.of(context).extension<BisonTypographyTokens>()!;
+
     return FilledButton(
-      style: switch (buttonType) {
-        BisonButtonType.filled => getFilledBisonButtonStyle(
+      style: switch (_buttonType) {
+        _BisonButtonType.filled => getFilledBisonButtonStyle(
           theme,
           padding,
           corners,
           typo,
         ),
-        BisonButtonType.ghost => getGhostBisonButtonStyle(
+        _BisonButtonType.ghost => getGhostBisonButtonStyle(
           theme,
           padding,
           corners,
           typo,
         ),
-        BisonButtonType.outlined => getOutlinedBisonButtonStyle(
+        _BisonButtonType.outlined => getOutlinedBisonButtonStyle(
           theme,
           padding,
           corners,
           typo,
         ),
-        BisonButtonType.destructive => getDestructiveBisonButtonStyle(
+        _BisonButtonType.destructive => getDestructiveBisonButtonStyle(
           theme,
           padding,
           corners,
