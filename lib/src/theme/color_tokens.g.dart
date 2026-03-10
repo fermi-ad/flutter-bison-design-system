@@ -259,6 +259,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
   final Color buttonGhostWhiteFixedDisabled;
   final Color buttonGhostWhiteFixedHovered;
   final Color buttonGhostWhiteFixedPressed;
+  final Color buttonInverse;
   final Color buttonPrimary;
   final Color buttonPrimaryFocusedPressed;
   final Color buttonPrimaryHovered;
@@ -275,7 +276,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
   final Color colorCodedDangerSignal;
   final Color colorCodedDelineateObjects;
   final Color colorCodedDynamicElement;
-  final Color colorCodedHistorialData;
+  final Color colorCodedHistoricalData;
   final Color colorCodedLiveValueOutput;
   final Color colorCodedSetpointInput;
   final Color colorCodedUserConfigurable;
@@ -307,8 +308,8 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
   final Color miscellaneousTransparent;
   final Color navigationSelectedActive;
   final Color navigationSelectedActiveSlate;
-  final Color navigationSelectedFcoused;
-  final Color navigationSelectedFcousedSlate;
+  final Color navigationSelectedFocused;
+  final Color navigationSelectedFocusedSlate;
   final Color navigationSelectedHovered;
   final Color navigationSelectedHoveredSlate;
   final Color navigationSelectedPressed;
@@ -334,6 +335,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
   final Color selectorXSelectorWhiteFixed;
   final Color surfaceDefault;
   final Color surfaceHovered;
+  final Color surfaceInverse;
   final Color surfacePressed;
   final Color surfaceSlate;
   final Color surfaceSlateHovered;
@@ -374,6 +376,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
     required this.buttonGhostWhiteFixedDisabled,
     required this.buttonGhostWhiteFixedHovered,
     required this.buttonGhostWhiteFixedPressed,
+    required this.buttonInverse,
     required this.buttonPrimary,
     required this.buttonPrimaryFocusedPressed,
     required this.buttonPrimaryHovered,
@@ -390,7 +393,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
     required this.colorCodedDangerSignal,
     required this.colorCodedDelineateObjects,
     required this.colorCodedDynamicElement,
-    required this.colorCodedHistorialData,
+    required this.colorCodedHistoricalData,
     required this.colorCodedLiveValueOutput,
     required this.colorCodedSetpointInput,
     required this.colorCodedUserConfigurable,
@@ -422,8 +425,8 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
     required this.miscellaneousTransparent,
     required this.navigationSelectedActive,
     required this.navigationSelectedActiveSlate,
-    required this.navigationSelectedFcoused,
-    required this.navigationSelectedFcousedSlate,
+    required this.navigationSelectedFocused,
+    required this.navigationSelectedFocusedSlate,
     required this.navigationSelectedHovered,
     required this.navigationSelectedHoveredSlate,
     required this.navigationSelectedPressed,
@@ -449,6 +452,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
     required this.selectorXSelectorWhiteFixed,
     required this.surfaceDefault,
     required this.surfaceHovered,
+    required this.surfaceInverse,
     required this.surfacePressed,
     required this.surfaceSlate,
     required this.surfaceSlateHovered,
@@ -490,6 +494,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
     buttonGhostWhiteFixedDisabled: AliasTokens.neutralEvenLighter,
     buttonGhostWhiteFixedHovered: AliasTokens.primaryDarker,
     buttonGhostWhiteFixedPressed: AliasTokens.primaryDark,
+    buttonInverse: AliasTokens.primaryLighter,
     buttonPrimary: AliasTokens.primaryDefault,
     buttonPrimaryFocusedPressed: AliasTokens.primaryDarker,
     buttonPrimaryHovered: AliasTokens.primaryDark,
@@ -506,7 +511,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
     colorCodedDangerSignal: AliasTokens.errorDefault,
     colorCodedDelineateObjects: AliasTokens.neutralWhite,
     colorCodedDynamicElement: AliasTokens.primaryDefault,
-    colorCodedHistorialData: AliasTokens.accentPurpleLighter,
+    colorCodedHistoricalData: AliasTokens.accentPurpleLighter,
     colorCodedLiveValueOutput: AliasTokens.successDark,
     colorCodedSetpointInput: AliasTokens.primaryDefault,
     colorCodedUserConfigurable: AliasTokens.accentCyanLight,
@@ -538,8 +543,8 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
     miscellaneousTransparent: AliasTokens.neutralWhite,
     navigationSelectedActive: AliasTokens.secondaryLightest,
     navigationSelectedActiveSlate: AliasTokens.secondaryLightest,
-    navigationSelectedFcoused: AliasTokens.secondaryLightest,
-    navigationSelectedFcousedSlate: AliasTokens.secondaryLightest,
+    navigationSelectedFocused: AliasTokens.secondaryLightest,
+    navigationSelectedFocusedSlate: AliasTokens.secondaryLightest,
     navigationSelectedHovered: AliasTokens.secondaryLightest,
     navigationSelectedHoveredSlate: AliasTokens.secondaryLightest,
     navigationSelectedPressed: AliasTokens.secondaryLightest,
@@ -565,6 +570,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
     selectorXSelectorWhiteFixed: AliasTokens.neutralNearWhite,
     surfaceDefault: AliasTokens.neutralNearWhite,
     surfaceHovered: AliasTokens.primaryNearWhite,
+    surfaceInverse: AliasTokens.neutralDarker,
     surfacePressed: AliasTokens.primaryLightest,
     surfaceSlate: AliasTokens.secondaryDarker,
     surfaceSlateHovered: AliasTokens.primaryDarker,
@@ -606,6 +612,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
     buttonGhostWhiteFixedDisabled: AliasTokens.neutralDarker,
     buttonGhostWhiteFixedHovered: AliasTokens.primaryDarker,
     buttonGhostWhiteFixedPressed: AliasTokens.primaryDark,
+    buttonInverse: AliasTokens.primaryDefault,
     buttonPrimary: AliasTokens.primaryLighter,
     buttonPrimaryFocusedPressed: AliasTokens.primaryLightest,
     buttonPrimaryHovered: AliasTokens.primaryEvenLighter,
@@ -622,7 +629,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
     colorCodedDangerSignal: AliasTokens.errorLight,
     colorCodedDelineateObjects: AliasTokens.neutralWhite,
     colorCodedDynamicElement: AliasTokens.primaryLighter,
-    colorCodedHistorialData: AliasTokens.accentPurpleLighter,
+    colorCodedHistoricalData: AliasTokens.accentPurpleLighter,
     colorCodedLiveValueOutput: AliasTokens.successLighter,
     colorCodedSetpointInput: AliasTokens.primaryLighter,
     colorCodedUserConfigurable: AliasTokens.accentCyanLight,
@@ -654,8 +661,8 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
     miscellaneousTransparent: AliasTokens.neutralDarkest,
     navigationSelectedActive: AliasTokens.secondaryDarker,
     navigationSelectedActiveSlate: AliasTokens.secondaryLightest,
-    navigationSelectedFcoused: AliasTokens.secondaryDarker,
-    navigationSelectedFcousedSlate: AliasTokens.secondaryLightest,
+    navigationSelectedFocused: AliasTokens.secondaryDarker,
+    navigationSelectedFocusedSlate: AliasTokens.secondaryLightest,
     navigationSelectedHovered: AliasTokens.secondaryDarker,
     navigationSelectedHoveredSlate: AliasTokens.secondaryLightest,
     navigationSelectedPressed: AliasTokens.secondaryDarker,
@@ -681,6 +688,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
     selectorXSelectorWhiteFixed: AliasTokens.neutralNearWhite,
     surfaceDefault: AliasTokens.neutralEvenDarker,
     surfaceHovered: AliasTokens.primaryDarker,
+    surfaceInverse: AliasTokens.neutralLightest,
     surfacePressed: AliasTokens.primaryDark,
     surfaceSlate: AliasTokens.secondaryDarker,
     surfaceSlateHovered: AliasTokens.primaryDarker,
@@ -723,6 +731,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
     final Color? buttonGhostWhiteFixedDisabled,
     final Color? buttonGhostWhiteFixedHovered,
     final Color? buttonGhostWhiteFixedPressed,
+    final Color? buttonInverse,
     final Color? buttonPrimary,
     final Color? buttonPrimaryFocusedPressed,
     final Color? buttonPrimaryHovered,
@@ -739,7 +748,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
     final Color? colorCodedDangerSignal,
     final Color? colorCodedDelineateObjects,
     final Color? colorCodedDynamicElement,
-    final Color? colorCodedHistorialData,
+    final Color? colorCodedHistoricalData,
     final Color? colorCodedLiveValueOutput,
     final Color? colorCodedSetpointInput,
     final Color? colorCodedUserConfigurable,
@@ -771,8 +780,8 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
     final Color? miscellaneousTransparent,
     final Color? navigationSelectedActive,
     final Color? navigationSelectedActiveSlate,
-    final Color? navigationSelectedFcoused,
-    final Color? navigationSelectedFcousedSlate,
+    final Color? navigationSelectedFocused,
+    final Color? navigationSelectedFocusedSlate,
     final Color? navigationSelectedHovered,
     final Color? navigationSelectedHoveredSlate,
     final Color? navigationSelectedPressed,
@@ -798,6 +807,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
     final Color? selectorXSelectorWhiteFixed,
     final Color? surfaceDefault,
     final Color? surfaceHovered,
+    final Color? surfaceInverse,
     final Color? surfacePressed,
     final Color? surfaceSlate,
     final Color? surfaceSlateHovered,
@@ -842,6 +852,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
           buttonGhostWhiteFixedHovered ?? this.buttonGhostWhiteFixedHovered,
       buttonGhostWhiteFixedPressed:
           buttonGhostWhiteFixedPressed ?? this.buttonGhostWhiteFixedPressed,
+      buttonInverse: buttonInverse ?? this.buttonInverse,
       buttonPrimary: buttonPrimary ?? this.buttonPrimary,
       buttonPrimaryFocusedPressed:
           buttonPrimaryFocusedPressed ?? this.buttonPrimaryFocusedPressed,
@@ -869,8 +880,8 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
           colorCodedDelineateObjects ?? this.colorCodedDelineateObjects,
       colorCodedDynamicElement:
           colorCodedDynamicElement ?? this.colorCodedDynamicElement,
-      colorCodedHistorialData:
-          colorCodedHistorialData ?? this.colorCodedHistorialData,
+      colorCodedHistoricalData:
+          colorCodedHistoricalData ?? this.colorCodedHistoricalData,
       colorCodedLiveValueOutput:
           colorCodedLiveValueOutput ?? this.colorCodedLiveValueOutput,
       colorCodedSetpointInput:
@@ -921,10 +932,10 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
           navigationSelectedActive ?? this.navigationSelectedActive,
       navigationSelectedActiveSlate:
           navigationSelectedActiveSlate ?? this.navigationSelectedActiveSlate,
-      navigationSelectedFcoused:
-          navigationSelectedFcoused ?? this.navigationSelectedFcoused,
-      navigationSelectedFcousedSlate:
-          navigationSelectedFcousedSlate ?? this.navigationSelectedFcousedSlate,
+      navigationSelectedFocused:
+          navigationSelectedFocused ?? this.navigationSelectedFocused,
+      navigationSelectedFocusedSlate:
+          navigationSelectedFocusedSlate ?? this.navigationSelectedFocusedSlate,
       navigationSelectedHovered:
           navigationSelectedHovered ?? this.navigationSelectedHovered,
       navigationSelectedHoveredSlate:
@@ -970,6 +981,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
           selectorXSelectorWhiteFixed ?? this.selectorXSelectorWhiteFixed,
       surfaceDefault: surfaceDefault ?? this.surfaceDefault,
       surfaceHovered: surfaceHovered ?? this.surfaceHovered,
+      surfaceInverse: surfaceInverse ?? this.surfaceInverse,
       surfacePressed: surfacePressed ?? this.surfacePressed,
       surfaceSlate: surfaceSlate ?? this.surfaceSlate,
       surfaceSlateHovered: surfaceSlateHovered ?? this.surfaceSlateHovered,
@@ -1050,6 +1062,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
         other.buttonGhostWhiteFixedPressed,
         t,
       )!,
+      buttonInverse: Color.lerp(buttonInverse, other.buttonInverse, t)!,
       buttonPrimary: Color.lerp(buttonPrimary, other.buttonPrimary, t)!,
       buttonPrimaryFocusedPressed: Color.lerp(
         buttonPrimaryFocusedPressed,
@@ -1126,9 +1139,9 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
         other.colorCodedDynamicElement,
         t,
       )!,
-      colorCodedHistorialData: Color.lerp(
-        colorCodedHistorialData,
-        other.colorCodedHistorialData,
+      colorCodedHistoricalData: Color.lerp(
+        colorCodedHistoricalData,
+        other.colorCodedHistoricalData,
         t,
       )!,
       colorCodedLiveValueOutput: Color.lerp(
@@ -1234,14 +1247,14 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
         other.navigationSelectedActiveSlate,
         t,
       )!,
-      navigationSelectedFcoused: Color.lerp(
-        navigationSelectedFcoused,
-        other.navigationSelectedFcoused,
+      navigationSelectedFocused: Color.lerp(
+        navigationSelectedFocused,
+        other.navigationSelectedFocused,
         t,
       )!,
-      navigationSelectedFcousedSlate: Color.lerp(
-        navigationSelectedFcousedSlate,
-        other.navigationSelectedFcousedSlate,
+      navigationSelectedFocusedSlate: Color.lerp(
+        navigationSelectedFocusedSlate,
+        other.navigationSelectedFocusedSlate,
         t,
       )!,
       navigationSelectedHovered: Color.lerp(
@@ -1345,6 +1358,7 @@ class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {
       )!,
       surfaceDefault: Color.lerp(surfaceDefault, other.surfaceDefault, t)!,
       surfaceHovered: Color.lerp(surfaceHovered, other.surfaceHovered, t)!,
+      surfaceInverse: Color.lerp(surfaceInverse, other.surfaceInverse, t)!,
       surfacePressed: Color.lerp(surfacePressed, other.surfacePressed, t)!,
       surfaceSlate: Color.lerp(surfaceSlate, other.surfaceSlate, t)!,
       surfaceSlateHovered: Color.lerp(

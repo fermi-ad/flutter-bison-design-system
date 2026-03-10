@@ -101,7 +101,7 @@ class BisonThemeData {
       onSecondaryContainer: themeTokens.textPlain,
       // Tertiary group – use the same color as primary for now;
       // we can replace it with a dedicated accent token later.
-      tertiary: themeTokens.borderPrimary,
+      tertiary: themeTokens.buttonPrimary,
       onTertiary: themeTokens.textInverse,
       tertiaryContainer: themeTokens.surfaceHovered,
       onTertiaryContainer: themeTokens.textPlain,
@@ -127,9 +127,9 @@ class BisonThemeData {
       shadow: Color.fromARGB((0.2 * 255).round(), 0, 0, 0), // 20 % opacity
       scrim: Color.fromARGB((0.5 * 255).round(), 0, 0, 0), // 50 % opacity
       // Inverse colors – simply invert the surface palette.
-      inverseSurface: themeTokens.surfacePressed,
+      inverseSurface: themeTokens.surfaceInverse,
       onInverseSurface: themeTokens.textInverse,
-      inversePrimary: themeTokens.borderPrimary,
+      inversePrimary: themeTokens.buttonInverse,
       // Surface tint – usually the primary color.
       surfaceTint: themeTokens.buttonPrimary,
     );
