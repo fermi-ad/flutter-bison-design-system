@@ -28,17 +28,85 @@ void main() {
       // Get the resolved style from the theme
       final mergedStyle = getButtonStyle(element, filledButton);
 
-      // Test background color (should use buttonPrimary from theme)
+      // Test background color
       final backgroundColor = mergedStyle.backgroundColor?.resolve(
         <WidgetState>{},
       );
       expect(backgroundColor, equals(themeTokens.buttonPrimary));
 
-      // Test foreground color (should use textInverse from theme)
+      // Test foreground color
       final foregroundColor = mergedStyle.foregroundColor?.resolve(
         <WidgetState>{},
       );
       expect(foregroundColor, equals(themeTokens.textInverse));
+    });
+
+    testWidgets('TextButton uses theme styling from BisonThemeData', (
+      final WidgetTester tester,
+    ) async {
+      final themeTokens = BisonThemeTokens.light();
+
+      await tester.pumpWidget(
+        buildScaffold(
+          TextButton(onPressed: () {}, child: const Text('Test Button')),
+        ),
+      );
+
+      final element = tester.element(find.byType(TextButton));
+      final textButton = element.widget as TextButton;
+
+      // Get the resolved style from the theme
+      final mergedStyle = getButtonStyle(element, textButton);
+
+      // Test background color
+      final backgroundColor = mergedStyle.backgroundColor?.resolve(
+        <WidgetState>{},
+      );
+      expect(backgroundColor?.a, isZero);
+
+      // Test foreground color
+      final foregroundColor = mergedStyle.foregroundColor?.resolve(
+        <WidgetState>{},
+      );
+      expect(foregroundColor, equals(themeTokens.buttonPrimary));
+    });
+
+    testWidgets('OutlinedButton uses theme styling from BisonThemeData', (
+      final WidgetTester tester,
+    ) async {
+      final themeTokens = BisonThemeTokens.light();
+
+      await tester.pumpWidget(
+        buildScaffold(
+          OutlinedButton(onPressed: () {}, child: const Text('Test Button')),
+        ),
+      );
+
+      final element = tester.element(find.byType(OutlinedButton));
+      final outlinedButton = element.widget as OutlinedButton;
+
+      // Get the resolved style from the theme
+      final ButtonStyle widgetStyle =
+          outlinedButton.style ?? const ButtonStyle();
+      final ButtonStyle? themeStyle = outlinedButton.themeStyleOf(element);
+      final ButtonStyle defaults = outlinedButton.defaultStyleOf(element);
+      final mergedStyle = widgetStyle.merge(themeStyle).merge(defaults);
+
+      // Test background color
+      final backgroundColor = mergedStyle.backgroundColor?.resolve(
+        <WidgetState>{},
+      );
+      expect(backgroundColor?.a, isZero);
+
+      // Test foreground color
+      final foregroundColor = mergedStyle.foregroundColor?.resolve(
+        <WidgetState>{},
+      );
+      expect(foregroundColor, equals(themeTokens.buttonPrimary));
+
+      // Test side color
+      final side = mergedStyle.side?.resolve(<WidgetState>{});
+      expect(side?.color, equals(themeTokens.borderPlain));
     });
 
     testWidgets('MenuAnchor uses theme styling from BisonThemeData', (
@@ -74,18 +142,18 @@ void main() {
       // Use helper function to get merged style
       final style = getMenuStyle(element, menuAnchorWidget);
 
-      // Test background color (should use surfaceDefault from theme)
+      // Test background color
       final backgroundColor = style.backgroundColor?.resolve(<WidgetState>{});
       expect(backgroundColor, equals(themeTokens.surfaceDefault));
 
-      // Test border radius (should use cornerExtraSmall from theme)
+      // Test border radius
       final shape =
           style.shape?.resolve(<WidgetState>{}) as RoundedRectangleBorder;
       final borderRadius = shape.borderRadius;
       final radius = (borderRadius as BorderRadius).topLeft;
       expect(radius.x, equals(cornerTokens.cornerExtraSmall));
 
-      // Test vertical padding (should use tinySpacing * 2 from theme)
+      // Test vertical padding
       final padding = style.padding?.resolve(<WidgetState>{});
       expect(padding?.vertical, equals(spacingTokens.tinySpacing * 2));
     });
@@ -127,23 +195,23 @@ void main() {
       // Get the resolved style from the theme using helper function
       final style = getMenuItemButtonStyle(element, menuItemWidget);
 
-      // Test background color (should be transparent in default state)
+      // Test background color
       final backgroundColor = style.backgroundColor?.resolve(<WidgetState>{});
       expect(backgroundColor?.a, isZero);
 
-      // Test foreground color (should use textPlain from theme)
+      // Test foreground color
       final foregroundColor = style.foregroundColor?.resolve(<WidgetState>{});
       expect(foregroundColor, equals(themeTokens.textPlain));
 
-      // Test icon color (should use iconPlain from theme)
+      // Test icon color
       final iconColor = style.iconColor?.resolve(<WidgetState>{});
       expect(iconColor, equals(themeTokens.iconPlain));
 
-      // Test text style (should use bodyLarge from typography tokens)
+      // Test text style
       final textStyle = style.textStyle?.resolve(<WidgetState>{});
       expect(textStyle, equals(typographyTokens.bodyLarge));
 
-      // Test padding (should use xSmallSpacing * 2 horizontal and tinySpacing * 2 vertical)
+      // Test padding
       final padding = style.padding?.resolve(<WidgetState>{});
       expect(padding?.horizontal, equals(spacingTokens.xSmallSpacing * 2));
       expect(padding?.vertical, equals(spacingTokens.tinySpacing * 2));

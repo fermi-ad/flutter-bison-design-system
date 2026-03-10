@@ -5,7 +5,10 @@ import 'shape_spacing_tokens.g.dart' show BisonSpacingTokens, BisonCornerTokens;
 import 'typography_tokens.g.dart' show BisonTypographyTokens;
 
 import '../core_widgets/buttons/bison_button.dart'
-    show getFilledBisonButtonStyle;
+    show
+        getFilledBisonButtonStyle,
+        getGhostBisonButtonStyle,
+        getOutlinedBisonButtonStyle;
 import '../core_widgets/menus/bison_menu.dart'
     show getBisonMenuStyle, getBisonMenuButtonStyle;
 
@@ -56,6 +59,22 @@ class BisonThemeData {
       // appropriate base Material widget styles here as well.
       filledButtonTheme: FilledButtonThemeData(
         style: getFilledBisonButtonStyle(
+          themeTokens,
+          spacingTokens,
+          cornerTokens,
+          typographyTokens,
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: getGhostBisonButtonStyle(
+          themeTokens,
+          spacingTokens,
+          cornerTokens,
+          typographyTokens,
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: getOutlinedBisonButtonStyle(
           themeTokens,
           spacingTokens,
           cornerTokens,
