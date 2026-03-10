@@ -10,14 +10,47 @@ Widget buildScaffold(final Widget widget) {
   );
 }
 
+ButtonStyle _mergeButtonStyles(
+  final ButtonStyle? widgetStyle,
+  final ButtonStyle? themeStyle,
+  final ButtonStyle defaults,
+) {
+  return (widgetStyle ?? const ButtonStyle()).merge(themeStyle).merge(defaults);
+}
+
 ButtonStyle getButtonStyle(
   final BuildContext context,
-  final FilledButton button,
+  final ButtonStyleButton button,
+) {
+  return _mergeButtonStyles(
+    button.style,
+    // ButtonStyleButton is abstract, so you can only ever pass instances of
+    // its subclasses which must override these methods.
+    // ignore: invalid_use_of_protected_member
+    button.themeStyleOf(context),
+    // ignore: invalid_use_of_protected_member
+    button.defaultStyleOf(context),
+  );
+}
+
+ButtonStyle getMenuItemButtonStyle(
+  final BuildContext context,
+  final MenuItemButton menuItem,
+) {
+  return _mergeButtonStyles(
+    menuItem.style,
+    menuItem.themeStyleOf(context),
+    menuItem.defaultStyleOf(context),
+  );
+}
+
+ButtonStyle getIconButtonStyle(
+  final BuildContext context,
+  final IconButton button,
 ) {
   final ButtonStyle widgetStyle = button.style ?? const ButtonStyle();
-  final ButtonStyle? themeStyle = button.themeStyleOf(context);
-  final ButtonStyle defaults = button.defaultStyleOf(context);
-  return widgetStyle.merge(themeStyle).merge(defaults);
+  final ButtonStyle? themeStyle = IconButtonTheme.of(context).style;
+  return widgetStyle.merge(themeStyle);
 }
 
 MenuStyle getMenuStyle(
@@ -27,14 +60,4 @@ MenuStyle getMenuStyle(
   final MenuStyle widgetStyle = menuAnchor.style ?? const MenuStyle();
   final MenuStyle? themeStyle = MenuTheme.of(context).style;
   return widgetStyle.merge(themeStyle);
-}
-
-ButtonStyle getMenuItemButtonStyle(
-  final BuildContext context,
-  final MenuItemButton menuItem,
-) {
-  final ButtonStyle widgetStyle = menuItem.style ?? const ButtonStyle();
-  final ButtonStyle? themeStyle = menuItem.themeStyleOf(context);
-  final ButtonStyle defaults = menuItem.defaultStyleOf(context);
-  return widgetStyle.merge(themeStyle).merge(defaults);
 }

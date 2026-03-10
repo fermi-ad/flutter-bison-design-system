@@ -1,10 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:bison_design_system/bison_design_system.dart'
     show
         BisonThemeTokens,
         BisonSpacingTokens,
         BisonCornerTokens,
         BisonTypographyTokens;
-import 'package:flutter/material.dart';
 
 enum _BisonIconButtonType { filled, ghost, whiteGhost, smallGhost, outlined }
 
