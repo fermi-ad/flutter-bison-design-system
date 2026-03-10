@@ -95,31 +95,31 @@ class BisonIconButton extends StatelessWidget {
       icon: icon,
       iconSize: 24.0,
       style: switch (_bisonIconButtonType) {
-        _BisonIconButtonType.filled => _filledButtonStyle(
+        _BisonIconButtonType.filled => filledIconButtonStyle(
           theme,
           padding,
           corners,
           typo,
         ),
-        _BisonIconButtonType.ghost => _ghostButtonStyle(
+        _BisonIconButtonType.ghost => ghostIconButtonStyle(
           theme,
           padding,
           corners,
           typo,
         ),
-        _BisonIconButtonType.whiteGhost => _whiteGhostButtonStyle(
+        _BisonIconButtonType.whiteGhost => whiteGhostIconButtonStyle(
           theme,
           padding,
           corners,
           typo,
         ),
-        _BisonIconButtonType.smallGhost => _smallGhostButtonStyle(
+        _BisonIconButtonType.smallGhost => smallGhostIconButtonStyle(
           theme,
           padding,
           corners,
           typo,
         ),
-        _BisonIconButtonType.outlined => _outlinedButtonStyle(
+        _BisonIconButtonType.outlined => outlinedIconButtonStyle(
           theme,
           padding,
           corners,
@@ -130,7 +130,7 @@ class BisonIconButton extends StatelessWidget {
   }
 }
 
-ButtonStyle _filledButtonStyle(
+ButtonStyle filledIconButtonStyle(
   final BisonThemeTokens theme,
   final BisonSpacingTokens padding,
   final BisonCornerTokens corners,
@@ -191,7 +191,7 @@ ButtonStyle _filledButtonStyle(
   );
 }
 
-ButtonStyle _ghostButtonStyle(
+ButtonStyle ghostIconButtonStyle(
   final BisonThemeTokens theme,
   final BisonSpacingTokens padding,
   final BisonCornerTokens corners,
@@ -241,7 +241,7 @@ ButtonStyle _ghostButtonStyle(
   );
 }
 
-ButtonStyle _whiteGhostButtonStyle(
+ButtonStyle whiteGhostIconButtonStyle(
   final BisonThemeTokens theme,
   final BisonSpacingTokens padding,
   final BisonCornerTokens corners,
@@ -291,7 +291,7 @@ ButtonStyle _whiteGhostButtonStyle(
   );
 }
 
-ButtonStyle _smallGhostButtonStyle(
+ButtonStyle smallGhostIconButtonStyle(
   final BisonThemeTokens theme,
   final BisonSpacingTokens padding,
   final BisonCornerTokens corners,
@@ -342,7 +342,7 @@ ButtonStyle _smallGhostButtonStyle(
   );
 }
 
-ButtonStyle _outlinedButtonStyle(
+ButtonStyle outlinedIconButtonStyle(
   final BisonThemeTokens theme,
   final BisonSpacingTokens padding,
   final BisonCornerTokens corners,

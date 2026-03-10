@@ -9,6 +9,8 @@ import '../core_widgets/buttons/bison_button.dart'
         getFilledBisonButtonStyle,
         getGhostBisonButtonStyle,
         getOutlinedBisonButtonStyle;
+import '../core_widgets/buttons/bison_icon_button.dart'
+    show filledIconButtonStyle;
 import '../core_widgets/menus/bison_menu.dart'
     show getBisonMenuStyle, getBisonMenuButtonStyle;
 
@@ -75,6 +77,14 @@ class BisonThemeData {
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: getOutlinedBisonButtonStyle(
+          themeTokens,
+          spacingTokens,
+          cornerTokens,
+          typographyTokens,
+        ),
+      ),
+      iconButtonTheme: IconButtonThemeData(
+        style: filledIconButtonStyle(
           themeTokens,
           spacingTokens,
           cornerTokens,
