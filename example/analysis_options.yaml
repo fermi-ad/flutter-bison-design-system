@@ -26,3 +26,12 @@ linter:
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
+
+plugins:
+  explicit_imports:
+    version: ^1.0.4
+    diagnostics:
+      explicit_dart_imports: true
+      explicit_flutter_imports: false
+      explicit_package_imports: true
+      explicit_relative_imports: true

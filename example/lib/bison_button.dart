@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:widgetbook/widgetbook.dart';
+import 'package:widgetbook/widgetbook.dart' show KnobsExtension;
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
-import 'package:bison_design_system/core_widgets.dart';
+import 'package:bison_design_system/core_widgets.dart'
+    show BisonButton, BisonButtonType;
 
 @widgetbook.UseCase(name: 'Default', type: BisonButton)
 Widget buildBisonButtonUseCase(BuildContext context) {
