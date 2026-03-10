@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bison_design_system/bison_design_system.dart'
-    show
-        BisonButton,
-        BisonButtonType,
-        BisonThemeTokens,
-        BisonSpacingTokens,
-        BisonCornerTokens;
+    show BisonButton, BisonThemeTokens, BisonSpacingTokens, BisonCornerTokens;
 import '../common.dart' show buildScaffold, getButtonStyle;
 
 void main() {
@@ -17,7 +12,9 @@ void main() {
       final bool callbackCalled = false;
 
       await tester.pumpWidget(
-        buildScaffold(BisonButton(buttonLabel: 'Test Button', onPressed: null)),
+        buildScaffold(
+          BisonButton.filled(buttonLabel: 'Test Button', onPressed: null),
+        ),
       );
 
       final buttonFinder = find.byType(BisonButton);
@@ -37,7 +34,7 @@ void main() {
 
       await tester.pumpWidget(
         buildScaffold(
-          BisonButton(
+          BisonButton.filled(
             buttonLabel: 'Test Button',
             onPressed: () {
               callbackCalled = true;
@@ -65,11 +62,7 @@ void main() {
 
       await tester.pumpWidget(
         buildScaffold(
-          BisonButton(
-            buttonLabel: 'Filled',
-            onPressed: () {},
-            buttonType: BisonButtonType.filled,
-          ),
+          BisonButton.filled(buttonLabel: 'Filled', onPressed: () {}),
         ),
       );
 
@@ -92,11 +85,7 @@ void main() {
 
       await tester.pumpWidget(
         buildScaffold(
-          BisonButton(
-            buttonLabel: 'ghost',
-            onPressed: () {},
-            buttonType: BisonButtonType.ghost,
-          ),
+          BisonButton.ghost(buttonLabel: 'ghost', onPressed: () {}),
         ),
       );
 
@@ -119,11 +108,7 @@ void main() {
 
       await tester.pumpWidget(
         buildScaffold(
-          BisonButton(
-            buttonLabel: 'Outlined',
-            onPressed: () {},
-            buttonType: BisonButtonType.outlined,
-          ),
+          BisonButton.outlined(buttonLabel: 'Outlined', onPressed: () {}),
         ),
       );
 
@@ -146,11 +131,7 @@ void main() {
 
       await tester.pumpWidget(
         buildScaffold(
-          BisonButton(
-            buttonLabel: 'Destructive',
-            onPressed: () {},
-            buttonType: BisonButtonType.destructive,
-          ),
+          BisonButton.destructive(buttonLabel: 'Destructive', onPressed: () {}),
         ),
       );
 
@@ -173,7 +154,7 @@ void main() {
 
       await tester.pumpWidget(
         buildScaffold(
-          BisonButton(
+          BisonButton.filled(
             buttonLabel: 'Label',
             onPressed: () => debugPrint('test'),
           ),
@@ -202,7 +183,7 @@ void main() {
 
       await tester.pumpWidget(
         buildScaffold(
-          BisonButton(
+          BisonButton.filled(
             buttonLabel: 'WithIcon',
             onPressed: () => debugPrint('test'),
             icon: Icon(Icons.add),
@@ -250,7 +231,10 @@ void main() {
 
       await tester.pumpWidget(
         buildScaffold(
-          BisonButton(buttonLabel: 'Corner', onPressed: () => debugPrint("")),
+          BisonButton.filled(
+            buttonLabel: 'Corner',
+            onPressed: () => debugPrint(""),
+          ),
         ),
       );
 
@@ -272,11 +256,7 @@ void main() {
 
       await tester.pumpWidget(
         buildScaffold(
-          BisonButton(
-            buttonLabel: 'filled',
-            onPressed: null,
-            buttonType: BisonButtonType.filled,
-          ),
+          BisonButton.filled(buttonLabel: 'filled', onPressed: null),
         ),
       );
 
@@ -307,13 +287,7 @@ void main() {
       final theme = BisonThemeTokens.light();
 
       await tester.pumpWidget(
-        buildScaffold(
-          BisonButton(
-            buttonLabel: 'ghost',
-            onPressed: null,
-            buttonType: BisonButtonType.ghost,
-          ),
-        ),
+        buildScaffold(BisonButton.ghost(buttonLabel: 'ghost', onPressed: null)),
       );
 
       final ghostFinder = find.descendant(
@@ -344,11 +318,7 @@ void main() {
 
       await tester.pumpWidget(
         buildScaffold(
-          BisonButton(
-            buttonLabel: 'outlined',
-            onPressed: null,
-            buttonType: BisonButtonType.outlined,
-          ),
+          BisonButton.outlined(buttonLabel: 'outlined', onPressed: null),
         ),
       );
 
@@ -379,11 +349,7 @@ void main() {
 
       await tester.pumpWidget(
         buildScaffold(
-          BisonButton(
-            buttonLabel: 'destructive',
-            onPressed: null,
-            buttonType: BisonButtonType.destructive,
-          ),
+          BisonButton.destructive(buttonLabel: 'destructive', onPressed: null),
         ),
       );
       final destructiveFinder = find.descendant(
