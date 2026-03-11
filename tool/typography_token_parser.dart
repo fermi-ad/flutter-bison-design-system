@@ -72,7 +72,7 @@ void main() {
       "        height: ${lineHeight / fontSize}, // Multiplier: $lineHeight / $fontSize",
     );
     buffer.writeln("        letterSpacing: $tracking,");
-    buffer.writeln("        color: colors.textPrimary,");
+    buffer.writeln("        color: colors.textPlain,");
     buffer.writeln("      ),");
   }
   buffer.writeln("    );\n  }\n");

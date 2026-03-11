@@ -96,9 +96,6 @@ void main() {
   // Overrides
   _writeOverrides(buffer, sortedKeys);
 
-  // ColorScheme
-  _writeToColorScheme(buffer);
-
   buffer.writeln("}");
 
   // create file
@@ -206,24 +203,6 @@ void _writeOverrides(final StringBuffer buffer, final List<String> keys) {
     buffer.writeln("      $name: Color.lerp($name, other.$name, t)!,");
   }
   buffer.writeln("    );\n  }");
-}
-
-void _writeToColorScheme(final StringBuffer buffer) {
-  buffer.writeln('''
-  ColorScheme toColorScheme(final Brightness brightness) {
-    return ColorScheme(
-      brightness: brightness,
-      primary: borderPrimary,
-      onPrimary: textInverse,
-      secondary: borderSecondary,
-      onSecondary: textInverse,
-      error: borderError,
-      onError: textInverse,
-      surface: surfaceDefault,
-      onSurface: textPlain,
-    );
-  }
-  ''');
 }
 
 String toCamelCase(final String input) {

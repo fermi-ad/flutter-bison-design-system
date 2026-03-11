@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:bison_design_system/bison_design_system.dart'
     show BisonThemeTokens, BisonSpacingTokens, BisonIconButton;
 import 'package:flutter/material.dart';
-import '../common.dart' show buildScaffold;
+import '../common.dart' show buildScaffold, getIconButtonStyle;
 
 void main() {
   group("Testing callback function", () {
@@ -58,9 +58,10 @@ void main() {
 
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = tester.widget<IconButton>(find.byType(IconButton));
+      final element = tester.element(find.byType(IconButton));
+      final iconWidget = element.widget as IconButton;
 
-      final buttonStyle = iconWidget.style!;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{});
       final foreground = buttonStyle.foregroundColor?.resolve(<WidgetState>{});
@@ -81,9 +82,10 @@ void main() {
 
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = tester.widget<IconButton>(find.byType(IconButton));
+      final element = tester.element(find.byType(IconButton));
+      final iconWidget = element.widget as IconButton;
 
-      final buttonStyle = iconWidget.style!;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{});
       final foreground = buttonStyle.foregroundColor?.resolve(<WidgetState>{});
@@ -106,9 +108,10 @@ void main() {
 
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = tester.widget<IconButton>(find.byType(IconButton));
+      final element = tester.element(find.byType(IconButton));
+      final iconWidget = element.widget as IconButton;
 
-      final buttonStyle = iconWidget.style!;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{});
       final foreground = buttonStyle.foregroundColor?.resolve(<WidgetState>{});
@@ -129,9 +132,10 @@ void main() {
 
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = tester.widget<IconButton>(find.byType(IconButton));
+      final element = tester.element(find.byType(IconButton));
+      final iconWidget = element.widget as IconButton;
 
-      final buttonStyle = iconWidget.style!;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{});
       final foreground = buttonStyle.foregroundColor?.resolve(<WidgetState>{});
@@ -152,9 +156,10 @@ void main() {
 
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = tester.widget<IconButton>(find.byType(IconButton));
+      final element = tester.element(find.byType(IconButton));
+      final iconWidget = element.widget as IconButton;
 
-      final buttonStyle = iconWidget.style!;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{});
       final foreground = buttonStyle.foregroundColor?.resolve(<WidgetState>{});
@@ -173,9 +178,10 @@ void main() {
         ),
       );
 
-      final iconWidget = tester.widget<IconButton>(find.byType(IconButton));
+      final element = tester.element(find.byType(IconButton));
+      final iconWidget = element.widget as IconButton;
 
-      final buttonStyle = iconWidget.style!;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final padding = buttonStyle.padding?.resolve(<WidgetState>{});
 
@@ -192,9 +198,10 @@ void main() {
         ),
       );
 
-      final iconWidget = tester.widget<IconButton>(find.byType(IconButton));
+      final element = tester.element(find.byType(IconButton));
+      final iconWidget = element.widget as IconButton;
 
-      final buttonStyle = iconWidget.style!;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final padding = buttonStyle.padding?.resolve(<WidgetState>{});
 
@@ -215,12 +222,14 @@ void main() {
       final cursor = TestPointer();
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = find.byType(IconButton);
+      final iconWidgetFinder = find.byType(IconButton);
       await tester.sendEventToBinding(
-        cursor.hover(tester.getCenter(iconWidget)),
+        cursor.hover(tester.getCenter(iconWidgetFinder)),
       );
 
-      final buttonStyle = (tester.widget<IconButton>(iconWidget)).style!;
+      final element = tester.element(iconWidgetFinder);
+      final iconWidget = element.widget as IconButton;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
         WidgetState.hovered,
@@ -245,12 +254,14 @@ void main() {
       final cursor = TestPointer();
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = find.byType(IconButton);
+      final iconWidgetFinder = find.byType(IconButton);
       await tester.sendEventToBinding(
-        cursor.hover(tester.getCenter(iconWidget)),
+        cursor.hover(tester.getCenter(iconWidgetFinder)),
       );
 
-      final buttonStyle = (tester.widget<IconButton>(iconWidget)).style!;
+      final element = tester.element(iconWidgetFinder);
+      final iconWidget = element.widget as IconButton;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
         WidgetState.hovered,
@@ -279,12 +290,14 @@ void main() {
       final cursor = TestPointer();
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = find.byType(IconButton);
+      final iconWidgetFinder = find.byType(IconButton);
       await tester.sendEventToBinding(
-        cursor.hover(tester.getCenter(iconWidget)),
+        cursor.hover(tester.getCenter(iconWidgetFinder)),
       );
 
-      final buttonStyle = (tester.widget<IconButton>(iconWidget)).style!;
+      final element = tester.element(iconWidgetFinder);
+      final iconWidget = element.widget as IconButton;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
         WidgetState.hovered,
@@ -309,12 +322,14 @@ void main() {
       final cursor = TestPointer();
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = find.byType(IconButton);
+      final iconWidgetFinder = find.byType(IconButton);
       await tester.sendEventToBinding(
-        cursor.hover(tester.getCenter(iconWidget)),
+        cursor.hover(tester.getCenter(iconWidgetFinder)),
       );
 
-      final buttonStyle = (tester.widget<IconButton>(iconWidget)).style!;
+      final element = tester.element(iconWidgetFinder);
+      final iconWidget = element.widget as IconButton;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
         WidgetState.hovered,
@@ -339,12 +354,14 @@ void main() {
       final cursor = TestPointer();
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = find.byType(IconButton);
+      final iconWidgetFinder = find.byType(IconButton);
       await tester.sendEventToBinding(
-        cursor.hover(tester.getCenter(iconWidget)),
+        cursor.hover(tester.getCenter(iconWidgetFinder)),
       );
 
-      final buttonStyle = (tester.widget<IconButton>(iconWidget)).style!;
+      final element = tester.element(iconWidgetFinder);
+      final iconWidget = element.widget as IconButton;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
         WidgetState.hovered,
@@ -371,10 +388,12 @@ void main() {
 
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = find.byType(IconButton);
-      await tester.tap(iconWidget);
+      final iconWidgetFinder = find.byType(IconButton);
+      await tester.tap(iconWidgetFinder);
 
-      final buttonStyle = (tester.widget<IconButton>(iconWidget)).style!;
+      final element = tester.element(iconWidgetFinder);
+      final iconWidget = element.widget as IconButton;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
         WidgetState.focused,
@@ -403,10 +422,12 @@ void main() {
 
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = find.byType(IconButton);
-      await tester.tap(iconWidget);
+      final iconWidgetFinder = find.byType(IconButton);
+      await tester.tap(iconWidgetFinder);
 
-      final buttonStyle = (tester.widget<IconButton>(iconWidget)).style!;
+      final element = tester.element(iconWidgetFinder);
+      final iconWidget = element.widget as IconButton;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
         WidgetState.focused,
@@ -435,10 +456,12 @@ void main() {
 
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = find.byType(IconButton);
-      await tester.tap(iconWidget);
+      final iconWidgetFinder = find.byType(IconButton);
+      await tester.tap(iconWidgetFinder);
 
-      final buttonStyle = (tester.widget<IconButton>(iconWidget)).style!;
+      final element = tester.element(iconWidgetFinder);
+      final iconWidget = element.widget as IconButton;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
         WidgetState.focused,
@@ -467,10 +490,12 @@ void main() {
 
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = find.byType(IconButton);
-      await tester.tap(iconWidget);
+      final iconWidgetFinder = find.byType(IconButton);
+      await tester.tap(iconWidgetFinder);
 
-      final buttonStyle = (tester.widget<IconButton>(iconWidget)).style!;
+      final element = tester.element(iconWidgetFinder);
+      final iconWidget = element.widget as IconButton;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
         WidgetState.focused,
@@ -499,10 +524,12 @@ void main() {
 
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = find.byType(IconButton);
-      await tester.tap(iconWidget);
+      final iconWidgetFinder = find.byType(IconButton);
+      await tester.tap(iconWidgetFinder);
 
-      final buttonStyle = (tester.widget<IconButton>(iconWidget)).style!;
+      final element = tester.element(iconWidgetFinder);
+      final iconWidget = element.widget as IconButton;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
         WidgetState.focused,
@@ -533,10 +560,12 @@ void main() {
 
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = find.byType(IconButton);
-      await tester.tap(iconWidget);
+      final iconWidgetFinder = find.byType(IconButton);
+      await tester.tap(iconWidgetFinder);
 
-      final buttonStyle = (tester.widget<IconButton>(iconWidget)).style!;
+      final element = tester.element(iconWidgetFinder);
+      final iconWidget = element.widget as IconButton;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
         WidgetState.pressed,
@@ -561,10 +590,12 @@ void main() {
 
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = find.byType(IconButton);
-      await tester.tap(iconWidget);
+      final iconWidgetFinder = find.byType(IconButton);
+      await tester.tap(iconWidgetFinder);
 
-      final buttonStyle = (tester.widget<IconButton>(iconWidget)).style!;
+      final element = tester.element(iconWidgetFinder);
+      final iconWidget = element.widget as IconButton;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
         WidgetState.pressed,
@@ -593,10 +624,12 @@ void main() {
 
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = find.byType(IconButton);
-      await tester.tap(iconWidget);
+      final iconWidgetFinder = find.byType(IconButton);
+      await tester.tap(iconWidgetFinder);
 
-      final buttonStyle = (tester.widget<IconButton>(iconWidget)).style!;
+      final element = tester.element(iconWidgetFinder);
+      final iconWidget = element.widget as IconButton;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
         WidgetState.pressed,
@@ -621,10 +654,12 @@ void main() {
 
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = find.byType(IconButton);
-      await tester.tap(iconWidget);
+      final iconWidgetFinder = find.byType(IconButton);
+      await tester.tap(iconWidgetFinder);
 
-      final buttonStyle = (tester.widget<IconButton>(iconWidget)).style!;
+      final element = tester.element(iconWidgetFinder);
+      final iconWidget = element.widget as IconButton;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
         WidgetState.pressed,
@@ -649,10 +684,12 @@ void main() {
 
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = find.byType(IconButton);
-      await tester.tap(iconWidget);
+      final iconWidgetFinder = find.byType(IconButton);
+      await tester.tap(iconWidgetFinder);
 
-      final buttonStyle = (tester.widget<IconButton>(iconWidget)).style!;
+      final element = tester.element(iconWidgetFinder);
+      final iconWidget = element.widget as IconButton;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
         WidgetState.pressed,
@@ -679,9 +716,10 @@ void main() {
 
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = tester.widget<IconButton>(find.byType(IconButton));
+      final element = tester.element(find.byType(IconButton));
+      final iconWidget = element.widget as IconButton;
 
-      final buttonStyle = iconWidget.style!;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
         WidgetState.disabled,
@@ -710,9 +748,10 @@ void main() {
 
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = tester.widget<IconButton>(find.byType(IconButton));
+      final element = tester.element(find.byType(IconButton));
+      final iconWidget = element.widget as IconButton;
 
-      final buttonStyle = iconWidget.style!;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
         WidgetState.disabled,
@@ -741,9 +780,10 @@ void main() {
 
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = tester.widget<IconButton>(find.byType(IconButton));
+      final element = tester.element(find.byType(IconButton));
+      final iconWidget = element.widget as IconButton;
 
-      final buttonStyle = iconWidget.style!;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
         WidgetState.disabled,
@@ -768,9 +808,10 @@ void main() {
 
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = tester.widget<IconButton>(find.byType(IconButton));
+      final element = tester.element(find.byType(IconButton));
+      final iconWidget = element.widget as IconButton;
 
-      final buttonStyle = iconWidget.style!;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
         WidgetState.disabled,
@@ -795,9 +836,10 @@ void main() {
 
       // BisonIconButton builds off of [IconButton]
       // finding [IconButton] allows use of style getters
-      final iconWidget = tester.widget<IconButton>(find.byType(IconButton));
+      final element = tester.element(find.byType(IconButton));
+      final iconWidget = element.widget as IconButton;
 
-      final buttonStyle = iconWidget.style!;
+      final buttonStyle = getIconButtonStyle(element, iconWidget);
 
       final background = buttonStyle.backgroundColor?.resolve(<WidgetState>{
         WidgetState.disabled,

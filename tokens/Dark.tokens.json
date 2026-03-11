@@ -210,6 +210,32 @@
         "com.figma.isOverride": true
       }
     },
+    "Inverse": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1764705926179886,
+          0.4156862795352936,
+          0.9411764740943909
+        ],
+        "alpha": 1,
+        "hex": "#2D6AF0"
+      },
+      "$extensions": {
+        "com.figma.variableId": "VariableID:62817:313",
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.aliasData": {
+          "targetVariableId": "VariableID:6a2b6947cdf8d0991509fc23d7d7e43741064df7/-1:-1",
+          "targetVariableName": "Primary/Default",
+          "targetVariableSetId": "VariableCollectionId:e4a8639a1973b907f51884f82842982f5fc56e51/-1:-1",
+          "targetVariableSetName": "Color Alias"
+        },
+        "com.figma.isOverride": true
+      }
+    },
     "Primary-Hovered": {
       "$type": "color",
       "$value": {
@@ -894,7 +920,7 @@
         "com.figma.isOverride": true
       }
     },
-    "Historial-Data": {
+    "Historical-Data": {
       "$type": "color",
       "$value": {
         "colorSpace": "srgb",
@@ -1683,7 +1709,7 @@
           "com.figma.isOverride": true
         }
       },
-      "Fcoused": {
+      "Focused": {
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
@@ -1787,7 +1813,7 @@
           "com.figma.isOverride": true
         }
       },
-      "Fcoused-Slate": {
+      "Focused-Slate": {
         "$type": "color",
         "$value": {
           "colorSpace": "srgb",
@@ -2414,6 +2440,32 @@
         "com.figma.aliasData": {
           "targetVariableId": "VariableID:da60927ad559af069ff74191f5f4e5a95484b972/-1:-1",
           "targetVariableName": "Neutral/Even Darker",
+          "targetVariableSetId": "VariableCollectionId:e4a8639a1973b907f51884f82842982f5fc56e51/-1:-1",
+          "targetVariableSetName": "Color Alias"
+        },
+        "com.figma.isOverride": true
+      }
+    },
+    "Inverse": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9137254953384399,
+          0.9137254953384399,
+          0.9137254953384399
+        ],
+        "alpha": 1,
+        "hex": "#E9E9E9"
+      },
+      "$extensions": {
+        "com.figma.variableId": "VariableID:62817:312",
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ],
+        "com.figma.aliasData": {
+          "targetVariableId": "VariableID:1dfaf15ce382eb53de0454e54d193c674f019d08/-1:-1",
+          "targetVariableName": "Neutral/Lightest",
           "targetVariableSetId": "VariableCollectionId:e4a8639a1973b907f51884f82842982f5fc56e51/-1:-1",
           "targetVariableSetName": "Color Alias"
         },

@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
-class BisonSpacingTokens extends ThemeExtension<BisonSpacingTokens>{
+class BisonSpacingTokens extends ThemeExtension<BisonSpacingTokens> {
   final double noneSpacing;
   final double microSpacing;
   final double tinySpacing;
@@ -26,7 +26,7 @@ class BisonSpacingTokens extends ThemeExtension<BisonSpacingTokens>{
     required this.xLargeSpacing,
   });
 
-  factory BisonSpacingTokens.standard() => const BisonSpacingTokens (
+  factory BisonSpacingTokens.standard() => const BisonSpacingTokens(
     noneSpacing: 0,
     microSpacing: 4,
     tinySpacing: 8,
@@ -83,7 +83,7 @@ class BisonSpacingTokens extends ThemeExtension<BisonSpacingTokens>{
   }
 }
 
-class BisonCornerTokens extends ThemeExtension<BisonCornerTokens>{
+class BisonCornerTokens extends ThemeExtension<BisonCornerTokens> {
   final double cornerNone;
   final double cornerExtraSmall;
   final double cornerSmall;
@@ -98,7 +98,7 @@ class BisonCornerTokens extends ThemeExtension<BisonCornerTokens>{
     required this.cornerLarge,
   });
 
-  factory BisonCornerTokens.standard() => const BisonCornerTokens (
+  factory BisonCornerTokens.standard() => const BisonCornerTokens(
     cornerNone: 0,
     cornerExtraSmall: 4,
     cornerSmall: 8,
@@ -131,7 +131,11 @@ class BisonCornerTokens extends ThemeExtension<BisonCornerTokens>{
     if (other is! BisonCornerTokens) return this;
     return BisonCornerTokens(
       cornerNone: lerpDouble(cornerNone, other.cornerNone, t)!,
-      cornerExtraSmall: lerpDouble(cornerExtraSmall, other.cornerExtraSmall, t)!,
+      cornerExtraSmall: lerpDouble(
+        cornerExtraSmall,
+        other.cornerExtraSmall,
+        t,
+      )!,
       cornerSmall: lerpDouble(cornerSmall, other.cornerSmall, t)!,
       cornerMedium: lerpDouble(cornerMedium, other.cornerMedium, t)!,
       cornerLarge: lerpDouble(cornerLarge, other.cornerLarge, t)!,

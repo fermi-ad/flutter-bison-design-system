@@ -29,7 +29,7 @@ class BisonTypographyTokens extends ThemeExtension<BisonTypographyTokens> {
         fontWeight: FontWeight.w400,
         height: 1.0, // Multiplier: 20.0 / 20.0
         letterSpacing: 0.0,
-        color: colors.textPrimary,
+        color: colors.textPlain,
       ),
       h2: TextStyle(
         fontFamily: 'Atkinson Hyperlegible Next',
@@ -38,7 +38,7 @@ class BisonTypographyTokens extends ThemeExtension<BisonTypographyTokens> {
         fontWeight: FontWeight.w400,
         height: 1.1111111111111112, // Multiplier: 20.0 / 18.0
         letterSpacing: 0.0,
-        color: colors.textPrimary,
+        color: colors.textPlain,
       ),
       h3: TextStyle(
         fontFamily: 'Atkinson Hyperlegible Next',
@@ -47,7 +47,7 @@ class BisonTypographyTokens extends ThemeExtension<BisonTypographyTokens> {
         fontWeight: FontWeight.w500,
         height: 1.125, // Multiplier: 18.0 / 16.0
         letterSpacing: 0.0,
-        color: colors.textPrimary,
+        color: colors.textPlain,
       ),
       bodyLarge: TextStyle(
         fontFamily: 'Atkinson Hyperlegible Next',
@@ -56,7 +56,7 @@ class BisonTypographyTokens extends ThemeExtension<BisonTypographyTokens> {
         fontWeight: FontWeight.w500,
         height: 1.1428571428571428, // Multiplier: 16.0 / 14.0
         letterSpacing: 0.0,
-        color: colors.textPrimary,
+        color: colors.textPlain,
       ),
       bodySmall: TextStyle(
         fontFamily: 'Atkinson Hyperlegible Next',
@@ -65,7 +65,7 @@ class BisonTypographyTokens extends ThemeExtension<BisonTypographyTokens> {
         fontWeight: FontWeight.w400,
         height: 1.2307692307692308, // Multiplier: 16.0 / 13.0
         letterSpacing: 0.0,
-        color: colors.textPrimary,
+        color: colors.textPlain,
       ),
       capitalizedLabel: TextStyle(
         fontFamily: 'Atkinson Hyperlegible Next',
@@ -74,7 +74,7 @@ class BisonTypographyTokens extends ThemeExtension<BisonTypographyTokens> {
         fontWeight: FontWeight.w400,
         height: 1.3333333333333333, // Multiplier: 16.0 / 12.0
         letterSpacing: 0.25,
-        color: colors.textPrimary,
+        color: colors.textPlain,
       ),
     );
   }
