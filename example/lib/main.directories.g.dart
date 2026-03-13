@@ -12,6 +12,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:bison_design_system_catalog/bison_button.dart'
     as _bison_design_system_catalog_bison_button;
+import 'package:bison_design_system_catalog/bison_dialog.dart'
+    as _bison_design_system_catalog_bison_dialog;
 import 'package:bison_design_system_catalog/bison_icon_button.dart'
     as _bison_design_system_catalog_bison_icon_button;
 import 'package:bison_design_system_catalog/bison_menu.dart'
@@ -62,6 +64,26 @@ final directories = <_widgetbook.WidgetbookNode>[
                 name: 'White Ghost',
                 builder: _bison_design_system_catalog_bison_icon_button
                     .buildBisonIconButtonWhiteGhostUseCase,
+              ),
+            ],
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookFolder(
+        name: 'dialogs',
+        children: [
+          _widgetbook.WidgetbookComponent(
+            name: 'BisonDialog',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Default',
+                builder:
+                    _bison_design_system_catalog_bison_dialog.builBisonDialog,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Trigger Dialog',
+                builder: _bison_design_system_catalog_bison_dialog
+                    .builBisonDialogTrigger,
               ),
             ],
           ),
