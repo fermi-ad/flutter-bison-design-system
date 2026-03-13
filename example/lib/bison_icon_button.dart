@@ -25,9 +25,7 @@ Widget buildBisonIconButtonFilledUseCase(BuildContext context) {
         Icon(Icons.delete),
       ],
     ),
-    onPressed: context.knobs.boolean(label: 'Disabled')
-        ? null
-        : () => debugPrint("Hello!"),
+    onPressed: context.knobs.boolean(label: 'Disabled') ? null : () => {},
   );
 }
 
@@ -51,9 +49,7 @@ Widget buildBisonIconButtonGhostUseCase(BuildContext context) {
         Icon(Icons.delete),
       ],
     ),
-    onPressed: context.knobs.boolean(label: 'Disabled')
-        ? null
-        : () => debugPrint("Hello!"),
+    onPressed: context.knobs.boolean(label: 'Disabled') ? null : () => {},
   );
 }
 
@@ -80,9 +76,7 @@ Widget buildBisonIconButtonWhiteGhostUseCase(BuildContext context) {
           Icon(Icons.delete),
         ],
       ),
-      onPressed: context.knobs.boolean(label: 'Disabled')
-          ? null
-          : () => debugPrint("Hello!"),
+      onPressed: context.knobs.boolean(label: 'Disabled') ? null : () => {},
     ),
   );
 }
@@ -107,9 +101,7 @@ Widget buildBisonIconButtonSmallGhostUseCase(BuildContext context) {
         Icon(Icons.delete),
       ],
     ),
-    onPressed: context.knobs.boolean(label: 'Disabled')
-        ? null
-        : () => debugPrint("Hello!"),
+    onPressed: context.knobs.boolean(label: 'Disabled') ? null : () => {},
   );
 }
 
@@ -133,8 +125,6 @@ Widget buildBisonIconButtonOutlinedUseCase(BuildContext context) {
         Icon(Icons.delete),
       ],
     ),
-    onPressed: context.knobs.boolean(label: 'Disabled')
-        ? null
-        : () => debugPrint("Hello!"),
+    onPressed: context.knobs.boolean(label: 'Disabled') ? null : () => {},
   );
 }
