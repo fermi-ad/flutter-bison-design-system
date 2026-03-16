@@ -41,7 +41,13 @@ void main() {
       final theme = BisonThemeTokens.light();
 
       await tester.pumpWidget(
-        buildScaffold(BisonDialog(title: 'Dialog title', body: 'Dialog body')),
+        buildScaffold(
+          BisonDialog(
+            title: 'Dialog title',
+            body: 'Dialog body',
+            primaryAction: BisonDialogAction(label: 'Okay', onPressed: () {}),
+          ),
+        ),
       );
 
       final surfaceFinder = find.byKey(
@@ -69,6 +75,10 @@ void main() {
                     context: context,
                     title: 'Dialog title',
                     body: 'Dialog body',
+                    primaryAction: BisonDialogAction(
+                      label: 'Okay',
+                      onPressed: () {},
+                    ),
                   );
                 },
                 child: const Text('Open dialog'),

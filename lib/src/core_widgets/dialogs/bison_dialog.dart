@@ -6,7 +6,6 @@ import 'package:flutter/widgets.dart';
 import 'package:bison_design_system/bison_design_system.dart'
     show
         BisonButton,
-        BisonButtonType,
         BisonCornerTokens,
         BisonSpacingTokens,
         BisonThemeTokens,
@@ -32,7 +31,7 @@ class BisonDialog extends StatelessWidget {
   final String body;
   final BisonDialogAction? destructiveAction;
   final BisonDialogAction? secondaryAction;
-  final BisonDialogAction? primaryAction;
+  final BisonDialogAction primaryAction;
   final double minWidth;
   final double maxWidth;
 
@@ -42,7 +41,7 @@ class BisonDialog extends StatelessWidget {
     required this.body,
     this.destructiveAction,
     this.secondaryAction,
-    this.primaryAction,
+    required this.primaryAction,
     this.minWidth = 280.0,
     this.maxWidth = 560.0,
   });
@@ -53,7 +52,7 @@ class BisonDialog extends StatelessWidget {
     required final String body,
     final BisonDialogAction? destructiveAction,
     final BisonDialogAction? secondaryAction,
-    final BisonDialogAction? primaryAction,
+    required final BisonDialogAction primaryAction,
     final bool barrierDismissible = true,
     final String barrierLabel = 'Dismiss dialog',
     final double minWidth = 280.0,
@@ -109,8 +108,6 @@ class BisonDialog extends StatelessWidget {
     final destructive = destructiveAction;
     final secondary = secondaryAction;
     final primary = primaryAction;
-    final hasActions =
-        destructive != null || secondary != null || primary != null;
 
     return ConstrainedBox(
       constraints: BoxConstraints(minWidth: minWidth, maxWidth: maxWidth),
@@ -137,31 +134,28 @@ class BisonDialog extends StatelessWidget {
               Text(title, style: typography.h3),
               SizedBox(height: spacing.smallSpacing),
               Text(body, style: typography.bodyLarge),
-              if (hasActions) ...[
-                SizedBox(height: spacing.standardSpacing),
-                Row(
-                  children: [
-                    if (destructive != null)
-                      BisonButton.destructive(
-                        buttonLabel: destructive.label,
-                        onPressed: destructive.onPressed,
-                      ),
-                    const Spacer(),
-                    if (secondary != null)
-                      BisonButton.outlined(
-                        buttonLabel: secondary.label,
-                        onPressed: secondary.onPressed,
-                      ),
-                    if (secondary != null && primary != null)
-                      SizedBox(width: spacing.tinySpacing),
-                    if (primary != null)
-                      BisonButton.filled(
-                        buttonLabel: primary.label,
-                        onPressed: primary.onPressed,
-                      ),
-                  ],
-                ),
-              ],
+              SizedBox(height: spacing.standardSpacing),
+              Row(
+                children: [
+                  if (destructive != null)
+                    BisonButton.destructive(
+                      buttonLabel: destructive.label,
+                      onPressed: destructive.onPressed,
+                    ),
+                  const Spacer(),
+                  if (secondary != null)
+                    BisonButton.outlined(
+                      buttonLabel: secondary.label,
+                      onPressed: secondary.onPressed,
+                    ),
+                  if (secondary != null)
+                    SizedBox(width: spacing.tinySpacing),
+                  BisonButton.filled(
+                    buttonLabel: primary.label,
+                    onPressed: primary.onPressed,
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -175,7 +169,7 @@ class _BisonDialogOverlay extends StatelessWidget {
   final String body;
   final BisonDialogAction? destructiveAction;
   final BisonDialogAction? secondaryAction;
-  final BisonDialogAction? primaryAction;
+  final BisonDialogAction primaryAction;
   final bool barrierDismissible;
   final String barrierLabel;
   final double minWidth;
@@ -199,6 +193,17 @@ class _BisonDialogOverlay extends StatelessWidget {
 
   BisonDialogAction? _wrapAction(final BisonDialogAction? action) {
     if (action == null) return null;
+    return BisonDialogAction(
+      label: action.label,
+      dismissDialog: action.dismissDialog,
+      onPressed: () {
+        action.onPressed();
+        if (action.dismissDialog) onDismiss();
+      },
+    );
+  }
+
+  BisonDialogAction _wrapRequiredAction(final BisonDialogAction action) {
     return BisonDialogAction(
       label: action.label,
       dismissDialog: action.dismissDialog,
@@ -242,7 +247,7 @@ class _BisonDialogOverlay extends StatelessWidget {
                     maxWidth: maxWidth,
                     destructiveAction: _wrapAction(destructiveAction),
                     secondaryAction: _wrapAction(secondaryAction),
-                    primaryAction: _wrapAction(primaryAction),
+                    primaryAction: _wrapRequiredAction(primaryAction),
                   ),
                 ),
               ),
