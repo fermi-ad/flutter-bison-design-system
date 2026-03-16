@@ -34,21 +34,30 @@ Widget builBisonDialog(BuildContext context) {
 
 @widgetbook.UseCase(name: 'Trigger Dialog', type: BisonDialog)
 Widget builBisonDialogTrigger(BuildContext context) {
+  final String dialogTitle = context.knobs.string(
+    label: 'Dialog Title',
+    initialValue: 'Dialog',
+  );
   final String message =
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+  final secondaryActionToggle =
+      context.knobs.boolean(label: 'Secondary Action', initialValue: true)
+      ? BisonDialogAction(label: 'Cancel', onPressed: () {})
+      : null;
+  final destructiveActionToggle =
+      context.knobs.boolean(label: 'Destructive Action', initialValue: true)
+      ? BisonDialogAction(label: 'Destroy', onPressed: () {})
+      : null;
   return BisonButton.filled(
     buttonLabel: "Open Dialog",
     onPressed: () {
       BisonDialog.show(
         context: context,
-        title: 'Dialog',
+        title: dialogTitle,
         body: message,
         primaryAction: BisonDialogAction(label: 'Okay', onPressed: () {}),
-        secondaryAction: BisonDialogAction(label: 'Cancel', onPressed: () {}),
-        destructiveAction: BisonDialogAction(
-          label: 'Destroy',
-          onPressed: () {},
-        ),
+        secondaryAction: secondaryActionToggle,
+        destructiveAction: destructiveActionToggle,
       );
     },
   );
