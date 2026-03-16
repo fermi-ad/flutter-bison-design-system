@@ -36,7 +36,7 @@ Widget builBisonDialog(BuildContext context) {
 Widget builBisonDialogTrigger(BuildContext context) {
   final String message =
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
-  return BisonButton(
+  return BisonButton.filled(
     buttonLabel: "Open Dialog",
     onPressed: () {
       BisonDialog.show(

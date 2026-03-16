@@ -142,25 +142,22 @@ class BisonDialog extends StatelessWidget {
                 Row(
                   children: [
                     if (destructive != null)
-                      BisonButton(
+                      BisonButton.destructive(
                         buttonLabel: destructive.label,
                         onPressed: destructive.onPressed,
-                        buttonType: BisonButtonType.destructive,
                       ),
                     const Spacer(),
                     if (secondary != null)
-                      BisonButton(
+                      BisonButton.outlined(
                         buttonLabel: secondary.label,
                         onPressed: secondary.onPressed,
-                        buttonType: BisonButtonType.outlined,
                       ),
                     if (secondary != null && primary != null)
                       SizedBox(width: spacing.tinySpacing),
                     if (primary != null)
-                      BisonButton(
+                      BisonButton.filled(
                         buttonLabel: primary.label,
                         onPressed: primary.onPressed,
-                        buttonType: BisonButtonType.filled,
                       ),
                   ],
                 ),
