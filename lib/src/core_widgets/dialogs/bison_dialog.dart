@@ -19,6 +19,10 @@ class BisonDialogAction {
   final VoidCallback onPressed;
   final bool dismissDialog;
 
+  /// Builds an action button for a BisonDialog. This take a [label], [onPressed], and [dismissDialog].
+  ///
+  /// [label] will be the label on the button and [onPressed] being the function called when pressed. Both are required.
+  /// [dismissDialog] will determine if the dialog box should be clossed after the button is pressed. This is true by default. 
   const BisonDialogAction({
     required this.label,
     required this.onPressed,
@@ -35,6 +39,7 @@ class BisonDialog extends StatelessWidget {
   final double minWidth;
   final double maxWidth;
 
+  /// Builds an instance of BisonDialog. Requires a dialog [title], [body], and one [primaryAction] button. 
   const BisonDialog({
     super.key,
     required this.title,
