@@ -57,7 +57,7 @@ void main() {
       final decoration = decoratedBox.decoration as BoxDecoration;
 
       expect(decoration.color, equals(theme.surfaceDefault));
-      expect(decoration.border?.top.color, equals(theme.borderPlain));
+      expect(decoration.border?.top.style, equals(BorderStyle.none));
     });
   });
 
