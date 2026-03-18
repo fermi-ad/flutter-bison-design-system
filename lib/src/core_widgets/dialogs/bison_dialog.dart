@@ -121,53 +121,65 @@ class BisonDialog extends StatelessWidget {
     final secondary = secondaryAction;
     final primary = primaryAction;
 
-    return ConstrainedBox(
-      constraints: BoxConstraints(minWidth: minWidth, maxWidth: maxWidth),
-      child: DecoratedBox(
-        key: _bisonDialogSurfaceKey,
-        decoration: BoxDecoration(
-          color: theme.surfaceDefault,
-          borderRadius: BorderRadius.circular(corners.cornerSmall),
-          border: Border.all(color: theme.borderPlain),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFF000000).withValues(alpha: 0.24),
-              blurRadius: spacing.smallSpacing,
-              offset: Offset(0, spacing.tinySpacing),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(spacing.standardSpacing),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: typography.h3),
-              SizedBox(height: spacing.smallSpacing),
-              Text(body, style: typography.bodyLarge),
-              SizedBox(height: spacing.standardSpacing),
-              Row(
-                children: [
-                  if (destructive != null)
-                    BisonButton.destructive(
-                      buttonLabel: destructive.label,
-                      onPressed: destructive.onPressed,
-                    ),
-                  const Spacer(),
-                  if (secondary != null)
-                    BisonButton.outlined(
-                      buttonLabel: secondary.label,
-                      onPressed: secondary.onPressed,
-                    ),
-                  if (secondary != null) SizedBox(width: spacing.tinySpacing),
-                  BisonButton.filled(
-                    buttonLabel: primary.label,
-                    onPressed: primary.onPressed,
-                  ),
-                ],
+    return DefaultTextStyle(
+      // Added to prevent yellow warning lines.
+      // could potentially be removed as Scaffold defines a DefaultTextStyle
+      style: TextStyle(decoration: TextDecoration.none),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minWidth: minWidth, maxWidth: maxWidth),
+        child: DecoratedBox(
+          key: _bisonDialogSurfaceKey,
+          decoration: BoxDecoration(
+            color: theme.surfaceDefault,
+            borderRadius: BorderRadius.circular(corners.cornerSmall),
+            border: Border.all(style: BorderStyle.none),
+            boxShadow: [
+              BoxShadow(
+                offset: Offset(0, spacing.tinySpacing),
+                blurRadius: spacing.xSmallSpacing,
+                spreadRadius: 6.0,
+                color: const Color(0xFF000000).withValues(alpha: 0.15),
+              ),
+              BoxShadow(
+                offset: Offset(0, spacing.microSpacing),
+                blurRadius: spacing.microSpacing,
+                spreadRadius: 0,
+                color: const Color(0xFF000000).withValues(alpha: .30),
               ),
             ],
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(spacing.mediumSpacing),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: typography.h3),
+                SizedBox(height: spacing.smallSpacing),
+                Text(body, style: typography.bodyLarge),
+                SizedBox(height: spacing.standardSpacing),
+                Row(
+                  children: [
+                    if (destructive != null)
+                      BisonButton.destructive(
+                        buttonLabel: destructive.label,
+                        onPressed: destructive.onPressed,
+                      ),
+                    const Spacer(),
+                    if (secondary != null)
+                      BisonButton.outlined(
+                        buttonLabel: secondary.label,
+                        onPressed: secondary.onPressed,
+                      ),
+                    if (secondary != null) SizedBox(width: spacing.tinySpacing),
+                    BisonButton.filled(
+                      buttonLabel: primary.label,
+                      onPressed: primary.onPressed,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -277,8 +289,8 @@ class _BisonDialogScrim extends StatelessWidget {
   Widget build(final BuildContext context) {
     final currentTheme = Theme.of(context);
     final boxColor = currentTheme.brightness == Brightness.light
-        ? Color(0x00000000).withValues(alpha: 24.0)
-        : Color(0x00000000).withValues(alpha: 72.0);
+        ? Color(0xFF000000).withValues(alpha: .24)
+        : Color(0xFF000000).withValues(alpha: .72);
     return Semantics(
       label: barrierLabel,
       button: barrierDismissible,
