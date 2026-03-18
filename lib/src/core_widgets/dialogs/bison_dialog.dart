@@ -22,7 +22,7 @@ class BisonDialogAction {
   /// Builds an action button for a BisonDialog. This take a [label], [onPressed], and [dismissDialog].
   ///
   /// [label] will be the label on the button and [onPressed] being the function called when pressed. Both are required.
-  /// [dismissDialog] will determine if the dialog box should be clossed after the button is pressed. This is true by default. 
+  /// [dismissDialog] will determine if the dialog box should be clossed after the button is pressed. This is true by default.
   const BisonDialogAction({
     required this.label,
     required this.onPressed,
@@ -39,7 +39,14 @@ class BisonDialog extends StatelessWidget {
   final double minWidth;
   final double maxWidth;
 
-  /// Builds an instance of BisonDialog. Requires a dialog [title], [body], and one [primaryAction] button. 
+  /// Builds an instance of BisonDialog.
+  ///
+  /// Requires a dialog [title], [body], and one [primaryAction] button.
+  /// A dialog can have up to 3 buttons and at minimum 1 button, the [primaryAction].
+  /// [primaryAction] is right aligned and has a higher visual prominence than the [secondaryAction]
+  /// which will be left of the [primaryAction].
+  /// A [destructiveAction] can also be passed to the dialog, and will be stylized to give a warning to users.
+  /// This button will be left aligned.
   const BisonDialog({
     super.key,
     required this.title,
@@ -51,6 +58,10 @@ class BisonDialog extends StatelessWidget {
     this.maxWidth = 560.0,
   });
 
+  /// Displays a BisonDialog as an overlay. Takes a [BuildContext] as well as
+  /// properties needed for a [BisonDialog] (see [BisonDialog()]). By default a dialog can
+  /// be dismissed by tapping out of the dialog. To disable this action [barrierDismissible]
+  /// should be false.
   static Future<void> show({
     required final BuildContext context,
     required final String title,
@@ -59,10 +70,8 @@ class BisonDialog extends StatelessWidget {
     final BisonDialogAction? secondaryAction,
     required final BisonDialogAction primaryAction,
     final bool barrierDismissible = true,
-    final String barrierLabel = 'Dismiss dialog',
     final double minWidth = 280.0,
     final double maxWidth = 560.0,
-    final EdgeInsets? insetPadding,
   }) {
     final overlay = Overlay.maybeOf(context, rootOverlay: true);
     if (overlay == null) {
@@ -91,10 +100,8 @@ class BisonDialog extends StatelessWidget {
         secondaryAction: secondaryAction,
         primaryAction: primaryAction,
         barrierDismissible: barrierDismissible,
-        barrierLabel: barrierLabel,
         minWidth: minWidth,
         maxWidth: maxWidth,
-        insetPadding: insetPadding,
         onDismiss: closeDialog,
       ),
     );
@@ -153,8 +160,7 @@ class BisonDialog extends StatelessWidget {
                       buttonLabel: secondary.label,
                       onPressed: secondary.onPressed,
                     ),
-                  if (secondary != null)
-                    SizedBox(width: spacing.tinySpacing),
+                  if (secondary != null) SizedBox(width: spacing.tinySpacing),
                   BisonButton.filled(
                     buttonLabel: primary.label,
                     onPressed: primary.onPressed,
@@ -176,10 +182,8 @@ class _BisonDialogOverlay extends StatelessWidget {
   final BisonDialogAction? secondaryAction;
   final BisonDialogAction primaryAction;
   final bool barrierDismissible;
-  final String barrierLabel;
   final double minWidth;
   final double maxWidth;
-  final EdgeInsets? insetPadding;
   final VoidCallback onDismiss;
 
   const _BisonDialogOverlay({
@@ -189,10 +193,8 @@ class _BisonDialogOverlay extends StatelessWidget {
     required this.secondaryAction,
     required this.primaryAction,
     required this.barrierDismissible,
-    required this.barrierLabel,
     required this.minWidth,
     required this.maxWidth,
-    required this.insetPadding,
     required this.onDismiss,
   });
 
@@ -222,8 +224,6 @@ class _BisonDialogOverlay extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final spacing = Theme.of(context).extension<BisonSpacingTokens>()!;
-    final resolvedInsetPadding =
-        insetPadding ?? EdgeInsets.all(spacing.standardSpacing);
 
     return CallbackShortcuts(
       bindings: {
@@ -237,13 +237,12 @@ class _BisonDialogOverlay extends StatelessWidget {
             Positioned.fill(
               child: _BisonDialogScrim(
                 barrierDismissible: barrierDismissible,
-                barrierLabel: barrierLabel,
                 onDismiss: onDismiss,
               ),
             ),
             Positioned.fill(
               child: SafeArea(
-                minimum: resolvedInsetPadding,
+                minimum: EdgeInsets.all(spacing.mediumSpacing),
                 child: Center(
                   child: BisonDialog(
                     title: title,
@@ -266,12 +265,11 @@ class _BisonDialogOverlay extends StatelessWidget {
 
 class _BisonDialogScrim extends StatelessWidget {
   final bool barrierDismissible;
-  final String barrierLabel;
+  final String barrierLabel = "Dismiss Dialog";
   final VoidCallback onDismiss;
 
   const _BisonDialogScrim({
     required this.barrierDismissible,
-    required this.barrierLabel,
     required this.onDismiss,
   });
 
