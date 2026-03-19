@@ -7,11 +7,11 @@ import 'package:bison_design_system/bison_design_system.dart'
     show
         BisonButton,
         BisonCornerTokens,
+        BisonScrim,
         BisonSpacingTokens,
         BisonThemeTokens,
         BisonTypographyTokens;
 
-const _bisonDialogBarrierKey = ValueKey<String>('bison-dialog-barrier');
 const _bisonDialogSurfaceKey = ValueKey<String>('bison-dialog-surface');
 
 class BisonDialogAction {
@@ -19,10 +19,14 @@ class BisonDialogAction {
   final VoidCallback onPressed;
   final bool dismissDialog;
 
-  /// Builds an action button for a BisonDialog. This take a [label], [onPressed], and [dismissDialog].
+  /// Builds an action button for a BisonDialog.
   ///
-  /// [label] will be the label on the button and [onPressed] being the function called when pressed. Both are required.
-  /// [dismissDialog] will determine if the dialog box should be clossed after the button is pressed. This is true by default.
+  /// This takes a [label], [onPressed], and [dismissDialog].
+  ///
+  /// [label] is shown on the button, and [onPressed] is called when the
+  /// button is pressed. Both are required.
+  /// [dismissDialog] determines whether the dialog should be closed after the
+  /// button is pressed. This is true by default.
   const BisonDialogAction({
     required this.label,
     required this.onPressed,
@@ -58,10 +62,11 @@ class BisonDialog extends StatelessWidget {
     this.maxWidth = 560.0,
   });
 
-  /// Displays a BisonDialog as an overlay. Takes a [BuildContext] as well as
-  /// properties needed for a [BisonDialog] (see [BisonDialog()]). By default a dialog can
-  /// be dismissed by tapping out of the dialog. To disable this action [barrierDismissible]
-  /// should be false.
+  /// Displays a BisonDialog as an overlay.
+  ///
+  /// Takes a [BuildContext] and the properties needed for a [BisonDialog]
+  /// (see [BisonDialog()]). By default, the dialog can be dismissed by tapping
+  /// outside of it. To disable this, set [barrierDismissible] to false.
   static Future<void> show({
     required final BuildContext context,
     required final String title,
@@ -247,7 +252,7 @@ class _BisonDialogOverlay extends StatelessWidget {
         child: Stack(
           children: [
             Positioned.fill(
-              child: _BisonDialogScrim(
+              child: BisonScrim(
                 barrierDismissible: barrierDismissible,
                 onDismiss: onDismiss,
               ),
@@ -275,32 +280,3 @@ class _BisonDialogOverlay extends StatelessWidget {
   }
 }
 
-class _BisonDialogScrim extends StatelessWidget {
-  final bool barrierDismissible;
-  final String barrierLabel = "Dismiss Dialog";
-  final VoidCallback onDismiss;
-
-  const _BisonDialogScrim({
-    required this.barrierDismissible,
-    required this.onDismiss,
-  });
-
-  @override
-  Widget build(final BuildContext context) {
-    final currentTheme = Theme.of(context);
-    final boxColor = currentTheme.brightness == Brightness.light
-        ? Color(0xFF000000).withValues(alpha: .24)
-        : Color(0xFF000000).withValues(alpha: .72);
-    return Semantics(
-      label: barrierLabel,
-      button: barrierDismissible,
-      child: GestureDetector(
-        key: _bisonDialogBarrierKey,
-        behavior: HitTestBehavior.opaque,
-        onTap: barrierDismissible ? onDismiss : null,
-        // TODO: Change to token once provided
-        child: ColoredBox(color: boxColor),
-      ),
-    );
-  }
-}

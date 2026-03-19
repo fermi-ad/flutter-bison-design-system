@@ -76,7 +76,7 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'BisonDialog',
             useCases: [
               _widgetbook.WidgetbookUseCase(
-                name: 'Default',
+                name: 'Dialog',
                 builder:
                     _bison_design_system_catalog_bison_dialog.builBisonDialog,
               ),

@@ -94,7 +94,7 @@ void main() {
       expect(find.byType(BisonDialog), findsOneWidget);
 
       expect(
-        find.byKey(const ValueKey<String>('bison-dialog-barrier')),
+        find.byKey(const ValueKey<String>('bison-scrim')),
         findsOneWidget,
       );
 
