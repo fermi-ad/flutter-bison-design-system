@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bison_design_system/bison_design_system.dart'
     show BisonDialog, BisonDialogAction, BisonThemeTokens;
@@ -93,10 +94,7 @@ void main() {
 
       expect(find.byType(BisonDialog), findsOneWidget);
 
-      expect(
-        find.byKey(const ValueKey<String>('bison-scrim')),
-        findsOneWidget,
-      );
+      expect(find.byKey(const ValueKey<String>('bison-scrim')), findsOneWidget);
 
       await tester.tapAt(const Offset(16, 16));
       await tester.pump();
@@ -143,5 +141,88 @@ void main() {
       expect(callbackCalled, isTrue);
       expect(find.byType(BisonDialog), findsNothing);
     });
+
+    testWidgets('dismisses on escape key press', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(
+          Builder(
+            builder: (final context) {
+              return FilledButton(
+                onPressed: () {
+                  BisonDialog.show(
+                    context: context,
+                    title: 'Dialog title',
+                    body: 'Dialog body',
+                    primaryAction: BisonDialogAction(
+                      label: 'Okay',
+                      onPressed: () {},
+                    ),
+                  );
+                },
+                child: const Text('Open dialog'),
+              );
+            },
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Open dialog'));
+      await tester.pump();
+
+      expect(find.byType(BisonDialog), findsOneWidget);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pump();
+
+      expect(find.byType(BisonDialog), findsNothing);
+    });
+
+    testWidgets(
+      'does not stack multiple dialogs when show is called repeatedly',
+      (final WidgetTester tester) async {
+        await tester.pumpWidget(
+          buildScaffold(
+            Builder(
+              builder: (final context) {
+                return FilledButton(
+                  onPressed: () {
+                    BisonDialog.show(
+                      context: context,
+                      title: 'Dialog title',
+                      body: 'Dialog body',
+                      primaryAction: BisonDialogAction(
+                        label: 'Okay',
+                        onPressed: () {},
+                      ),
+                    );
+                    BisonDialog.show(
+                      context: context,
+                      title: 'Dialog title',
+                      body: 'Dialog body',
+                      primaryAction: BisonDialogAction(
+                        label: 'Okay',
+                        onPressed: () {},
+                      ),
+                    );
+                  },
+                  child: const Text('Open dialog'),
+                );
+              },
+            ),
+          ),
+        );
+
+        await tester.tap(find.text('Open dialog'));
+        await tester.pump();
+
+        expect(find.byType(BisonDialog), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey<String>('bison-scrim')),
+          findsOneWidget,
+        );
+      },
+    );
   });
 }
