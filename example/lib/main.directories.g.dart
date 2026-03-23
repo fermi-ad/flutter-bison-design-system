@@ -14,6 +14,8 @@ import 'package:bison_design_system_catalog/bison_button.dart'
     as _bison_design_system_catalog_bison_button;
 import 'package:bison_design_system_catalog/bison_dialog.dart'
     as _bison_design_system_catalog_bison_dialog;
+import 'package:bison_design_system_catalog/bison_chip.dart'
+    as _bison_design_system_catalog_bison_chip;
 import 'package:bison_design_system_catalog/bison_icon_button.dart'
     as _bison_design_system_catalog_bison_icon_button;
 import 'package:bison_design_system_catalog/bison_menu.dart'
@@ -84,6 +86,21 @@ final directories = <_widgetbook.WidgetbookNode>[
                 name: 'Trigger Dialog',
                 builder: _bison_design_system_catalog_bison_dialog
                     .builBisonDialogTrigger,
+              ),
+            ],
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookFolder(
+        name: 'chips',
+        children: [
+          _widgetbook.WidgetbookComponent(
+            name: 'BisonChip',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Default',
+                builder: _bison_design_system_catalog_bison_chip
+                    .buildBisonChipUseCase,
               ),
             ],
           ),
