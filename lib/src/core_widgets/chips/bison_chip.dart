@@ -13,29 +13,36 @@ class BisonChip extends StatelessWidget {
   final String label;
   final VoidCallback? onLeftPressed;
   final VoidCallback? onRightPressed;
-  final ObjectChipStyle? objectChipStyle;
+  final ObjectChipStyle? _objectChipStyle;
 
-  const BisonChip._({
-    required this.label,
-    this.onLeftPressed,
-    this.onRightPressed,
-    this.objectChipStyle,
-  });
-
-  BisonChip.object({
+  const BisonChip.filter({
     super.key,
     required this.label,
     this.onLeftPressed,
     this.onRightPressed,
-    this.objectChipStyle = ObjectChipStyle.normal,
-  }) {
-    BisonChip._(
-      label: label,
-      onLeftPressed: onLeftPressed,
-      onRightPressed: onRightPressed,
-      objectChipStyle: objectChipStyle,
-    );
-  }
+  }) : _objectChipStyle = null;
+
+  const BisonChip.input({
+    super.key,
+    required this.label,
+    this.onLeftPressed,
+    this.onRightPressed,
+  }) : _objectChipStyle = null;
+
+  const BisonChip.suggestion({
+    super.key,
+    required this.label,
+    this.onLeftPressed,
+    this.onRightPressed,
+  }) : _objectChipStyle = null;
+
+  const BisonChip.object({
+    super.key,
+    required this.label,
+    this.onLeftPressed,
+    this.onRightPressed,
+    ObjectChipStyle objectChipStyle = ObjectChipStyle.normal,
+  }) : _objectChipStyle = objectChipStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +57,7 @@ class BisonChip extends StatelessWidget {
         onSecondaryTap: onRightPressed,
         child: Container(
           decoration: BoxDecoration(
-            color: switch (objectChipStyle) {
+            color: switch (_objectChipStyle) {
               ObjectChipStyle.normal => theme.chipUnselectedActive,
               ObjectChipStyle.warning => theme.chipWarningActive,
               ObjectChipStyle.danger => theme.chipDangerActive,

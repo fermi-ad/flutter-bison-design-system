@@ -9,11 +9,11 @@ import 'package:bison_design_system/core_widgets.dart'
 Widget buildBisonChipUseCase(BuildContext context) {
   return BisonChip.object(
     label: context.knobs.string(label: 'Chip Label', initialValue: 'Label'),
-    onLeftPressed: () => print("Left Click!"),
-    onRightPressed: () => print("Right Click"),
+    onLeftPressed: () => {},
+    onRightPressed: () => {},
     objectChipStyle: context.knobs.object.dropdown(
       label: 'Object Style',
-      labelBuilder: (value) => value!.name,
+      labelBuilder: (value) => value.name,
       options: [
         ObjectChipStyle.normal,
         ObjectChipStyle.warning,
