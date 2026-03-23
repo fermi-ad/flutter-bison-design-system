@@ -1,7 +1,8 @@
 import 'dart:async' show Completer;
 
 import 'package:flutter/material.dart' show Theme;
-import 'package:flutter/services.dart' show LogicalKeyboardKey;
+import 'package:flutter/services.dart'
+    show HardwareKeyboard, KeyDownEvent, KeyEvent, LogicalKeyboardKey;
 import 'package:flutter/widgets.dart';
 import 'package:bison_design_system/bison_design_system.dart'
     show
@@ -11,8 +12,6 @@ import 'package:bison_design_system/bison_design_system.dart'
         BisonSpacingTokens,
         BisonThemeTokens,
         BisonTypographyTokens;
-
-const _bisonDialogSurfaceKey = ValueKey<String>('bison-dialog-surface');
 
 class BisonDialogAction {
   final String label;
@@ -35,11 +34,16 @@ class BisonDialogAction {
 }
 
 class BisonDialog extends StatelessWidget {
+  static const _surfaceKey = ValueKey<String>('bison-dialog-surface');
+  static Future<void>? _activeDialogFuture;
+  static GlobalKey? _activeDialogKey;
+  static bool _isDialogOpening = false;
+
   final String title;
   final String body;
-  final BisonDialogAction? destructiveAction;
-  final BisonDialogAction? secondaryAction;
   final BisonDialogAction primaryAction;
+  final BisonDialogAction? secondaryAction;
+  final BisonDialogAction? destructiveAction;
   final double minWidth;
   final double maxWidth;
 
@@ -55,9 +59,9 @@ class BisonDialog extends StatelessWidget {
     super.key,
     required this.title,
     required this.body,
-    this.destructiveAction,
-    this.secondaryAction,
     required this.primaryAction,
+    this.secondaryAction,
+    this.destructiveAction,
     this.minWidth = 280.0,
     this.maxWidth = 560.0,
   });
@@ -66,14 +70,15 @@ class BisonDialog extends StatelessWidget {
   ///
   /// Takes a [BuildContext] and the properties needed for a [BisonDialog]
   /// (see [BisonDialog()]). By default, the dialog can be dismissed by tapping
-  /// outside of it. To disable this, set [barrierDismissible] to false.
+  /// outside of it or pressing the 'ESC' key.
+  ///  To disable this, set [barrierDismissible] to false.
   static Future<void> show({
     required final BuildContext context,
     required final String title,
     required final String body,
-    final BisonDialogAction? destructiveAction,
-    final BisonDialogAction? secondaryAction,
     required final BisonDialogAction primaryAction,
+    final BisonDialogAction? secondaryAction,
+    final BisonDialogAction? destructiveAction,
     final bool barrierDismissible = true,
     final double minWidth = 280.0,
     final double maxWidth = 560.0,
@@ -85,34 +90,73 @@ class BisonDialog extends StatelessWidget {
       );
     }
 
+    final currentDialog = _activeDialogFuture;
+    final currentDialogKey = _activeDialogKey;
+    if (_isDialogOpening) {
+      return currentDialog ?? Future<void>.value();
+    }
+    if (currentDialog != null && currentDialogKey?.currentContext != null) {
+      return currentDialog;
+    }
+    _activeDialogFuture = null;
+    _activeDialogKey = null;
+
     final completer = Completer<void>();
+    final dialogKey = GlobalKey();
     late final OverlayEntry entry;
+    late final bool Function(KeyEvent event) handleEscape;
 
     void closeDialog() {
+      HardwareKeyboard.instance.removeHandler(handleEscape);
+      _isDialogOpening = false;
       if (entry.mounted) {
         entry.remove();
       }
       if (!completer.isCompleted) {
         completer.complete();
       }
+      _activeDialogKey = null;
     }
 
+    handleEscape = (final event) {
+      if (!barrierDismissible) return false;
+      if (event is KeyDownEvent &&
+          event.logicalKey == LogicalKeyboardKey.escape) {
+        closeDialog();
+        return true;
+      }
+      return false;
+    };
+
     entry = OverlayEntry(
-      builder: (final overlayContext) => _BisonDialogOverlay(
-        title: title,
-        body: body,
-        destructiveAction: destructiveAction,
-        secondaryAction: secondaryAction,
-        primaryAction: primaryAction,
-        barrierDismissible: barrierDismissible,
-        minWidth: minWidth,
-        maxWidth: maxWidth,
-        onDismiss: closeDialog,
+      builder: (final overlayContext) => KeyedSubtree(
+        key: dialogKey,
+        child: _BisonDialogOverlay(
+          title: title,
+          body: body,
+          primaryAction: primaryAction,
+          secondaryAction: secondaryAction,
+          destructiveAction: destructiveAction,
+          barrierDismissible: barrierDismissible,
+          minWidth: minWidth,
+          maxWidth: maxWidth,
+          onDismiss: closeDialog,
+        ),
       ),
     );
 
+    _activeDialogKey = dialogKey;
+    _activeDialogFuture = completer.future.whenComplete(() {
+      _isDialogOpening = false;
+      _activeDialogFuture = null;
+      _activeDialogKey = null;
+    });
+
+    _isDialogOpening = true;
     overlay.insert(entry);
-    return completer.future;
+    _activeDialogKey = dialogKey;
+    HardwareKeyboard.instance.addHandler(handleEscape);
+    return _activeDialogFuture!;
   }
 
   @override
@@ -122,9 +166,9 @@ class BisonDialog extends StatelessWidget {
     final corners = Theme.of(context).extension<BisonCornerTokens>()!;
     final typography = Theme.of(context).extension<BisonTypographyTokens>()!;
 
-    final destructive = destructiveAction;
-    final secondary = secondaryAction;
     final primary = primaryAction;
+    final secondary = secondaryAction;
+    final destructive = destructiveAction;
 
     return DefaultTextStyle(
       // Added to prevent yellow warning lines.
@@ -133,7 +177,7 @@ class BisonDialog extends StatelessWidget {
       child: ConstrainedBox(
         constraints: BoxConstraints(minWidth: minWidth, maxWidth: maxWidth),
         child: DecoratedBox(
-          key: _bisonDialogSurfaceKey,
+          key: _surfaceKey,
           decoration: BoxDecoration(
             color: theme.surfaceDefault,
             borderRadius: BorderRadius.circular(corners.cornerSmall),
@@ -195,9 +239,9 @@ class BisonDialog extends StatelessWidget {
 class _BisonDialogOverlay extends StatelessWidget {
   final String title;
   final String body;
-  final BisonDialogAction? destructiveAction;
-  final BisonDialogAction? secondaryAction;
   final BisonDialogAction primaryAction;
+  final BisonDialogAction? secondaryAction;
+  final BisonDialogAction? destructiveAction;
   final bool barrierDismissible;
   final double minWidth;
   final double maxWidth;
@@ -206,9 +250,9 @@ class _BisonDialogOverlay extends StatelessWidget {
   const _BisonDialogOverlay({
     required this.title,
     required this.body,
-    required this.destructiveAction,
-    required this.secondaryAction,
     required this.primaryAction,
+    required this.secondaryAction,
+    required this.destructiveAction,
     required this.barrierDismissible,
     required this.minWidth,
     required this.maxWidth,
@@ -247,8 +291,16 @@ class _BisonDialogOverlay extends StatelessWidget {
         if (barrierDismissible)
           const SingleActivator(LogicalKeyboardKey.escape): onDismiss,
       },
-      child: FocusScope(
+      child: Focus(
         autofocus: true,
+        onKeyEvent: (final node, final event) {
+          if (barrierDismissible &&
+              event.logicalKey == LogicalKeyboardKey.escape) {
+            onDismiss();
+            return KeyEventResult.handled;
+          }
+          return KeyEventResult.ignored;
+        },
         child: Stack(
           children: [
             Positioned.fill(
@@ -279,4 +331,3 @@ class _BisonDialogOverlay extends StatelessWidget {
     );
   }
 }
-

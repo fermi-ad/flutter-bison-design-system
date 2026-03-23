@@ -63,6 +63,10 @@ Widget builBisonDialogTrigger(BuildContext context) {
       context.knobs.boolean(label: 'Destructive Action', initialValue: true)
       ? BisonDialogAction(label: 'Destroy', onPressed: () {})
       : null;
+  final barrierDismissible = context.knobs.boolean(
+    label: 'Dismissible Barrier',
+    initialValue: true,
+  );
   return BisonButton.filled(
     buttonLabel: "Open Dialog",
     onPressed: () {
@@ -73,6 +77,7 @@ Widget builBisonDialogTrigger(BuildContext context) {
         primaryAction: BisonDialogAction(label: 'Okay', onPressed: () {}),
         secondaryAction: secondaryActionToggle,
         destructiveAction: destructiveActionToggle,
+        barrierDismissible: barrierDismissible,
       );
     },
   );
