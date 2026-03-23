@@ -207,25 +207,40 @@ class BisonDialog extends StatelessWidget {
                 SizedBox(height: spacing.smallSpacing),
                 Text(body, style: typography.bodyLarge),
                 SizedBox(height: spacing.standardSpacing),
-                Row(
-                  children: [
-                    if (destructive != null)
-                      BisonButton.destructive(
-                        buttonLabel: destructive.label,
-                        onPressed: destructive.onPressed,
+                FocusTraversalGroup(
+                  policy: OrderedTraversalPolicy(),
+                  child: Row(
+                    children: [
+                      if (destructive != null)
+                        FocusTraversalOrder(
+                          order: NumericFocusOrder(3.0),
+                          child: BisonButton.destructive(
+                            buttonLabel: destructive.label,
+                            onPressed: destructive.onPressed,
+                          ),
+                        ),
+
+                      const Spacer(),
+                      if (secondary != null)
+                        FocusTraversalOrder(
+                          order: NumericFocusOrder(2.0),
+                          child: BisonButton.outlined(
+                            buttonLabel: secondary.label,
+                            onPressed: secondary.onPressed,
+                          ),
+                        ),
+
+                      if (secondary != null)
+                        SizedBox(width: spacing.tinySpacing),
+                      FocusTraversalOrder(
+                        order: NumericFocusOrder(1.0),
+                        child: BisonButton.filled(
+                          buttonLabel: primary.label,
+                          onPressed: primary.onPressed,
+                        ),
                       ),
-                    const Spacer(),
-                    if (secondary != null)
-                      BisonButton.outlined(
-                        buttonLabel: secondary.label,
-                        onPressed: secondary.onPressed,
-                      ),
-                    if (secondary != null) SizedBox(width: spacing.tinySpacing),
-                    BisonButton.filled(
-                      buttonLabel: primary.label,
-                      onPressed: primary.onPressed,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
