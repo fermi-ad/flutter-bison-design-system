@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show BrowserContextMenu;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:widgetbook/widgetbook.dart' show Widgetbook, AlignmentAddon;
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
@@ -7,6 +9,11 @@ import 'package:bison_design_system/theme.dart' show BisonThemeData;
 import 'main.directories.g.dart' show directories;
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (kIsWeb) {
+    // If running in web, disable browser's context menu
+    BrowserContextMenu.disableContextMenu();
+  }
   runApp(const WidgetbookApp());
 }
 
