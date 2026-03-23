@@ -43,22 +43,29 @@ class BisonChip extends StatelessWidget {
     final spacing = Theme.of(context).extension<BisonSpacingTokens>()!;
     final corners = Theme.of(context).extension<BisonCornerTokens>()!;
     final typography = Theme.of(context).extension<BisonTypographyTokens>()!;
-    return Container(
-      decoration: BoxDecoration(
-        color: switch (objectChipStyle) {
-          ObjectChipStyle.normal => theme.chipUnselectedActive,
-          ObjectChipStyle.warning => theme.chipWarningActive,
-          ObjectChipStyle.danger => theme.chipDangerActive,
-          _ => theme.chipUnselectedActive,
-        },
-        border: Border.all(color: theme.borderPlain),
-        borderRadius: BorderRadius.circular(corners.cornerExtraSmall),
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: onLeftPressed,
+        onSecondaryTap: onRightPressed,
+        child: Container(
+          decoration: BoxDecoration(
+            color: switch (objectChipStyle) {
+              ObjectChipStyle.normal => theme.chipUnselectedActive,
+              ObjectChipStyle.warning => theme.chipWarningActive,
+              ObjectChipStyle.danger => theme.chipDangerActive,
+              _ => theme.chipUnselectedActive,
+            },
+            border: Border.all(color: theme.borderPlain),
+            borderRadius: BorderRadius.circular(corners.cornerExtraSmall),
+          ),
+          padding: EdgeInsets.symmetric(
+            vertical: spacing.microSpacing,
+            horizontal: spacing.tinySpacing,
+          ),
+          child: Text(label, style: typography.bodySmall),
+        ),
       ),
-      padding: EdgeInsets.symmetric(
-        vertical: spacing.microSpacing,
-        horizontal: spacing.tinySpacing,
-      ),
-      child: Text(label, style: typography.bodySmall),
     );
   }
 }
