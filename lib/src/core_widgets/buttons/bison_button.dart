@@ -33,12 +33,16 @@ class BisonButton extends StatelessWidget {
   final _BisonButtonType _buttonType;
   final Icon? icon;
   final VoidCallback? onPressed;
+  final FocusNode? focusNode;
+  final bool autofocus;
 
   const BisonButton._({
     required this.buttonLabel,
     required this.onPressed,
     required _BisonButtonType buttonType,
     this.icon,
+    this.focusNode,
+    this.autofocus = false,
   }) : _buttonType = buttonType;
 
   /// A Filled button with the primary color. The most promininent styling option.
@@ -46,12 +50,16 @@ class BisonButton extends StatelessWidget {
     required String buttonLabel,
     required VoidCallback? onPressed,
     Icon? icon,
+    FocusNode? focusNode,
+    bool autofocus = false,
   }) {
     return BisonButton._(
       buttonLabel: buttonLabel,
       onPressed: onPressed,
       buttonType: _BisonButtonType.filled,
       icon: icon,
+      focusNode: focusNode,
+      autofocus: autofocus,
     );
   }
 
@@ -60,12 +68,16 @@ class BisonButton extends StatelessWidget {
     required String buttonLabel,
     required VoidCallback? onPressed,
     Icon? icon,
+    FocusNode? focusNode,
+    bool autofocus = false,
   }) {
     return BisonButton._(
       buttonLabel: buttonLabel,
       onPressed: onPressed,
       buttonType: _BisonButtonType.ghost,
       icon: icon,
+      focusNode: focusNode,
+      autofocus: autofocus,
     );
   }
 
@@ -74,12 +86,16 @@ class BisonButton extends StatelessWidget {
     required String buttonLabel,
     required VoidCallback? onPressed,
     Icon? icon,
+    FocusNode? focusNode,
+    bool autofocus = false,
   }) {
     return BisonButton._(
       buttonLabel: buttonLabel,
       onPressed: onPressed,
       buttonType: _BisonButtonType.outlined,
       icon: icon,
+      focusNode: focusNode,
+      autofocus: autofocus,
     );
   }
 
@@ -88,12 +104,16 @@ class BisonButton extends StatelessWidget {
     required String buttonLabel,
     required VoidCallback? onPressed,
     Icon? icon,
+    FocusNode? focusNode,
+    bool autofocus = false,
   }) {
     return BisonButton._(
       buttonLabel: buttonLabel,
       onPressed: onPressed,
       buttonType: _BisonButtonType.destructive,
       icon: icon,
+      focusNode: focusNode,
+      autofocus: autofocus,
     );
   }
 
@@ -105,6 +125,8 @@ class BisonButton extends StatelessWidget {
     final typo = Theme.of(context).extension<BisonTypographyTokens>()!;
 
     return FilledButton(
+      focusNode: focusNode,
+      autofocus: autofocus,
       style: switch (_buttonType) {
         _BisonButtonType.filled => getFilledBisonButtonStyle(
           theme,
