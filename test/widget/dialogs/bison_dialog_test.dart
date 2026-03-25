@@ -179,6 +179,125 @@ void main() {
       expect(find.byType(BisonDialog), findsNothing);
     });
 
+    testWidgets('autofocuses primary action on open', (
+      final WidgetTester tester,
+    ) async {
+      bool primaryPressed = false;
+
+      await tester.pumpWidget(
+        buildScaffold(
+          Builder(
+            builder: (final context) {
+              return FilledButton(
+                onPressed: () {
+                  BisonDialog.show(
+                    context: context,
+                    title: 'Dialog title',
+                    body: 'Dialog body',
+                    secondaryAction: BisonDialogAction(
+                      label: 'Secondary',
+                      onPressed: () {},
+                    ),
+                    primaryAction: BisonDialogAction(
+                      label: 'Primary',
+                      onPressed: () {
+                        primaryPressed = true;
+                      },
+                    ),
+                  );
+                },
+                child: const Text('Open dialog'),
+              );
+            },
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Open dialog'));
+      await tester.pump();
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.pump();
+
+      expect(primaryPressed, isTrue);
+      expect(find.byType(BisonDialog), findsNothing);
+    });
+
+    testWidgets('tab traversal stays within dialog actions', (
+      final WidgetTester tester,
+    ) async {
+      final backgroundFocusNode = FocusNode(debugLabel: 'background-focus');
+      final openDialogFocusNode = FocusNode(debugLabel: 'open-dialog-focus');
+      addTearDown(backgroundFocusNode.dispose);
+      addTearDown(openDialogFocusNode.dispose);
+
+      await tester.pumpWidget(
+        buildScaffold(
+          Column(
+            children: [
+              FilledButton(
+                focusNode: backgroundFocusNode,
+                onPressed: () {},
+                child: const Text('Background action'),
+              ),
+              Builder(
+                builder: (final context) {
+                  return FilledButton(
+                    focusNode: openDialogFocusNode,
+                    onPressed: () {
+                      BisonDialog.show(
+                        context: context,
+                        title: 'Dialog title',
+                        body: 'Dialog body',
+                        destructiveAction: BisonDialogAction(
+                          label: 'Delete',
+                          onPressed: () {},
+                        ),
+                        secondaryAction: BisonDialogAction(
+                          label: 'Cancel',
+                          onPressed: () {},
+                        ),
+                        primaryAction: BisonDialogAction(
+                          label: 'Confirm',
+                          onPressed: () {},
+                        ),
+                      );
+                    },
+                    child: const Text('Open dialog'),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Open dialog'));
+      await tester.pump();
+
+      for (int i = 0; i < 8; i++) {
+        await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+        await tester.pump();
+      }
+
+      expect(backgroundFocusNode.hasFocus, isFalse);
+      expect(openDialogFocusNode.hasFocus, isFalse);
+
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+      await tester.pump();
+
+      expect(backgroundFocusNode.hasFocus, isFalse);
+      expect(openDialogFocusNode.hasFocus, isFalse);
+      expect(find.byType(BisonDialog), findsOneWidget);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pump();
+
+      expect(find.byType(BisonDialog), findsNothing);
+    });
+
     testWidgets(
       'does not stack multiple dialogs when show is called repeatedly',
       (final WidgetTester tester) async {

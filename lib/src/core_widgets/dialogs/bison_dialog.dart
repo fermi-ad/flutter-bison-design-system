@@ -1,8 +1,6 @@
 import 'dart:async' show Completer;
-
 import 'package:flutter/material.dart' show Theme;
-import 'package:flutter/services.dart'
-    show HardwareKeyboard, KeyDownEvent, KeyEvent, LogicalKeyboardKey;
+import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter/widgets.dart';
 import 'package:bison_design_system/bison_design_system.dart'
     show
@@ -46,6 +44,10 @@ class BisonDialog extends StatelessWidget {
   final BisonDialogAction? destructiveAction;
   final double minWidth;
   final double maxWidth;
+  final FocusNode? primaryActionFocusNode;
+  final FocusNode? secondaryActionFocusNode;
+  final FocusNode? destructiveActionFocusNode;
+  final bool autofocusPrimaryAction;
 
   /// Builds an instance of BisonDialog.
   ///
@@ -64,6 +66,10 @@ class BisonDialog extends StatelessWidget {
     this.destructiveAction,
     this.minWidth = 280.0,
     this.maxWidth = 560.0,
+    this.primaryActionFocusNode,
+    this.secondaryActionFocusNode,
+    this.destructiveActionFocusNode,
+    this.autofocusPrimaryAction = false,
   });
 
   /// Displays a BisonDialog as an overlay.
@@ -104,10 +110,8 @@ class BisonDialog extends StatelessWidget {
     final completer = Completer<void>();
     final dialogKey = GlobalKey();
     late final OverlayEntry entry;
-    late final bool Function(KeyEvent event) handleEscape;
 
     void closeDialog() {
-      HardwareKeyboard.instance.removeHandler(handleEscape);
       _isDialogOpening = false;
       if (entry.mounted) {
         entry.remove();
@@ -117,16 +121,6 @@ class BisonDialog extends StatelessWidget {
       }
       _activeDialogKey = null;
     }
-
-    handleEscape = (final event) {
-      if (!barrierDismissible) return false;
-      if (event is KeyDownEvent &&
-          event.logicalKey == LogicalKeyboardKey.escape) {
-        closeDialog();
-        return true;
-      }
-      return false;
-    };
 
     entry = OverlayEntry(
       builder: (final overlayContext) => KeyedSubtree(
@@ -155,7 +149,6 @@ class BisonDialog extends StatelessWidget {
     _isDialogOpening = true;
     overlay.insert(entry);
     _activeDialogKey = dialogKey;
-    HardwareKeyboard.instance.addHandler(handleEscape);
     return _activeDialogFuture!;
   }
 
@@ -170,45 +163,42 @@ class BisonDialog extends StatelessWidget {
     final secondary = secondaryAction;
     final destructive = destructiveAction;
 
-    return DefaultTextStyle(
-      // Added to prevent yellow warning lines.
-      // could potentially be removed as Scaffold defines a DefaultTextStyle
-      style: TextStyle(decoration: TextDecoration.none),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(minWidth: minWidth, maxWidth: maxWidth),
-        child: DecoratedBox(
-          key: _surfaceKey,
-          decoration: BoxDecoration(
-            color: theme.surfaceDefault,
-            borderRadius: BorderRadius.circular(corners.cornerSmall),
-            border: Border.all(style: BorderStyle.none),
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(0, spacing.tinySpacing),
-                blurRadius: spacing.xSmallSpacing,
-                spreadRadius: 6.0,
-                color: const Color(0xFF000000).withValues(alpha: 0.15),
-              ),
-              BoxShadow(
-                offset: Offset(0, spacing.microSpacing),
-                blurRadius: spacing.microSpacing,
-                spreadRadius: 0,
-                color: const Color(0xFF000000).withValues(alpha: .30),
-              ),
-            ],
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(spacing.mediumSpacing),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: typography.h3),
-                SizedBox(height: spacing.smallSpacing),
-                Text(body, style: typography.bodyLarge),
-                SizedBox(height: spacing.standardSpacing),
-                FocusTraversalGroup(
-                  policy: OrderedTraversalPolicy(),
+    Widget buildDialogMenu() {
+      return DecoratedBox(
+        key: _surfaceKey,
+        decoration: BoxDecoration(
+          color: theme.surfaceDefault,
+          borderRadius: BorderRadius.circular(corners.cornerSmall),
+          border: Border.all(style: BorderStyle.none),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, spacing.tinySpacing),
+              blurRadius: spacing.xSmallSpacing,
+              spreadRadius: 6.0,
+              color: const Color(0xFF000000).withValues(alpha: 0.15),
+            ),
+            BoxShadow(
+              offset: Offset(0, spacing.microSpacing),
+              blurRadius: spacing.microSpacing,
+              spreadRadius: 0,
+              color: const Color(0xFF000000).withValues(alpha: .30),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(spacing.mediumSpacing),
+          child: Column(
+            mainAxisSize: .min,
+            crossAxisAlignment: .start,
+            children: [
+              Text(title, style: typography.h3),
+              SizedBox(height: spacing.smallSpacing),
+              Text(body, style: typography.bodyLarge),
+              SizedBox(height: spacing.standardSpacing),
+              FocusTraversalGroup(
+                policy: OrderedTraversalPolicy(),
+                child: FocusScope(
+                  autofocus: true,
                   child: Row(
                     children: [
                       if (destructive != null)
@@ -217,6 +207,7 @@ class BisonDialog extends StatelessWidget {
                           child: BisonButton.destructive(
                             buttonLabel: destructive.label,
                             onPressed: destructive.onPressed,
+                            focusNode: destructiveActionFocusNode,
                           ),
                         ),
 
@@ -227,6 +218,7 @@ class BisonDialog extends StatelessWidget {
                           child: BisonButton.outlined(
                             buttonLabel: secondary.label,
                             onPressed: secondary.onPressed,
+                            focusNode: secondaryActionFocusNode,
                           ),
                         ),
 
@@ -237,21 +229,33 @@ class BisonDialog extends StatelessWidget {
                         child: BisonButton.filled(
                           buttonLabel: primary.label,
                           onPressed: primary.onPressed,
+                          focusNode: primaryActionFocusNode,
+                          autofocus: autofocusPrimaryAction,
                         ),
                       ),
                     ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
+      );
+    }
+
+    return DefaultTextStyle(
+      // Added to prevent yellow warning lines.
+      // could potentially be removed as Scaffold defines a DefaultTextStyle
+      style: TextStyle(decoration: TextDecoration.none),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minWidth: minWidth, maxWidth: maxWidth),
+        child: buildDialogMenu(),
       ),
     );
   }
 }
 
-class _BisonDialogOverlay extends StatelessWidget {
+class _BisonDialogOverlay extends StatefulWidget {
   final String title;
   final String body;
   final BisonDialogAction primaryAction;
@@ -274,6 +278,61 @@ class _BisonDialogOverlay extends StatelessWidget {
     required this.onDismiss,
   });
 
+  @override
+  State<_BisonDialogOverlay> createState() => _BisonDialogOverlayState();
+}
+
+class _BisonDialogOverlayState extends State<_BisonDialogOverlay> {
+  final FocusNode _primaryActionFocusNode = FocusNode(
+    debugLabel: 'bison-dialog-primary-action',
+  );
+  final FocusNode _secondaryActionFocusNode = FocusNode(
+    debugLabel: 'bison-dialog-secondary-action',
+  );
+  final FocusNode _destructiveActionFocusNode = FocusNode(
+    debugLabel: 'bison-dialog-destructive-action',
+  );
+
+  @override
+  void dispose() {
+    _primaryActionFocusNode.dispose();
+    _secondaryActionFocusNode.dispose();
+    _destructiveActionFocusNode.dispose();
+    super.dispose();
+  }
+
+  List<FocusNode> get _orderedActionNodes {
+    final nodes = <FocusNode>[_primaryActionFocusNode];
+    if (widget.secondaryAction != null) {
+      nodes.add(_secondaryActionFocusNode);
+    }
+    if (widget.destructiveAction != null) {
+      nodes.add(_destructiveActionFocusNode);
+    }
+    return nodes.where((final node) => node.canRequestFocus).toList();
+  }
+
+  void _cycleActionFocus({required final bool reverse}) {
+    final nodes = _orderedActionNodes;
+    if (nodes.isEmpty) {
+      return;
+    }
+
+    final current = FocusManager.instance.primaryFocus;
+    final currentIndex = nodes.indexWhere((final node) => node == current);
+
+    if (currentIndex < 0) {
+      final target = reverse ? nodes.last : nodes.first;
+      target.requestFocus();
+      return;
+    }
+
+    final targetIndex = reverse
+        ? (currentIndex - 1 + nodes.length) % nodes.length
+        : (currentIndex + 1) % nodes.length;
+    nodes[targetIndex].requestFocus();
+  }
+
   BisonDialogAction? _wrapAction(final BisonDialogAction? action) {
     if (action == null) return null;
     return BisonDialogAction(
@@ -281,7 +340,7 @@ class _BisonDialogOverlay extends StatelessWidget {
       dismissDialog: action.dismissDialog,
       onPressed: () {
         action.onPressed();
-        if (action.dismissDialog) onDismiss();
+        if (action.dismissDialog) widget.onDismiss();
       },
     );
   }
@@ -292,7 +351,7 @@ class _BisonDialogOverlay extends StatelessWidget {
       dismissDialog: action.dismissDialog,
       onPressed: () {
         action.onPressed();
-        if (action.dismissDialog) onDismiss();
+        if (action.dismissDialog) widget.onDismiss();
       },
     );
   }
@@ -303,25 +362,20 @@ class _BisonDialogOverlay extends StatelessWidget {
 
     return CallbackShortcuts(
       bindings: {
-        if (barrierDismissible)
-          const SingleActivator(LogicalKeyboardKey.escape): onDismiss,
+        if (widget.barrierDismissible)
+          const SingleActivator(.escape): widget.onDismiss,
+        const SingleActivator(.tab): () => _cycleActionFocus(reverse: false),
+        const SingleActivator(.tab, shift: true): () =>
+            _cycleActionFocus(reverse: true),
       },
       child: Focus(
         autofocus: true,
-        onKeyEvent: (final node, final event) {
-          if (barrierDismissible &&
-              event.logicalKey == LogicalKeyboardKey.escape) {
-            onDismiss();
-            return KeyEventResult.handled;
-          }
-          return KeyEventResult.ignored;
-        },
         child: Stack(
           children: [
             Positioned.fill(
               child: BisonScrim(
-                barrierDismissible: barrierDismissible,
-                onDismiss: onDismiss,
+                barrierDismissible: widget.barrierDismissible,
+                onDismiss: widget.onDismiss,
               ),
             ),
             Positioned.fill(
@@ -329,13 +383,17 @@ class _BisonDialogOverlay extends StatelessWidget {
                 minimum: EdgeInsets.all(spacing.mediumSpacing),
                 child: Center(
                   child: BisonDialog(
-                    title: title,
-                    body: body,
-                    minWidth: minWidth,
-                    maxWidth: maxWidth,
-                    destructiveAction: _wrapAction(destructiveAction),
-                    secondaryAction: _wrapAction(secondaryAction),
-                    primaryAction: _wrapRequiredAction(primaryAction),
+                    title: widget.title,
+                    body: widget.body,
+                    minWidth: widget.minWidth,
+                    maxWidth: widget.maxWidth,
+                    destructiveAction: _wrapAction(widget.destructiveAction),
+                    secondaryAction: _wrapAction(widget.secondaryAction),
+                    primaryAction: _wrapRequiredAction(widget.primaryAction),
+                    primaryActionFocusNode: _primaryActionFocusNode,
+                    secondaryActionFocusNode: _secondaryActionFocusNode,
+                    destructiveActionFocusNode: _destructiveActionFocusNode,
+                    autofocusPrimaryAction: true,
                   ),
                 ),
               ),
