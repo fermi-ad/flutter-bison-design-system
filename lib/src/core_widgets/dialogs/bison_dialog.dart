@@ -1,8 +1,7 @@
 import 'dart:async' show Completer;
 
 import 'package:flutter/material.dart' show Theme;
-import 'package:flutter/services.dart'
-    show HardwareKeyboard, KeyDownEvent, KeyEvent, LogicalKeyboardKey;
+import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter/widgets.dart';
 import 'package:bison_design_system/bison_design_system.dart'
     show
@@ -98,16 +97,12 @@ class BisonDialog extends StatelessWidget {
     if (currentDialog != null && currentDialogKey?.currentContext != null) {
       return currentDialog;
     }
-    _activeDialogFuture = null;
-    _activeDialogKey = null;
 
     final completer = Completer<void>();
     final dialogKey = GlobalKey();
     late final OverlayEntry entry;
-    late final bool Function(KeyEvent event) handleEscape;
 
     void closeDialog() {
-      HardwareKeyboard.instance.removeHandler(handleEscape);
       _isDialogOpening = false;
       if (entry.mounted) {
         entry.remove();
@@ -117,16 +112,6 @@ class BisonDialog extends StatelessWidget {
       }
       _activeDialogKey = null;
     }
-
-    handleEscape = (final event) {
-      if (!barrierDismissible) return false;
-      if (event is KeyDownEvent &&
-          event.logicalKey == LogicalKeyboardKey.escape) {
-        closeDialog();
-        return true;
-      }
-      return false;
-    };
 
     entry = OverlayEntry(
       builder: (final overlayContext) => KeyedSubtree(
@@ -145,7 +130,6 @@ class BisonDialog extends StatelessWidget {
       ),
     );
 
-    _activeDialogKey = dialogKey;
     _activeDialogFuture = completer.future.whenComplete(() {
       _isDialogOpening = false;
       _activeDialogFuture = null;
@@ -155,7 +139,6 @@ class BisonDialog extends StatelessWidget {
     _isDialogOpening = true;
     overlay.insert(entry);
     _activeDialogKey = dialogKey;
-    HardwareKeyboard.instance.addHandler(handleEscape);
     return _activeDialogFuture!;
   }
 
@@ -207,39 +190,40 @@ class BisonDialog extends StatelessWidget {
                 SizedBox(height: spacing.smallSpacing),
                 Text(body, style: typography.bodyLarge),
                 SizedBox(height: spacing.standardSpacing),
-                FocusTraversalGroup(
-                  policy: OrderedTraversalPolicy(),
-                  child: Row(
-                    children: [
-                      if (destructive != null)
+                FocusScope(
+                  child: FocusTraversalGroup(
+                    policy: OrderedTraversalPolicy(),
+                    child: Row(
+                      children: [
+                        if (destructive != null)
+                          FocusTraversalOrder(
+                            order: NumericFocusOrder(3.0),
+                            child: BisonButton.destructive(
+                              buttonLabel: destructive.label,
+                              onPressed: destructive.onPressed,
+                            ),
+                          ),
+                        const Spacer(),
+                        if (secondary != null)
+                          FocusTraversalOrder(
+                            order: NumericFocusOrder(2.0),
+                            child: BisonButton.outlined(
+                              buttonLabel: secondary.label,
+                              onPressed: secondary.onPressed,
+                            ),
+                          ),
+                        if (secondary != null)
+                          SizedBox(width: spacing.tinySpacing),
                         FocusTraversalOrder(
-                          order: NumericFocusOrder(3.0),
-                          child: BisonButton.destructive(
-                            buttonLabel: destructive.label,
-                            onPressed: destructive.onPressed,
+                          order: NumericFocusOrder(1.0),
+                          child: BisonButton.filled(
+                            buttonLabel: primary.label,
+                            onPressed: primary.onPressed,
+                            autofocus: true,
                           ),
                         ),
-
-                      const Spacer(),
-                      if (secondary != null)
-                        FocusTraversalOrder(
-                          order: NumericFocusOrder(2.0),
-                          child: BisonButton.outlined(
-                            buttonLabel: secondary.label,
-                            onPressed: secondary.onPressed,
-                          ),
-                        ),
-
-                      if (secondary != null)
-                        SizedBox(width: spacing.tinySpacing),
-                      FocusTraversalOrder(
-                        order: NumericFocusOrder(1.0),
-                        child: BisonButton.filled(
-                          buttonLabel: primary.label,
-                          onPressed: primary.onPressed,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -308,14 +292,6 @@ class _BisonDialogOverlay extends StatelessWidget {
       },
       child: Focus(
         autofocus: true,
-        onKeyEvent: (final node, final event) {
-          if (barrierDismissible &&
-              event.logicalKey == LogicalKeyboardKey.escape) {
-            onDismiss();
-            return KeyEventResult.handled;
-          }
-          return KeyEventResult.ignored;
-        },
         child: Stack(
           children: [
             Positioned.fill(
