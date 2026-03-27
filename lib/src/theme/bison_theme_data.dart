@@ -189,3 +189,29 @@ class BisonThemeData {
     );
   }
 }
+
+extension BisonContextTokens on BuildContext {
+  BisonThemeTokens get bisonTheme =>
+      Theme.of(this).extension<BisonThemeTokens>()!;
+  BisonSpacingTokens get bisonSpacing =>
+      Theme.of(this).extension<BisonSpacingTokens>()!;
+  BisonTypographyTokens get bisonTypography =>
+      Theme.of(this).extension<BisonTypographyTokens>()!;
+  BisonCornerTokens get bisonCorners =>
+      Theme.of(this).extension<BisonCornerTokens>()!;
+}
+
+final class BisonTokens {
+  final BuildContext context;
+
+  const BisonTokens(this.context);
+
+  BisonThemeTokens get theme => context.bisonTheme;
+  BisonSpacingTokens get spacing => context.bisonSpacing;
+  BisonTypographyTokens get typography => context.bisonTypography;
+  BisonCornerTokens get corners => context.bisonCorners;
+}
+
+extension BisonContextView on BuildContext {
+  BisonTokens get bison => BisonTokens(this);
+}
