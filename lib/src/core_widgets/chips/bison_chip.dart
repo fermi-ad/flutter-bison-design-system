@@ -205,7 +205,7 @@ class _BisonChipState extends State<BisonChip> {
           horizontal: spacing.tinySpacing,
         ),
         child: IconTheme(
-          data: IconThemeData(color: _foregroundColor(theme), size: 18.0),
+          data: IconThemeData(color: _foregroundColor(theme), size: 10.0),
           child: DefaultTextStyle(
             style: typography.bodySmall.copyWith(
               color: _foregroundColor(theme),
