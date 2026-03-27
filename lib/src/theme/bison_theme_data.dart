@@ -190,28 +190,108 @@ class BisonThemeData {
   }
 }
 
-extension BisonContextTokens on BuildContext {
-  BisonThemeTokens get bisonTheme =>
-      Theme.of(this).extension<BisonThemeTokens>()!;
-  BisonSpacingTokens get bisonSpacing =>
-      Theme.of(this).extension<BisonSpacingTokens>()!;
-  BisonTypographyTokens get bisonTypography =>
-      Theme.of(this).extension<BisonTypographyTokens>()!;
-  BisonCornerTokens get bisonCorners =>
-      Theme.of(this).extension<BisonCornerTokens>()!;
-}
-
+/// A snapshot of all Bison design-system tokens resolved from a [BuildContext].
+///
+/// Obtain an instance through [BisonContext.bison]:
+///
+/// ```dart
+/// // Inline
+/// Container(color: context.bison.theme.surfaceDefault);
+///
+/// // Or capture once when you need several tokens
+/// final tokens = context.bison;
+/// Text('Hello', style: tokens.typography.h2);
+/// ```
 final class BisonTokens {
-  final BuildContext context;
+  /// Semantic color tokens that adapt to the current light/dark theme.
+  ///
+  /// Covers surfaces, borders, buttons, icons, text, input fields, chips,
+  /// and color-coded meanings (danger, warning, success, etc.).
+  ///
+  /// ```dart
+  /// Container(color: context.bison.theme.surfaceDefault);
+  /// Icon(Icons.check, color: context.bison.theme.iconSuccess);
+  /// ```
+  final BisonThemeTokens theme;
 
-  const BisonTokens(this.context);
+  /// Spacing scale used for padding, margins, and gaps.
+  ///
+  /// Values range from `noneSpacing` (0) to `xLargeSpacing` (64), with
+  /// named steps in between: `micro` (4), `tiny` (8), `xSmall` (12),
+  /// `small` (16), `standard` (24), `medium` (36), and `large` (48).
+  ///
+  /// ```dart
+  /// Padding(
+  ///   padding: EdgeInsets.all(context.bison.spacing.smallSpacing),
+  /// );
+  /// ```
+  final BisonSpacingTokens spacing;
 
-  BisonThemeTokens get theme => context.bisonTheme;
-  BisonSpacingTokens get spacing => context.bisonSpacing;
-  BisonTypographyTokens get typography => context.bisonTypography;
-  BisonCornerTokens get corners => context.bisonCorners;
+  /// Text styles for the Bison type scale.
+  ///
+  /// Available styles: `h1`, `h2`, `h3`, `bodyLarge`, `bodySmall`, and
+  /// `capitalizedLabel`. All styles use the Atkinson Hyperlegible Next
+  /// typeface and inherit their color from the current theme.
+  ///
+  /// ```dart
+  /// Text('Section title', style: context.bison.typography.h2);
+  /// ```
+  final BisonTypographyTokens typography;
+
+  /// Border-radius scale for rounded corners.
+  ///
+  /// Values range from `cornerNone` (0) to `cornerLarge` (16), with named
+  /// steps: `cornerExtraSmall` (4), `cornerSmall` (8), and
+  /// `cornerMedium` (12).
+  ///
+  /// ```dart
+  /// ClipRRect(
+  ///   borderRadius: BorderRadius.circular(context.bison.corners.cornerSmall),
+  /// );
+  /// ```
+  final BisonCornerTokens corners;
+
+  const BisonTokens({
+    required this.theme,
+    required this.spacing,
+    required this.typography,
+    required this.corners,
+  });
+
+  /// Resolves all tokens from the nearest Bison theme in [context].
+  factory BisonTokens.of(BuildContext context) => BisonTokens(
+    theme: Theme.of(context).extension<BisonThemeTokens>()!,
+    spacing: Theme.of(context).extension<BisonSpacingTokens>()!,
+    typography: Theme.of(context).extension<BisonTypographyTokens>()!,
+    corners: Theme.of(context).extension<BisonCornerTokens>()!,
+  );
 }
 
-extension BisonContextView on BuildContext {
-  BisonTokens get bison => BisonTokens(this);
+extension BisonContext on BuildContext {
+  /// Returns a snapshot of all Bison design-system tokens resolved from this
+  /// context.
+  ///
+  /// Tokens are grouped into the following categories:
+  ///
+  /// - [BisonTokens.theme] — semantic colors (surfaces, borders, buttons,
+  ///   icons, text, input fields, chips, color-coded meanings).
+  /// - [BisonTokens.spacing] — spacing scale from `noneSpacing` (0) to
+  ///   `xLargeSpacing` (64).
+  /// - [BisonTokens.typography] — text styles (`h1`–`h3`, `bodyLarge`,
+  ///   `bodySmall`, `capitalizedLabel`).
+  /// - [BisonTokens.corners] — border-radius scale from `cornerNone` (0) to
+  ///   `cornerLarge` (16).
+  ///
+  /// ```dart
+  /// // Single token
+  /// Container(color: context.bison.theme.surfaceDefault);
+  ///
+  /// // Multiple tokens — capture once to avoid redundant lookups
+  /// final tokens = context.bison;
+  /// return Padding(
+  ///   padding: EdgeInsets.all(tokens.spacing.standardSpacing),
+  ///   child: Text('Hello', style: tokens.typography.bodyLarge),
+  /// );
+  /// ```
+  BisonTokens get bison => BisonTokens.of(this);
 }
