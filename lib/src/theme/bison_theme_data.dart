@@ -259,12 +259,27 @@ final class BisonTokens {
   });
 
   /// Resolves all tokens from the nearest Bison theme in [context].
-  factory BisonTokens.of(BuildContext context) => BisonTokens(
-    theme: Theme.of(context).extension<BisonThemeTokens>()!,
-    spacing: Theme.of(context).extension<BisonSpacingTokens>()!,
-    typography: Theme.of(context).extension<BisonTypographyTokens>()!,
-    corners: Theme.of(context).extension<BisonCornerTokens>()!,
-  );
+  ///
+  /// Throws a [StateError] if the Bison theme extensions are not present,
+  /// which happens when the app's [ThemeData] was not created with
+  /// [BisonThemeData.light] or [BisonThemeData.dark].
+  factory BisonTokens.of(BuildContext context) {
+    T resolve<T extends ThemeExtension<T>>() {
+      return Theme.of(context).extension<T>() ??
+          (throw StateError(
+            '$T not found in the current theme. '
+            'Ensure your MaterialApp uses BisonThemeData.light() or '
+            'BisonThemeData.dark() as its theme.',
+          ));
+    }
+
+    return BisonTokens(
+      theme: resolve<BisonThemeTokens>(),
+      spacing: resolve<BisonSpacingTokens>(),
+      typography: resolve<BisonTypographyTokens>(),
+      corners: resolve<BisonCornerTokens>(),
+    );
+  }
 }
 
 extension BisonContext on BuildContext {
