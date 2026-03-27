@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart' show KnobsExtension;
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
-import 'package:bison_design_system/theme.dart' show BisonThemeTokens;
+import 'package:bison_design_system/theme.dart' show BisonContext;
 import 'package:bison_design_system/core_widgets.dart' show BisonIconButton;
 
 @widgetbook.UseCase(name: 'Filled', type: BisonIconButton)
@@ -57,7 +57,7 @@ Widget buildBisonIconButtonGhostUseCase(BuildContext context) {
 Widget buildBisonIconButtonWhiteGhostUseCase(BuildContext context) {
   return Container(
     padding: EdgeInsets.all(200),
-    color: Theme.of(context).extension<BisonThemeTokens>()!.surfaceSlate,
+    color: context.bison.theme.surfaceSlate,
     child: BisonIconButton.whiteGhost(
       icon: context.knobs.object.dropdown(
         label: 'Icon',

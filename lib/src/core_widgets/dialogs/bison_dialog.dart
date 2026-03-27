@@ -1,16 +1,9 @@
 import 'dart:async' show Completer;
 
-import 'package:flutter/material.dart' show Theme;
 import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter/widgets.dart';
 import 'package:bison_design_system/bison_design_system.dart'
-    show
-        BisonButton,
-        BisonCornerTokens,
-        BisonScrim,
-        BisonSpacingTokens,
-        BisonThemeTokens,
-        BisonTypographyTokens;
+    show BisonButton, BisonScrim, BisonContext;
 
 class BisonDialogAction {
   final String label;
@@ -144,10 +137,7 @@ class BisonDialog extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final theme = Theme.of(context).extension<BisonThemeTokens>()!;
-    final spacing = Theme.of(context).extension<BisonSpacingTokens>()!;
-    final corners = Theme.of(context).extension<BisonCornerTokens>()!;
-    final typography = Theme.of(context).extension<BisonTypographyTokens>()!;
+    final bison = context.bison;
 
     final primary = primaryAction;
     final secondary = secondaryAction;
@@ -162,34 +152,34 @@ class BisonDialog extends StatelessWidget {
         child: DecoratedBox(
           key: _surfaceKey,
           decoration: BoxDecoration(
-            color: theme.surfaceDefault,
-            borderRadius: BorderRadius.circular(corners.cornerSmall),
+            color: bison.theme.surfaceDefault,
+            borderRadius: BorderRadius.circular(bison.corners.cornerSmall),
             border: Border.all(style: BorderStyle.none),
             boxShadow: [
               BoxShadow(
-                offset: Offset(0, spacing.tinySpacing),
-                blurRadius: spacing.xSmallSpacing,
+                offset: Offset(0, bison.spacing.tinySpacing),
+                blurRadius: bison.spacing.xSmallSpacing,
                 spreadRadius: 6.0,
                 color: const Color(0xFF000000).withValues(alpha: 0.15),
               ),
               BoxShadow(
-                offset: Offset(0, spacing.microSpacing),
-                blurRadius: spacing.microSpacing,
+                offset: Offset(0, bison.spacing.microSpacing),
+                blurRadius: bison.spacing.microSpacing,
                 spreadRadius: 0,
                 color: const Color(0xFF000000).withValues(alpha: .30),
               ),
             ],
           ),
           child: Padding(
-            padding: EdgeInsets.all(spacing.mediumSpacing),
+            padding: EdgeInsets.all(bison.spacing.mediumSpacing),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: typography.h3),
-                SizedBox(height: spacing.smallSpacing),
-                Text(body, style: typography.bodyLarge),
-                SizedBox(height: spacing.standardSpacing),
+                Text(title, style: bison.typography.h3),
+                SizedBox(height: bison.spacing.smallSpacing),
+                Text(body, style: bison.typography.bodyLarge),
+                SizedBox(height: bison.spacing.standardSpacing),
                 FocusScope(
                   child: FocusTraversalGroup(
                     policy: OrderedTraversalPolicy(),
@@ -213,7 +203,7 @@ class BisonDialog extends StatelessWidget {
                             ),
                           ),
                         if (secondary != null)
-                          SizedBox(width: spacing.tinySpacing),
+                          SizedBox(width: bison.spacing.tinySpacing),
                         FocusTraversalOrder(
                           order: NumericFocusOrder(1.0),
                           child: BisonButton.filled(
@@ -283,7 +273,7 @@ class _BisonDialogOverlay extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final spacing = Theme.of(context).extension<BisonSpacingTokens>()!;
+    final bison = context.bison;
 
     return CallbackShortcuts(
       bindings: {
@@ -302,7 +292,7 @@ class _BisonDialogOverlay extends StatelessWidget {
             ),
             Positioned.fill(
               child: SafeArea(
-                minimum: EdgeInsets.all(spacing.mediumSpacing),
+                minimum: EdgeInsets.all(bison.spacing.mediumSpacing),
                 child: Center(
                   child: BisonDialog(
                     title: title,

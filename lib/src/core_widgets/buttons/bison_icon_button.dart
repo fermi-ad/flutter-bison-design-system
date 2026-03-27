@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:bison_design_system/bison_design_system.dart'
     show
+        BisonContext,
         BisonThemeTokens,
-        BisonSpacingTokens,
         BisonCornerTokens,
+        BisonSpacingTokens,
         BisonTypographyTokens;
 
 enum _BisonIconButtonType { filled, ghost, whiteGhost, smallGhost, outlined }
@@ -85,10 +86,8 @@ class BisonIconButton extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final theme = Theme.of(context).extension<BisonThemeTokens>()!;
-    final padding = Theme.of(context).extension<BisonSpacingTokens>()!;
-    final corners = Theme.of(context).extension<BisonCornerTokens>()!;
-    final typo = Theme.of(context).extension<BisonTypographyTokens>()!;
+    final bison = context.bison;
+
     return IconButton(
       onPressed: onPressed,
       constraints: const BoxConstraints(), // allows for smaller buttons
@@ -96,34 +95,34 @@ class BisonIconButton extends StatelessWidget {
       iconSize: 24.0,
       style: switch (_bisonIconButtonType) {
         _BisonIconButtonType.filled => filledIconButtonStyle(
-          theme,
-          padding,
-          corners,
-          typo,
+          bison.theme,
+          bison.spacing,
+          bison.corners,
+          bison.typography,
         ),
         _BisonIconButtonType.ghost => ghostIconButtonStyle(
-          theme,
-          padding,
-          corners,
-          typo,
+          bison.theme,
+          bison.spacing,
+          bison.corners,
+          bison.typography,
         ),
         _BisonIconButtonType.whiteGhost => whiteGhostIconButtonStyle(
-          theme,
-          padding,
-          corners,
-          typo,
+          bison.theme,
+          bison.spacing,
+          bison.corners,
+          bison.typography,
         ),
         _BisonIconButtonType.smallGhost => smallGhostIconButtonStyle(
-          theme,
-          padding,
-          corners,
-          typo,
+          bison.theme,
+          bison.spacing,
+          bison.corners,
+          bison.typography,
         ),
         _BisonIconButtonType.outlined => outlinedIconButtonStyle(
-          theme,
-          padding,
-          corners,
-          typo,
+          bison.theme,
+          bison.spacing,
+          bison.corners,
+          bison.typography,
         ),
       },
     );
