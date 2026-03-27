@@ -1,4 +1,5 @@
-import 'package:bison_design_system/bison_design_system.dart';
+import 'package:bison_design_system/bison_design_system.dart'
+    show BisonThemeTokens, BisonChip, ObjectChipStyle;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -29,15 +30,27 @@ void main() {
 
       final BoxDecoration decoration = container.decoration! as BoxDecoration;
       final Border border = decoration.border! as Border;
-      final Text text = tester.widget<Text>(find.text('Object chip'));
-      final IconTheme iconTheme = tester.widget<IconTheme>(
-        find.byType(IconTheme),
+      final DefaultTextStyle defaultTextStyle = tester.widget<DefaultTextStyle>(
+        find
+            .descendant(
+              of: find.byType(BisonChip),
+              matching: find.byType(DefaultTextStyle),
+            )
+            .first,
       );
+      final IconTheme iconTheme = tester
+          .widgetList<IconTheme>(
+            find.descendant(
+              of: find.byType(BisonChip),
+              matching: find.byType(IconTheme),
+            ),
+          )
+          .firstWhere((final iconTheme) => iconTheme.data.color != null);
 
       expect(decoration.color, equals(theme.chipUnselectedActive));
       expect(border.top.color, equals(theme.borderPlain));
-      expect(text.style?.color, equals(theme.textPlain));
-      expect(iconTheme.data.color, equals(theme.textPlain));
+      expect(defaultTextStyle.style.color, equals(theme.textPlain));
+      expect(iconTheme.data.color, equals(theme.iconPlain));
     });
 
     testWidgets('warning style uses expected default colors', (
@@ -115,14 +128,26 @@ void main() {
       );
 
       final BoxDecoration decoration = container.decoration! as BoxDecoration;
-      final Text text = tester.widget<Text>(find.text('Disabled warning'));
-      final IconTheme iconTheme = tester.widget<IconTheme>(
-        find.byType(IconTheme),
+      final DefaultTextStyle defaultTextStyle = tester.widget<DefaultTextStyle>(
+        find
+            .descendant(
+              of: find.byType(BisonChip),
+              matching: find.byType(DefaultTextStyle),
+            )
+            .first,
       );
+      final IconTheme iconTheme = tester
+          .widgetList<IconTheme>(
+            find.descendant(
+              of: find.byType(BisonChip),
+              matching: find.byType(IconTheme),
+            ),
+          )
+          .firstWhere((final iconTheme) => iconTheme.data.color != null);
 
       expect(decoration.color, equals(theme.chipWarningDisabled));
-      expect(text.style?.color, equals(theme.textDisabled));
-      expect(iconTheme.data.color, equals(theme.textDisabled));
+      expect(defaultTextStyle.style.color, equals(theme.textPlain));
+      expect(iconTheme.data.color, equals(theme.iconPlain));
     });
   });
 }

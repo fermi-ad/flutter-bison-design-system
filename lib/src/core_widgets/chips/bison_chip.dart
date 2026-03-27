@@ -177,7 +177,7 @@ class _BisonChipState extends State<BisonChip> {
   }
 
   Color _foregroundColor(final BisonThemeTokens theme) {
-    if (_states.contains(WidgetState.disabled)) return theme.textDisabled;
+    if (_states.contains(WidgetState.disabled)) return theme.textPlain;
     return theme.textPlain;
   }
 
@@ -205,7 +205,7 @@ class _BisonChipState extends State<BisonChip> {
           horizontal: spacing.tinySpacing,
         ),
         child: IconTheme(
-          data: IconThemeData(color: _foregroundColor(theme)),
+          data: IconThemeData(color: _foregroundColor(theme), size: 18.0),
           child: DefaultTextStyle(
             style: typography.bodySmall.copyWith(
               color: _foregroundColor(theme),
