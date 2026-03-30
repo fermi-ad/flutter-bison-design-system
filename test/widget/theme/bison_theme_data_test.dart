@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bison_design_system/bison_design_system.dart'
     show
+    BisonContext,
         BisonThemeTokens,
         BisonSpacingTokens,
         BisonCornerTokens,
@@ -16,6 +17,35 @@ import '../common.dart'
 
 void main() {
   group('BisonThemeData Widget Styling Tests', () {
+    testWidgets('context.bison is available from public package exports', (
+      final WidgetTester tester,
+    ) async {
+      final expectedTheme = BisonThemeTokens.light();
+      final expectedSpacing = BisonSpacingTokens.standard();
+      final expectedCorners = BisonCornerTokens.standard();
+      final expectedTypography = BisonTypographyTokens.fromTokens(
+        expectedTheme,
+      );
+
+      await tester.pumpWidget(
+        buildScaffold(
+          Builder(
+            builder: (final context) {
+              final tokens = context.bison;
+              expect(tokens.theme.surfaceDefault, expectedTheme.surfaceDefault);
+              expect(
+                tokens.spacing.smallSpacing,
+                expectedSpacing.smallSpacing,
+              );
+              expect(tokens.corners.cornerLarge, expectedCorners.cornerLarge);
+              expect(tokens.typography.h1, expectedTypography.h1);
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      );
+    });
+
     testWidgets('FilledButton uses theme styling from BisonThemeData', (
       final WidgetTester tester,
     ) async {
