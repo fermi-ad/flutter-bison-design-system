@@ -37,6 +37,7 @@ class BisonChip extends StatefulWidget {
   final _ChipType _chipType;
   final ObjectChipStyle? _objectChipStyle;
 
+  /// Represents a filter field for a give collection.
   const BisonChip.filter({
     super.key,
     required this.label,
@@ -49,6 +50,7 @@ class BisonChip extends StatefulWidget {
   }) : _chipType = _ChipType.filter,
        _objectChipStyle = null;
 
+  /// Represents discrete pieces of information enterned by someone
   const BisonChip.input({
     super.key,
     required this.label,
@@ -61,6 +63,7 @@ class BisonChip extends StatefulWidget {
   }) : _chipType = _ChipType.input,
        _objectChipStyle = null;
 
+  /// Help narrow a person's intent by presenting dynamically-generated suggestions
   const BisonChip.suggestion({
     super.key,
     required this.label,
@@ -73,6 +76,9 @@ class BisonChip extends StatefulWidget {
   }) : _chipType = _ChipType.suggestion,
        _objectChipStyle = null;
 
+  /// Represent named entries in the workspace. The let users open objects for detail,
+  /// act on them via a contextual menu, and establish connections by dragging them
+  /// into context-aware targets like plots.
   const BisonChip.object({
     super.key,
     required this.label,
