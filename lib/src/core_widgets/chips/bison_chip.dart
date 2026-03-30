@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart' show Theme;
 import 'package:bison_design_system/theme.dart'
     show
@@ -94,6 +95,9 @@ class _BisonChipState extends State<BisonChip> {
   bool _isFocused = false;
   bool _isPressed = false;
   bool _isDragged = false;
+
+  VoidCallback? get _activateLeftAction =>
+      widget.enabled ? widget.onLeftPressed : null;
 
   Set<WidgetState> get _states {
     final states = <WidgetState>{};
@@ -234,6 +238,18 @@ class _BisonChipState extends State<BisonChip> {
       mouseCursor: widget.enabled
           ? SystemMouseCursors.click
           : SystemMouseCursors.basic,
+      shortcuts: const <ShortcutActivator, Intent>{
+        SingleActivator(LogicalKeyboardKey.enter): ActivateIntent(),
+        SingleActivator(LogicalKeyboardKey.space): ActivateIntent(),
+      },
+      actions: <Type, Action<Intent>>{
+        ActivateIntent: CallbackAction<ActivateIntent>(
+          onInvoke: (_) {
+            _activateLeftAction?.call();
+            return null;
+          },
+        ),
+      },
       onShowFocusHighlight: (final value) {
         setState(() => _isFocused = value);
       },

@@ -1,6 +1,7 @@
 import 'package:bison_design_system/bison_design_system.dart'
     show BisonThemeTokens, BisonChip, ObjectChipStyle;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../common.dart' show buildScaffold;
@@ -148,6 +149,32 @@ void main() {
       expect(decoration.color, equals(theme.chipWarningDisabled));
       expect(defaultTextStyle.style.color, equals(theme.textPlain));
       expect(iconTheme.data.color, equals(theme.iconPlain));
+    });
+
+    testWidgets('enter and space trigger the left action when focused', (
+      final WidgetTester tester,
+    ) async {
+      var pressedCount = 0;
+
+      await tester.pumpWidget(
+        buildScaffold(
+          BisonChip.object(
+            label: 'Keyboard chip',
+            onLeftPressed: () => pressedCount++,
+          ),
+        ),
+      );
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.pump();
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.space);
+      await tester.pump();
+
+      expect(pressedCount, 2);
     });
   });
 }
