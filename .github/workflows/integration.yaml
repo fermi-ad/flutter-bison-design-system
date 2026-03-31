@@ -19,4 +19,4 @@ jobs:
     with:
       # Change to true to pull in git submodules during build
       pull-git-submodules: false
-      coverage-exclude: "|tool/setup_git_hooks.dart|*.g.dart"
+      coverage-exclude: "|tool/setup_git_hooks.dart|.*\\.g\\.dart"
