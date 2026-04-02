@@ -1,12 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/material.dart' show Theme;
 import 'package:bison_design_system/theme.dart'
-    show
-        BisonCornerTokens,
-        BisonSpacingTokens,
-        BisonThemeTokens,
-        BisonTypographyTokens;
+    show BisonContext, BisonThemeTokens;
 
 enum ObjectChipStyle { normal, warning, danger }
 
@@ -198,38 +193,35 @@ class _BisonChipState extends State<BisonChip> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context).extension<BisonThemeTokens>()!;
-    final spacing = Theme.of(context).extension<BisonSpacingTokens>()!;
-    final corners = Theme.of(context).extension<BisonCornerTokens>()!;
-    final typography = Theme.of(context).extension<BisonTypographyTokens>()!;
+    final bison = context.bison;
 
     Widget buildBisonChip() {
       return Container(
         decoration: BoxDecoration(
-          color: _backgroundColor(theme),
-          border: Border.all(color: _borderColor(theme)),
-          borderRadius: BorderRadius.circular(corners.cornerExtraSmall),
+          color: _backgroundColor(bison.theme),
+          border: Border.all(color: _borderColor(bison.theme)),
+          borderRadius: BorderRadius.circular(bison.corners.cornerExtraSmall),
         ),
         padding: EdgeInsets.symmetric(
-          vertical: spacing.microSpacing,
-          horizontal: spacing.tinySpacing,
+          vertical: bison.spacing.microSpacing,
+          horizontal: bison.spacing.tinySpacing,
         ),
         child: IconTheme(
-          data: IconThemeData(color: _foregroundColor(theme), size: 10.0),
+          data: IconThemeData(color: _foregroundColor(bison.theme), size: 10.0),
           child: DefaultTextStyle(
-            style: typography.bodySmall.copyWith(
-              color: _foregroundColor(theme),
+            style: bison.typography.bodySmall.copyWith(
+              color: _foregroundColor(bison.theme),
             ),
             child: Row(
               mainAxisSize: .min,
               children: [
                 if (widget.leftIcon != null) ...[
                   widget.leftIcon!,
-                  SizedBox(width: spacing.tinySpacing),
+                  SizedBox(width: bison.spacing.tinySpacing),
                 ],
                 Text(widget.label),
                 if (widget.rightIcon != null) ...[
-                  SizedBox(width: spacing.tinySpacing),
+                  SizedBox(width: bison.spacing.tinySpacing),
                   widget.rightIcon!,
                 ],
               ],
