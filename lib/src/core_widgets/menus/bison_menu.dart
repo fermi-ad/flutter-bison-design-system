@@ -4,6 +4,7 @@ import 'package:disable_web_context_menu/disable_web_context_menu.dart'
     show DisableWebContextMenu;
 import 'package:bison_design_system/bison_design_system.dart'
     show
+        BisonContext,
         BisonThemeTokens,
         BisonSpacingTokens,
         BisonCornerTokens,
@@ -182,16 +183,13 @@ class _BisonMenuState extends State<BisonMenu> {
 
   @override
   Widget build(final BuildContext context) {
-    final theme = Theme.of(context).extension<BisonThemeTokens>()!;
-    final padding = Theme.of(context).extension<BisonSpacingTokens>()!;
-    final corners = Theme.of(context).extension<BisonCornerTokens>()!;
-    final typo = Theme.of(context).extension<BisonTypographyTokens>()!;
+    final bison = context.bison;
 
     // Make sure nodes are synced before building menu children.
     _syncFocusNodes();
 
     return MenuAnchor(
-      style: getBisonMenuStyle(theme, padding, corners),
+      style: getBisonMenuStyle(bison.theme, bison.spacing, bison.corners),
       childFocusNode: _childFocusNode,
       controller: _controller,
       menuChildren: [
@@ -211,7 +209,11 @@ class _BisonMenuState extends State<BisonMenu> {
               return MenuItemButton(
                 focusNode: focusNode,
                 autofocus: index == 0 && focusNode.canRequestFocus,
-                style: getBisonMenuButtonStyle(theme, padding, typo),
+                style: getBisonMenuButtonStyle(
+                  bison.theme,
+                  bison.spacing,
+                  bison.typography,
+                ),
                 onPressed: item.onSelect,
                 leadingIcon: item.icon,
                 child: Text(item.label),

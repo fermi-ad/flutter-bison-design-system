@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bison_design_system/bison_design_system.dart'
     show
+        BisonContext,
         BisonThemeTokens,
         BisonSpacingTokens,
         BisonCornerTokens,
@@ -119,59 +120,56 @@ class BisonButton extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final theme = Theme.of(context).extension<BisonThemeTokens>()!;
-    final padding = Theme.of(context).extension<BisonSpacingTokens>()!;
-    final corners = Theme.of(context).extension<BisonCornerTokens>()!;
-    final typo = Theme.of(context).extension<BisonTypographyTokens>()!;
+    final bison = context.bison;
 
     return FilledButton(
       focusNode: focusNode,
       autofocus: autofocus,
       style: switch (_buttonType) {
         _BisonButtonType.filled => getFilledBisonButtonStyle(
-          theme,
-          padding,
-          corners,
-          typo,
+          bison.theme,
+          bison.spacing,
+          bison.corners,
+          bison.typography,
         ),
         _BisonButtonType.ghost => getGhostBisonButtonStyle(
-          theme,
-          padding,
-          corners,
-          typo,
+          bison.theme,
+          bison.spacing,
+          bison.corners,
+          bison.typography,
         ),
         _BisonButtonType.outlined => getOutlinedBisonButtonStyle(
-          theme,
-          padding,
-          corners,
-          typo,
+          bison.theme,
+          bison.spacing,
+          bison.corners,
+          bison.typography,
         ),
         _BisonButtonType.destructive => getDestructiveBisonButtonStyle(
-          theme,
-          padding,
-          corners,
-          typo,
+          bison.theme,
+          bison.spacing,
+          bison.corners,
+          bison.typography,
         ),
       },
       onPressed: onPressed,
       child: icon == null
           ? Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: padding.smallSpacing,
-                vertical: padding.tinySpacing,
+                horizontal: bison.spacing.smallSpacing,
+                vertical: bison.spacing.tinySpacing,
               ),
               child: Text(buttonLabel),
             )
           : Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: padding.smallSpacing,
-                vertical: padding.tinySpacing,
+                horizontal: bison.spacing.smallSpacing,
+                vertical: bison.spacing.tinySpacing,
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   icon!,
-                  SizedBox(width: padding.tinySpacing),
+                  SizedBox(width: bison.spacing.tinySpacing),
                   Text(buttonLabel),
                 ],
               ),

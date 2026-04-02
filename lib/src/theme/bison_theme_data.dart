@@ -189,3 +189,124 @@ class BisonThemeData {
     );
   }
 }
+
+/// A snapshot of all Bison design-system tokens resolved from a [BuildContext].
+///
+/// Obtain an instance through [BisonContext.bison]:
+///
+/// ```dart
+/// // Inline
+/// Container(color: context.bison.theme.surfaceDefault);
+///
+/// // Or capture once when you need several tokens
+/// final tokens = context.bison;
+/// Text('Hello', style: tokens.typography.h2);
+/// ```
+final class BisonTokens {
+  /// Semantic color tokens that adapt to the current light/dark theme.
+  ///
+  /// Covers surfaces, borders, buttons, icons, text, input fields, chips,
+  /// and color-coded meanings (danger, warning, success, etc.).
+  ///
+  /// ```dart
+  /// Container(color: context.bison.theme.surfaceDefault);
+  /// Icon(Icons.check, color: context.bison.theme.iconSuccess);
+  /// ```
+  final BisonThemeTokens theme;
+
+  /// Spacing scale used for padding, margins, and gaps.
+  ///
+  /// Values range from `noneSpacing` (0) to `xLargeSpacing` (64), with
+  /// named steps in between: `micro` (4), `tiny` (8), `xSmall` (12),
+  /// `small` (16), `standard` (24), `medium` (36), and `large` (48).
+  ///
+  /// ```dart
+  /// Padding(
+  ///   padding: EdgeInsets.all(context.bison.spacing.smallSpacing),
+  /// );
+  /// ```
+  final BisonSpacingTokens spacing;
+
+  /// Text styles for the Bison type scale.
+  ///
+  /// Available styles: `h1`, `h2`, `h3`, `bodyLarge`, `bodySmall`, and
+  /// `capitalizedLabel`. All styles use the Atkinson Hyperlegible Next
+  /// typeface and inherit their color from the current theme.
+  ///
+  /// ```dart
+  /// Text('Section title', style: context.bison.typography.h2);
+  /// ```
+  final BisonTypographyTokens typography;
+
+  /// Border-radius scale for rounded corners.
+  ///
+  /// Values range from `cornerNone` (0) to `cornerLarge` (16), with named
+  /// steps: `cornerExtraSmall` (4), `cornerSmall` (8), and
+  /// `cornerMedium` (12).
+  ///
+  /// ```dart
+  /// ClipRRect(
+  ///   borderRadius: BorderRadius.circular(context.bison.corners.cornerSmall),
+  /// );
+  /// ```
+  final BisonCornerTokens corners;
+
+  const BisonTokens({
+    required this.theme,
+    required this.spacing,
+    required this.typography,
+    required this.corners,
+  });
+
+  /// Resolves all tokens from the nearest Bison theme in [context].
+  ///
+  /// Throws a [StateError] if the Bison theme extensions are not present,
+  /// which happens when the app's [ThemeData] was not created with
+  /// [BisonThemeData.light] or [BisonThemeData.dark].
+  factory BisonTokens.of(BuildContext context) {
+    T resolve<T extends ThemeExtension<T>>() {
+      return Theme.of(context).extension<T>() ??
+          (throw StateError(
+            '$T not found in the current theme. '
+            'Ensure your MaterialApp uses BisonThemeData.light() or '
+            'BisonThemeData.dark() as its theme.',
+          ));
+    }
+
+    return BisonTokens(
+      theme: resolve<BisonThemeTokens>(),
+      spacing: resolve<BisonSpacingTokens>(),
+      typography: resolve<BisonTypographyTokens>(),
+      corners: resolve<BisonCornerTokens>(),
+    );
+  }
+}
+
+extension BisonContext on BuildContext {
+  /// Returns a snapshot of all Bison design-system tokens resolved from this
+  /// context.
+  ///
+  /// Tokens are grouped into the following categories:
+  ///
+  /// - [BisonTokens.theme] — semantic colors (surfaces, borders, buttons,
+  ///   icons, text, input fields, chips, color-coded meanings).
+  /// - [BisonTokens.spacing] — spacing scale from `noneSpacing` (0) to
+  ///   `xLargeSpacing` (64).
+  /// - [BisonTokens.typography] — text styles (`h1`–`h3`, `bodyLarge`,
+  ///   `bodySmall`, `capitalizedLabel`).
+  /// - [BisonTokens.corners] — border-radius scale from `cornerNone` (0) to
+  ///   `cornerLarge` (16).
+  ///
+  /// ```dart
+  /// // Single token
+  /// Container(color: context.bison.theme.surfaceDefault);
+  ///
+  /// // Multiple tokens — capture once to avoid redundant lookups
+  /// final tokens = context.bison;
+  /// return Padding(
+  ///   padding: EdgeInsets.all(tokens.spacing.standardSpacing),
+  ///   child: Text('Hello', style: tokens.typography.bodyLarge),
+  /// );
+  /// ```
+  BisonTokens get bison => BisonTokens.of(this);
+}
