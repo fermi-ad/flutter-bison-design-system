@@ -147,8 +147,8 @@ void main() {
           .firstWhere((final iconTheme) => iconTheme.data.color != null);
 
       expect(decoration.color, equals(theme.chipWarningDisabled));
-      expect(defaultTextStyle.style.color, equals(theme.textPlain));
-      expect(iconTheme.data.color, equals(theme.iconPlain));
+      expect(defaultTextStyle.style.color, equals(theme.textDisabled));
+      expect(iconTheme.data.color, equals(theme.iconDisabled));
     });
 
     testWidgets('enter and space trigger the left action when focused', (
