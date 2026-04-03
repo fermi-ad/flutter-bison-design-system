@@ -102,7 +102,7 @@ Widget buildBisonChipDeviceUseCase(BuildContext context) {
   );
 
   final chipType = context.knobs.object.dropdown(
-    label: 'Device Serverity',
+    label: 'Device Severity',
     labelBuilder: (value) => value.name,
     initialOption: ObjectChipStyle.normal,
     options: [

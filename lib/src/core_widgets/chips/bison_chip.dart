@@ -11,13 +11,13 @@ class _ChipPalette {
   final Color active;
   final Color disabled;
   final Color hovered;
-  final Color focuseDraggedPressed;
+  final Color focusedDraggedPressed;
 
   const _ChipPalette({
     required this.active,
     required this.disabled,
     required this.hovered,
-    required this.focuseDraggedPressed,
+    required this.focusedDraggedPressed,
   });
 }
 
@@ -33,6 +33,7 @@ class BisonChip extends StatefulWidget {
   final ObjectChipStyle? _objectChipStyle;
 
   /// Represents a filter field for a give collection.
+  // FIXME: Not fully implemented
   const BisonChip.filter({
     super.key,
     required this.label,
@@ -45,7 +46,8 @@ class BisonChip extends StatefulWidget {
   }) : _chipType = _ChipType.filter,
        _objectChipStyle = null;
 
-  /// Represents discrete pieces of information enterned by someone
+  /// Represents discrete pieces of information entered by someone
+  // FIXME: Not fully implemented
   const BisonChip.input({
     super.key,
     required this.label,
@@ -59,6 +61,7 @@ class BisonChip extends StatefulWidget {
        _objectChipStyle = null;
 
   /// Help narrow a person's intent by presenting dynamically-generated suggestions
+  // FIXME: Not fully implemented
   const BisonChip.suggestion({
     super.key,
     required this.label,
@@ -71,7 +74,7 @@ class BisonChip extends StatefulWidget {
   }) : _chipType = _ChipType.suggestion,
        _objectChipStyle = null;
 
-  /// Represent named entries in the workspace. The let users open objects for detail,
+  /// Represent named entries in the workspace. They let users open objects for detail,
   /// act on them via a contextual menu, and establish connections by dragging them
   /// into context-aware targets like plots.
   const BisonChip.object({
@@ -117,7 +120,7 @@ class _BisonChipState extends State<BisonChip> {
           // TODO: Add unselected states
           active: theme.chipSelectedActive,
           hovered: theme.chipSelectedHovered,
-          focuseDraggedPressed: theme.chipSelectedFocusedDraggedPressed,
+          focusedDraggedPressed: theme.chipSelectedFocusedDraggedPressed,
           disabled: theme.chipSelectedDisabled,
         );
       case _ChipType.input:
@@ -125,7 +128,7 @@ class _BisonChipState extends State<BisonChip> {
           // TODO: Add unselected states
           active: theme.chipSelectedActive,
           hovered: theme.chipSelectedHovered,
-          focuseDraggedPressed: theme.chipCautionFocusedDraggedPressed,
+          focusedDraggedPressed: theme.chipCautionFocusedDraggedPressed,
           // FIXME: Input chips do not have a disabled state
           disabled: theme.chipCautionDisabled,
         );
@@ -134,7 +137,7 @@ class _BisonChipState extends State<BisonChip> {
           // TODO: Add unselected states
           active: theme.chipSelectedActive,
           hovered: theme.chipSelectedHovered,
-          focuseDraggedPressed: theme.chipSelectedFocusedDraggedPressed,
+          focusedDraggedPressed: theme.chipSelectedFocusedDraggedPressed,
           disabled: theme.chipSelectedDisabled,
         );
       case _ChipType.object:
@@ -143,21 +146,21 @@ class _BisonChipState extends State<BisonChip> {
             return _ChipPalette(
               active: theme.chipUnselectedActive,
               hovered: theme.chipUnselectedHovered,
-              focuseDraggedPressed: theme.chipUnselectedFocusedDraggedPressed,
+              focusedDraggedPressed: theme.chipUnselectedFocusedDraggedPressed,
               disabled: theme.surfaceTransparent,
             );
           case ObjectChipStyle.warning:
             return _ChipPalette(
               active: theme.chipWarningActive,
               hovered: theme.chipWarningHovered,
-              focuseDraggedPressed: theme.chipWarningFocusedDraggedPressed,
+              focusedDraggedPressed: theme.chipWarningFocusedDraggedPressed,
               disabled: theme.chipWarningDisabled,
             );
           case ObjectChipStyle.danger:
             return _ChipPalette(
               active: theme.chipDangerActive,
               hovered: theme.chipDangerHovered,
-              focuseDraggedPressed: theme.chipDangerFocusedDraggedPressed,
+              focusedDraggedPressed: theme.chipDangerFocusedDraggedPressed,
               disabled: theme.chipDangerDisabled,
             );
         }
@@ -171,18 +174,18 @@ class _BisonChipState extends State<BisonChip> {
         !_states.contains(WidgetState.hovered) &&
         !_states.contains(WidgetState.pressed) &&
         !_states.contains(WidgetState.dragged)) {
-      return palette.focuseDraggedPressed;
+      return palette.focusedDraggedPressed;
     }
     if (_states.contains(WidgetState.dragged) ||
         _states.contains(WidgetState.pressed)) {
-      return palette.focuseDraggedPressed;
+      return palette.focusedDraggedPressed;
     }
     if (_states.contains(WidgetState.hovered)) return palette.hovered;
     return palette.active;
   }
 
   Color _foregroundColor(final BisonThemeTokens theme) {
-    if (_states.contains(WidgetState.disabled)) return theme.textPlain;
+    if (_states.contains(WidgetState.disabled)) return theme.textDisabled;
     return theme.textPlain;
   }
 
@@ -207,7 +210,7 @@ class _BisonChipState extends State<BisonChip> {
           horizontal: bison.spacing.tinySpacing,
         ),
         child: IconTheme(
-          data: IconThemeData(color: _foregroundColor(bison.theme), size: 10.0),
+          data: IconThemeData(color: _foregroundColor(bison.theme), size: 18.0),
           child: DefaultTextStyle(
             style: bison.typography.bodySmall.copyWith(
               color: _foregroundColor(bison.theme),
@@ -253,7 +256,10 @@ class _BisonChipState extends State<BisonChip> {
       },
       onFocusChange: (final isFocused) {
         if (!isFocused) {
-          setState(() => _isHovered = false);
+          setState(() {
+            _isFocused = false;
+            _isHovered = false;
+          });
         }
       },
       child: MouseRegion(
