@@ -9,11 +9,6 @@ import 'package:bison_design_system/theme.dart' show BisonThemeData;
 import 'main.directories.g.dart' show directories;
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  if (kIsWeb) {
-    // If running in web, disable browser's context menu
-    BrowserContextMenu.disableContextMenu();
-  }
   runApp(const WidgetbookApp());
 }
 
