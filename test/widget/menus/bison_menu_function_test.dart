@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:bison_design_system/bison_design_system.dart'
-    show BisonMenuItem, BisonMenu, BisonMenuTriggerAction;
+    show BisonChip, BisonMenuItem, BisonMenu, BisonMenuTriggerAction;
 import 'bison_menu_common.dart' show buildStandardMenu, buildMenuWithItems;
 import '../common.dart' show buildScaffold;
 
@@ -170,6 +170,70 @@ void main() {
   });
 
   group('keyboard navigation and shortcuts', () {
+    testWidgets('secondary-trigger chips use one tab stop per chip', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(
+          FocusTraversalGroup(
+            policy: WidgetOrderTraversalPolicy(),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                BisonMenu(
+                  builder:
+                      (
+                        final context,
+                        final focusNode, {
+                        required final isOpen,
+                        required final toggleMenu,
+                      }) => BisonChip.object(
+                        label: 'Chip A',
+                        focusNode: focusNode,
+                        onLeftPressed: () {},
+                      ),
+                  items: [BisonMenuItem(label: 'Item A', onSelect: () {})],
+                  triggerAction: BisonMenuTriggerAction.secondary,
+                ),
+                const SizedBox(width: 12),
+                BisonMenu(
+                  builder:
+                      (
+                        final context,
+                        final focusNode, {
+                        required final isOpen,
+                        required final toggleMenu,
+                      }) => BisonChip.object(
+                        label: 'Chip B',
+                        focusNode: focusNode,
+                        onLeftPressed: () {},
+                      ),
+                  items: [BisonMenuItem(label: 'Item B', onSelect: () {})],
+                  triggerAction: BisonMenuTriggerAction.secondary,
+                ),
+                FilledButton(onPressed: () {}, child: const Text('After')),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+
+      expect(Focus.of(tester.element(find.text('Chip A'))).hasFocus, isTrue);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+
+      expect(Focus.of(tester.element(find.text('Chip B'))).hasFocus, isTrue);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+
+      expect(Focus.of(tester.element(find.text('After'))).hasFocus, isTrue);
+    });
+
     testWidgets('arrow keys navigate menu items', (
       final WidgetTester tester,
     ) async {
