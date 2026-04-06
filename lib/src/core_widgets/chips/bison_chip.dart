@@ -29,6 +29,8 @@ class BisonChip extends StatefulWidget {
   final Icon? rightIcon;
   final bool selected;
   final bool enabled;
+  final FocusNode? focusNode;
+  final bool autofocus;
   final _ChipType _chipType;
   final ObjectChipStyle? _objectChipStyle;
 
@@ -43,6 +45,8 @@ class BisonChip extends StatefulWidget {
     this.rightIcon,
     this.selected = false,
     this.enabled = true,
+    this.focusNode,
+    this.autofocus = false,
   }) : _chipType = _ChipType.filter,
        _objectChipStyle = null;
 
@@ -57,6 +61,8 @@ class BisonChip extends StatefulWidget {
     this.rightIcon,
     this.selected = false,
     this.enabled = true,
+    this.focusNode,
+    this.autofocus = false,
   }) : _chipType = _ChipType.input,
        _objectChipStyle = null;
 
@@ -71,6 +77,8 @@ class BisonChip extends StatefulWidget {
     this.rightIcon,
     this.selected = false,
     this.enabled = true,
+    this.focusNode,
+    this.autofocus = false,
   }) : _chipType = _ChipType.suggestion,
        _objectChipStyle = null;
 
@@ -86,6 +94,8 @@ class BisonChip extends StatefulWidget {
     this.rightIcon,
     this.selected = false, // TODO: Not sure I need this yet
     this.enabled = true,
+    this.focusNode,
+    this.autofocus = false,
     ObjectChipStyle objectChipStyle = ObjectChipStyle.normal,
   }) : _chipType = _ChipType.object,
        _objectChipStyle = objectChipStyle;
@@ -240,6 +250,8 @@ class _BisonChipState extends State<BisonChip> {
 
     return FocusableActionDetector(
       enabled: widget.enabled,
+      focusNode: widget.focusNode,
+      autofocus: widget.autofocus,
       mouseCursor: widget.enabled
           ? SystemMouseCursors.click
           : SystemMouseCursors.basic,

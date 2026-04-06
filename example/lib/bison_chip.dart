@@ -165,16 +165,14 @@ Widget _buildObjectChip(
 ) {
   return BisonMenu(
     builder: (_, final focusNode, {required toggleMenu, required isOpen}) {
-      return Focus(
+      return BisonChip.object(
         focusNode: focusNode,
-        child: BisonChip.object(
-          label: chipLabel,
-          leftIcon: leftIcon,
-          onLeftPressed: () {
-            _buildObjectDialog(context, dialogTitle, dialogMessage);
-          },
-          objectChipStyle: chipType,
-        ),
+        label: chipLabel,
+        leftIcon: leftIcon,
+        onLeftPressed: () {
+          _buildObjectDialog(context, dialogTitle, dialogMessage);
+        },
+        objectChipStyle: chipType,
       );
     },
     triggerAction: BisonMenuTriggerAction.secondary,

@@ -5,5 +5,4 @@ export 'src/core_widgets/dialogs/bison_dialog.dart'
 export 'src/core_widgets/menus/bison_menu.dart'
     show BisonMenu, BisonMenuItem, BisonMenuTriggerAction;
 export 'src/core_widgets/overlays/bison_scrim.dart' show BisonScrim;
-// TODO: Remove ObjectChipStyle
 export 'src/core_widgets/chips/bison_chip.dart' show BisonChip, ObjectChipStyle;
