@@ -100,6 +100,10 @@ Widget buildBisonChipDeviceUseCase(BuildContext context) {
       RotatedIcon(Icons.square_sharp),
     ],
   );
+  final chipLabel = context.knobs.string(
+    label: 'Device Name',
+    initialValue: 'M:OUTTMP',
+  );
 
   final chipType = context.knobs.object.dropdown(
     label: 'Device Severity',
@@ -111,32 +115,63 @@ Widget buildBisonChipDeviceUseCase(BuildContext context) {
       ObjectChipStyle.danger,
     ],
   );
+  final dialogTitle = 'M:OUTTMP';
+  final dialogMessage =
+      'Open details for M:OUTTMP. Right-click the chip to access device actions.';
 
+  return _buildObjectChip(
+    context,
+    chipType,
+    chipLabel,
+    icon,
+    dialogTitle,
+    dialogMessage,
+  );
+}
+
+@widgetbook.UseCase(name: 'Grouping Navigation', type: BisonChip)
+Widget buildBisonChiGroupUseCase(BuildContext context) {
+  return Row(
+    mainAxisAlignment: .center,
+    spacing: 8.0,
+    children: [
+      _buildObjectChip(
+        context,
+        ObjectChipStyle.normal,
+        'M:OUTTMP',
+        Icon(Icons.circle_outlined),
+        'M:OUTTMP',
+        'Right-click the chip for access device actions.',
+      ),
+      _buildObjectChip(
+        context,
+        ObjectChipStyle.warning,
+        'G:AMANDA',
+        Icon(Icons.circle_outlined),
+        'G:AMANDA',
+        'Right-click the chip for access device actions.',
+      ),
+    ],
+  );
+}
+
+Widget _buildObjectChip(
+  BuildContext context,
+  ObjectChipStyle chipType,
+  String chipLabel,
+  Icon leftIcon,
+  String dialogTitle,
+  String dialogMessage,
+) {
   return BisonMenu(
     builder: (_, final focusNode, {required toggleMenu, required isOpen}) {
       return Focus(
         focusNode: focusNode,
         child: BisonChip.object(
-          label: context.knobs.string(
-            label: 'Device Name',
-            initialValue: 'M:OUTTMP',
-          ),
-          leftIcon: icon,
+          label: chipLabel,
+          leftIcon: leftIcon,
           onLeftPressed: () {
-            BisonDialog.show(
-              context: context,
-              title: 'M:OUTTMP',
-              body:
-                  'Open details for M:OUTTMP. Right-click the chip to access device actions.',
-              primaryAction: BisonDialogAction(
-                label: 'Close',
-                onPressed: () {},
-              ),
-              secondaryAction: BisonDialogAction(
-                label: 'Snooze',
-                onPressed: () {},
-              ),
-            );
+            _buildObjectDialog(context, dialogTitle, dialogMessage);
           },
           objectChipStyle: chipType,
         ),
@@ -170,5 +205,19 @@ Widget buildBisonChipDeviceUseCase(BuildContext context) {
         onSelect: () => {},
       ),
     ],
+  );
+}
+
+Future<void> _buildObjectDialog(
+  BuildContext context,
+  String dialogTitle,
+  String dialogMessage,
+) {
+  return BisonDialog.show(
+    context: context,
+    title: dialogTitle,
+    body: dialogMessage,
+    primaryAction: BisonDialogAction(label: 'Close', onPressed: () {}),
+    secondaryAction: BisonDialogAction(label: 'Snooze', onPressed: () {}),
   );
 }

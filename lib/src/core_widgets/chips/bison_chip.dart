@@ -197,6 +197,7 @@ class _BisonChipState extends State<BisonChip> {
   @override
   Widget build(BuildContext context) {
     final bison = context.bison;
+    final iconSize = 18.0;
 
     Widget buildBisonChip() {
       return Container(
@@ -210,7 +211,10 @@ class _BisonChipState extends State<BisonChip> {
           horizontal: bison.spacing.tinySpacing,
         ),
         child: IconTheme(
-          data: IconThemeData(color: _foregroundColor(bison.theme), size: 18.0),
+          data: IconThemeData(
+            color: _foregroundColor(bison.theme),
+            size: iconSize,
+          ),
           child: DefaultTextStyle(
             style: bison.typography.bodySmall.copyWith(
               color: _foregroundColor(bison.theme),

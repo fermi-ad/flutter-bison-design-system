@@ -87,6 +87,11 @@ final directories = <_widgetbook.WidgetbookNode>[
                 builder: _bison_design_system_catalog_bison_chip
                     .buildBisonChipDeviceUseCase,
               ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Grouping Navigation',
+                builder: _bison_design_system_catalog_bison_chip
+                    .buildBisonChiGroupUseCase,
+              ),
             ],
           ),
         ],
