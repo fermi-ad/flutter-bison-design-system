@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart' show Widgetbook, AlignmentAddon;
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
-
 import 'package:bison_design_system/theme.dart' show BisonThemeData;
 
 import 'main.directories.g.dart' show directories;
