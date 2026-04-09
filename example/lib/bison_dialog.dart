@@ -6,7 +6,7 @@ import 'package:bison_design_system/core_widgets.dart'
     show BisonDialog, BisonDialogAction, BisonButton;
 
 @widgetbook.UseCase(name: 'Dialog', type: BisonDialog)
-Widget builBisonDialog(BuildContext context) {
+Widget buildBisonDialog(BuildContext context) {
   final String dialogTitle = context.knobs.string(
     label: 'Dialog Title',
     initialValue: 'Dialog',
@@ -48,7 +48,7 @@ Widget builBisonDialog(BuildContext context) {
 }
 
 @widgetbook.UseCase(name: 'Trigger Dialog', type: BisonDialog)
-Widget builBisonDialogTrigger(BuildContext context) {
+Widget buildBisonDialogTrigger(BuildContext context) {
   final String dialogTitle = context.knobs.string(
     label: 'Dialog Title',
     initialValue: 'Dialog',
@@ -59,9 +59,19 @@ Widget builBisonDialogTrigger(BuildContext context) {
       context.knobs.boolean(label: 'Secondary Action', initialValue: true)
       ? BisonDialogAction(label: 'Cancel', onPressed: () {})
       : null;
+  final destructiveActionDisabled =
+      context.knobs.boolean(
+        label: 'Destructive Action Disabled',
+        initialValue: false,
+      )
+      ? null
+      : () {};
   final destructiveActionToggle =
       context.knobs.boolean(label: 'Destructive Action', initialValue: true)
-      ? BisonDialogAction(label: 'Destroy', onPressed: () {})
+      ? BisonDialogAction(
+          label: 'Destroy',
+          onPressed: destructiveActionDisabled,
+        )
       : null;
   final barrierDismissible = context.knobs.boolean(
     label: 'Dismissible Barrier',

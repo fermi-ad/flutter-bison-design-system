@@ -7,7 +7,7 @@ import 'package:bison_design_system/bison_design_system.dart'
 
 class BisonDialogAction {
   final String label;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final bool dismissDialog;
 
   /// Builds an action button for a BisonDialog.
@@ -15,12 +15,13 @@ class BisonDialogAction {
   /// This takes a [label], [onPressed], and [dismissDialog].
   ///
   /// [label] is shown on the button, and [onPressed] is called when the
-  /// button is pressed. Both are required.
+  /// button is pressed.
+  /// When [onPressed] is not given, the button will be in a disabled state.
   /// [dismissDialog] determines whether the dialog should be closed after the
   /// button is pressed. This is true by default.
   const BisonDialogAction({
     required this.label,
-    required this.onPressed,
+    this.onPressed,
     this.dismissDialog = true,
   });
 }
@@ -248,26 +249,16 @@ class _BisonDialogOverlay extends StatelessWidget {
     required this.onDismiss,
   });
 
-  BisonDialogAction? _wrapAction(final BisonDialogAction? action) {
-    if (action == null) return null;
+  BisonDialogAction _wrapAction(final BisonDialogAction action) {
     return BisonDialogAction(
       label: action.label,
       dismissDialog: action.dismissDialog,
-      onPressed: () {
-        action.onPressed();
-        if (action.dismissDialog) onDismiss();
-      },
-    );
-  }
-
-  BisonDialogAction _wrapRequiredAction(final BisonDialogAction action) {
-    return BisonDialogAction(
-      label: action.label,
-      dismissDialog: action.dismissDialog,
-      onPressed: () {
-        action.onPressed();
-        if (action.dismissDialog) onDismiss();
-      },
+      onPressed: action.onPressed == null
+          ? null
+          : () {
+              action.onPressed!();
+              if (action.dismissDialog) onDismiss();
+            },
     );
   }
 
@@ -299,9 +290,13 @@ class _BisonDialogOverlay extends StatelessWidget {
                     body: body,
                     minWidth: minWidth,
                     maxWidth: maxWidth,
-                    destructiveAction: _wrapAction(destructiveAction),
-                    secondaryAction: _wrapAction(secondaryAction),
-                    primaryAction: _wrapRequiredAction(primaryAction),
+                    destructiveAction: destructiveAction == null
+                        ? null
+                        : _wrapAction(destructiveAction!),
+                    secondaryAction: secondaryAction == null
+                        ? null
+                        : _wrapAction(secondaryAction!),
+                    primaryAction: _wrapAction(primaryAction),
                   ),
                 ),
               ),

@@ -105,12 +105,12 @@ final directories = <_widgetbook.WidgetbookNode>[
               _widgetbook.WidgetbookUseCase(
                 name: 'Dialog',
                 builder:
-                    _bison_design_system_catalog_bison_dialog.builBisonDialog,
+                    _bison_design_system_catalog_bison_dialog.buildBisonDialog,
               ),
               _widgetbook.WidgetbookUseCase(
                 name: 'Trigger Dialog',
                 builder: _bison_design_system_catalog_bison_dialog
-                    .builBisonDialogTrigger,
+                    .buildBisonDialogTrigger,
               ),
             ],
           ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bison_design_system/bison_design_system.dart'
     show
-    BisonContext,
+        BisonContext,
         BisonThemeTokens,
         BisonSpacingTokens,
         BisonCornerTokens,
@@ -33,10 +33,7 @@ void main() {
             builder: (final context) {
               final tokens = context.bison;
               expect(tokens.theme.surfaceDefault, expectedTheme.surfaceDefault);
-              expect(
-                tokens.spacing.smallSpacing,
-                expectedSpacing.smallSpacing,
-              );
+              expect(tokens.spacing.smallSpacing, expectedSpacing.smallSpacing);
               expect(tokens.corners.cornerLarge, expectedCorners.cornerLarge);
               expect(tokens.typography.h1, expectedTypography.h1);
               return const SizedBox.shrink();
