@@ -295,7 +295,7 @@ class _BisonDialogOverlay extends StatelessWidget {
                         : _wrapAction(destructiveAction!),
                     secondaryAction: secondaryAction == null
                         ? null
-                        : (secondaryAction!),
+                        : _wrapAction(secondaryAction!),
                     primaryAction: _wrapAction(primaryAction),
                   ),
                 ),
