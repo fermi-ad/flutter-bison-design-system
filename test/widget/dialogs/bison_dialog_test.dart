@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:bison_design_system/bison_design_system.dart'
     show BisonDialog, BisonDialogAction, BisonThemeTokens;
 
-import '../common.dart' show buildScaffold;
+import '../common.dart' show buildScaffold, getButtonStyle;
 
 void main() {
   group('BisonDialog widget', () {
@@ -340,6 +340,137 @@ void main() {
         expect(
           find.byKey(const ValueKey<String>('bison-scrim')),
           findsOneWidget,
+        );
+      },
+    );
+  });
+
+  group('BisonDialog buttons with null callbacks', () {
+    testWidgets(
+      'Primary action with null callback does not dissmiss and is disabled',
+      (WidgetTester tester) async {
+        final theme = BisonThemeTokens.light();
+
+        await tester.pumpWidget(
+          buildScaffold(
+            Builder(
+              builder: (final context) {
+                return ElevatedButton(
+                  onPressed: () {
+                    BisonDialog.show(
+                      context: context,
+                      title: 'Dialog title',
+                      body: 'Dialog body',
+                      primaryAction: BisonDialogAction(
+                        label: 'Okay',
+                        onPressed: null,
+                      ),
+                    );
+                  },
+                  child: const Text('Open dialog'),
+                );
+              },
+            ),
+          ),
+        );
+        // open dialog
+        final openButton = find.text('Open dialog');
+        await tester.tap(openButton);
+        await tester.pumpAndSettle();
+
+        final primaryActionFinder = find.byType(FilledButton);
+        // get state of primary button
+        final primaryButton = tester.widget<FilledButton>(primaryActionFinder);
+        final style = getButtonStyle(
+          tester.element(primaryActionFinder),
+          primaryButton,
+        );
+        final background = style.backgroundColor?.resolve(<WidgetState>{
+          WidgetState.disabled,
+        });
+        expect(
+          background,
+          equals(theme.buttonGhostDisabled),
+          reason: 'Primary action button should be disabled',
+        );
+
+        // tap disabled button
+        await tester.tap(primaryActionFinder);
+        await tester.pump();
+
+        expect(
+          find.byType(BisonDialog),
+          findsOneWidget,
+          reason: 'Dialog should still be visible',
+        );
+      },
+    );
+
+    testWidgets(
+      'Destructive action with null callback does not dissmiss and is disabled',
+      (WidgetTester tester) async {
+        final theme = BisonThemeTokens.light();
+
+        await tester.pumpWidget(
+          buildScaffold(
+            Builder(
+              builder: (final context) {
+                return ElevatedButton(
+                  onPressed: () {
+                    BisonDialog.show(
+                      context: context,
+                      title: 'Dialog title',
+                      body: 'Dialog body',
+                      primaryAction: BisonDialogAction(
+                        label: 'Okay',
+                        onPressed: null,
+                      ),
+                      destructiveAction: BisonDialogAction(
+                        label: 'Delete',
+                        onPressed: null,
+                      ),
+                    );
+                  },
+                  child: const Text('Open dialog'),
+                );
+              },
+            ),
+          ),
+        );
+        // open dialog
+        final openButton = find.text('Open dialog');
+        await tester.tap(openButton);
+        await tester.pumpAndSettle();
+
+        final destructiveActionFinder = find.descendant(
+          of: find.byType(BisonDialog),
+          matching: find.widgetWithText(FilledButton, 'Delete'),
+        );
+        // get state of destructive button
+        final destructiveButton = tester.widget<FilledButton>(
+          destructiveActionFinder,
+        );
+        final style = getButtonStyle(
+          tester.element(destructiveActionFinder),
+          destructiveButton,
+        );
+        final background = style.backgroundColor?.resolve(<WidgetState>{
+          WidgetState.disabled,
+        });
+        expect(
+          background,
+          equals(theme.buttonGhostDisabled),
+          reason: 'Destructive action button should be disabled',
+        );
+
+        // tap disabled button
+        await tester.tap(destructiveActionFinder);
+        await tester.pump();
+
+        expect(
+          find.byType(BisonDialog),
+          findsOneWidget,
+          reason: 'Dialog should still be visible',
         );
       },
     );
