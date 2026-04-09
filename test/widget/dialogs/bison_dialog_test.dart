@@ -353,7 +353,7 @@ void main() {
 
   group('BisonDialog buttons with null callbacks', () {
     testWidgets(
-      'Primary action with null callback does not dissmiss and is disabled',
+      'Primary action with null callback does not dismiss and is disabled',
       (WidgetTester tester) async {
         final theme = BisonThemeTokens.light();
 
@@ -419,7 +419,7 @@ void main() {
     );
 
     testWidgets(
-      'Destructive action with null callback does not dissmiss and is disabled',
+      'Destructive action with null callback does not dismiss and is disabled',
       (WidgetTester tester) async {
         final theme = BisonThemeTokens.light();
 
