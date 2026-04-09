@@ -341,6 +341,12 @@ void main() {
           find.byKey(const ValueKey<String>('bison-scrim')),
           findsOneWidget,
         );
+
+        // dismiss dialog
+        await tester.tapAt(const Offset(16, 16));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(BisonDialog), findsNothing);
       },
     );
   });
@@ -403,6 +409,12 @@ void main() {
           findsOneWidget,
           reason: 'Dialog should still be visible',
         );
+
+        // Dismiss dialog
+        await tester.tapAt(const Offset(16, 16));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(BisonDialog), findsNothing);
       },
     );
 
@@ -442,9 +454,12 @@ void main() {
         await tester.tap(openButton);
         await tester.pumpAndSettle();
 
-        final destructiveActionFinder = find.descendant(
-          of: find.byType(BisonDialog),
-          matching: find.widgetWithText(FilledButton, 'Delete'),
+        final destructiveActionFinder = find.ancestor(
+          of: find.descendant(
+            of: find.byType(BisonDialog),
+            matching: find.text('Delete'),
+          ),
+          matching: find.byType(FilledButton),
         );
         // get state of destructive button
         final destructiveButton = tester.widget<FilledButton>(
@@ -472,6 +487,12 @@ void main() {
           findsOneWidget,
           reason: 'Dialog should still be visible',
         );
+
+        // dismiss dialog
+        await tester.tapAt(const Offset(16, 16));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(BisonDialog), findsNothing);
       },
     );
   });
