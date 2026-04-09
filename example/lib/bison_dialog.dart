@@ -59,9 +59,19 @@ Widget builBisonDialogTrigger(BuildContext context) {
       context.knobs.boolean(label: 'Secondary Action', initialValue: true)
       ? BisonDialogAction(label: 'Cancel', onPressed: () {})
       : null;
+  final destructiveActionDisabled =
+      context.knobs.boolean(
+        label: 'Destructive Action Disabled',
+        initialValue: false,
+      )
+      ? null
+      : () {};
   final destructiveActionToggle =
       context.knobs.boolean(label: 'Destructive Action', initialValue: true)
-      ? BisonDialogAction(label: 'Destroy', onPressed: () {})
+      ? BisonDialogAction(
+          label: 'Destroy',
+          onPressed: destructiveActionDisabled,
+        )
       : null;
   final barrierDismissible = context.knobs.boolean(
     label: 'Dismissible Barrier',
