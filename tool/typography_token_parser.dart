@@ -1,17 +1,13 @@
-import 'dart:convert' show jsonDecode;
 import 'dart:io' show File;
+import 'token_parser_utils.dart' show toCamelCase, loadJson;
 
 void main() {
   const typescalePath = 'tokens/TypescaleTokens.json';
   const baselinePath = 'tokens/Baseline.tokens.json';
   const outputPath = 'lib/src/theme/typography_tokens.g.dart';
 
-  final typescaleData =
-      jsonDecode(File(typescalePath).readAsStringSync())
-          as Map<dynamic, dynamic>;
-  final baselineData =
-      jsonDecode(File(baselinePath).readAsStringSync())
-          as Map<dynamic, dynamic>;
+  final typescaleData = loadJson(typescalePath);
+  final baselineData = loadJson(baselinePath);
 
   final buffer = StringBuffer();
   buffer.writeln("// GENERATED CODE - DO NOT MODIFY BY HAND\n");
@@ -23,19 +19,19 @@ void main() {
   );
 
   final styles = typescaleData.keys
-      .where((final k) => !(k as String).startsWith('\$'))
+      .where((final k) => !(k).startsWith('\$'))
       .cast<String>()
       .toList();
 
   // Fields
   for (final String style in styles) {
-    buffer.writeln("  final TextStyle ${_toCamelCase(style)};");
+    buffer.writeln("  final TextStyle ${toCamelCase(style)};");
   }
 
   // Constructor
   buffer.writeln("\n  const BisonTypographyTokens({");
   for (final style in styles) {
-    buffer.writeln("    required this.${_toCamelCase(style)},");
+    buffer.writeln("    required this.${toCamelCase(style)},");
   }
   buffer.writeln("  });\n");
 
@@ -60,14 +56,14 @@ void main() {
         node['Weight']['\$extensions']['com.figma.aliasData']['targetVariableName']
             as String;
 
-    final fontFamily = _resolveBaselineValue(baselineData, fontAlias);
-    final weightString = _resolveBaselineValue(baselineData, weightAlias);
+    final fontFamily = resolveBaselineValue(baselineData, fontAlias);
+    final weightString = resolveBaselineValue(baselineData, weightAlias);
 
-    buffer.writeln("      ${_toCamelCase(style)}: TextStyle(");
+    buffer.writeln("      ${toCamelCase(style)}: TextStyle(");
     buffer.writeln("        fontFamily: '$fontFamily',");
     buffer.writeln("        package: 'bison_design_system',");
     buffer.writeln("        fontSize: $fontSize,");
-    buffer.writeln("        fontWeight: ${_mapWeight(weightString)},");
+    buffer.writeln("        fontWeight: ${mapWeight(weightString)},");
     buffer.writeln(
       "        height: ${lineHeight / fontSize}, // Multiplier: $lineHeight / $fontSize",
     );
@@ -86,7 +82,7 @@ void main() {
 }
 
 /// Navigates the Baseline JSON using the slash-delimited path (e.g. "Weight/Bold")
-String _resolveBaselineValue(
+String resolveBaselineValue(
   final Map<dynamic, dynamic> data,
   final String path,
 ) {
@@ -98,7 +94,7 @@ String _resolveBaselineValue(
   return current['\$value'].toString();
 }
 
-String _mapWeight(final String weight) {
+String mapWeight(final String weight) {
   switch (weight.toLowerCase()) {
     case 'extralight':
       return 'FontWeight.w200';
@@ -117,18 +113,6 @@ String _mapWeight(final String weight) {
   }
 }
 
-String _toCamelCase(final String input) {
-  final words = input
-      .split(RegExp(r'[\s\-\.]'))
-      .where((final w) => w.isNotEmpty)
-      .toList();
-  var result = words[0].toLowerCase();
-  for (var i = 1; i < words.length; i++) {
-    result += words[i][0].toUpperCase() + words[i].substring(1).toLowerCase();
-  }
-  return result;
-}
-
 void _writeExtensionMethods(
   final StringBuffer buffer,
   final List<String> styles,
@@ -136,12 +120,12 @@ void _writeExtensionMethods(
   buffer.writeln("  @override");
   buffer.writeln("  BisonTypographyTokens copyWith({");
   for (final style in styles) {
-    buffer.writeln("    final TextStyle? ${_toCamelCase(style)},");
+    buffer.writeln("    final TextStyle? ${toCamelCase(style)},");
   }
   buffer.writeln("  }) {");
   buffer.writeln("    return BisonTypographyTokens(");
   for (final style in styles) {
-    final name = _toCamelCase(style);
+    final name = toCamelCase(style);
     buffer.writeln("      $name: $name ?? this.$name,");
   }
   buffer.writeln("    );\n  }\n");
@@ -153,7 +137,7 @@ void _writeExtensionMethods(
   buffer.writeln("    if (other is! BisonTypographyTokens) return this;");
   buffer.writeln("    return BisonTypographyTokens(");
   for (final style in styles) {
-    final name = _toCamelCase(style);
+    final name = toCamelCase(style);
     buffer.writeln("      $name: TextStyle.lerp($name, other.$name, t)!,");
   }
   buffer.writeln("    );\n  }");

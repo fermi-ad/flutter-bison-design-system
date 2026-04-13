@@ -1,5 +1,5 @@
-import 'dart:convert' show jsonDecode;
 import 'dart:io' show File;
+import 'token_parser_utils.dart' show toCamelCase, formatHex, loadJson;
 
 void main() {
   const outputPath = 'lib/src/theme/color_tokens.g.dart';
@@ -11,14 +11,10 @@ void main() {
   const darkJson = 'tokens/Dark.tokens.json';
 
   // json data
-  final baseData =
-      jsonDecode(File(baseJson).readAsStringSync()) as Map<String, dynamic>;
-  final aliasData =
-      jsonDecode(File(aliasJson).readAsStringSync()) as Map<String, dynamic>;
-  final lightData =
-      jsonDecode(File(lightJson).readAsStringSync()) as Map<String, dynamic>;
-  final darkData =
-      jsonDecode(File(darkJson).readAsStringSync()) as Map<String, dynamic>;
+  final baseData = loadJson(baseJson);
+  final aliasData = loadJson(aliasJson);
+  final lightData = loadJson(lightJson);
+  final darkData = loadJson(darkJson);
 
   final buffer = StringBuffer();
   buffer.writeln("// GENERATED CODE - DO NOT MODIFY BY HAND\n");
@@ -27,7 +23,7 @@ void main() {
   // Create base tokens
   buffer.writeln("abstract class BaseTokens {");
   final baseMap = <String, String>{};
-  _extractBaseTokens(baseData, '', baseMap);
+  extractBaseTokens(baseData, '', baseMap);
   baseMap.forEach((final key, final hex) {
     buffer.writeln("  static const Color ${toCamelCase(key)} = Color($hex);");
   });
@@ -35,24 +31,24 @@ void main() {
 
   // create alias tokens
   buffer.writeln("abstract class AliasTokens {");
-  final aliasMap = <String, String>{};
-  _extractAliasTokens(aliasData, buffer, 'BaseTokens');
-  aliasMap.forEach((final key, final hex) {
-    buffer.writeln("  static const Color ${toCamelCase(key)} = Color($hex);");
+  final aliasMap = extractAliasTokens(aliasData);
+  aliasMap.forEach((final key, final targetVar) {
+    buffer.writeln(
+      "  static const Color ${toCamelCase(key)} = BaseTokens.${toCamelCase(targetVar)};",
+    );
   });
   buffer.writeln("}\n");
 
   // create component tokens (and ThemeExtension)
   buffer.writeln(
-    "class BisonThemeTokens extends ThemeExtension<BisonThemeTokens>{",
+    "class BisonThemeTokens extends ThemeExtension<BisonThemeTokens> {",
   );
 
   final componentKeys = <String>{};
   final lightMap = <String, String>{};
   final darkMap = <String, String>{};
-
-  _extractComponentTokens(lightData, '', lightMap);
-  _extractComponentTokens(darkData, '', darkMap);
+  extractComponentTokens(lightData, '', lightMap);
+  extractComponentTokens(darkData, '', darkMap);
   componentKeys.addAll(lightMap.keys);
 
   final sortedKeys = componentKeys.toList()..sort();
@@ -63,11 +59,11 @@ void main() {
   }
 
   // constructor
-  buffer.writeln("\n const BisonThemeTokens({");
+  buffer.writeln("\n  const BisonThemeTokens({");
   for (final key in sortedKeys) {
-    buffer.writeln("  required this.${toCamelCase(key)},");
+    buffer.writeln("    required this.${toCamelCase(key)},");
   }
-  buffer.writeln(" });\n");
+  buffer.writeln("  });\n");
 
   // Light Factory
   buffer.writeln(
@@ -104,7 +100,7 @@ void main() {
   outputFile.writeAsStringSync(buffer.toString());
 }
 
-void _extractBaseTokens(
+void extractBaseTokens(
   final Map<String, dynamic> json,
   final String prefix,
   final Map<String, String> target,
@@ -121,17 +117,14 @@ void _extractBaseTokens(
 
         target[newKey] = formatHex(hex, alpha is num ? alpha : null);
       } else {
-        _extractBaseTokens(value, newKey, target);
+        extractBaseTokens(value, newKey, target);
       }
     }
   });
 }
 
-void _extractAliasTokens(
-  final Map<String, dynamic> json,
-  final StringBuffer buffer,
-  final String targetClass,
-) {
+Map<String, String> extractAliasTokens(final Map<String, dynamic> json) {
+  final result = <String, String>{};
   void recurse(final Map<String, dynamic> node, final String prefix) {
     node.forEach((final key, final value) {
       if (key.startsWith('\$')) return;
@@ -141,9 +134,7 @@ void _extractAliasTokens(
         if (extensions != null && extensions['com.figma.aliasData'] != null) {
           final targetVar =
               extensions['com.figma.aliasData']['targetVariableName'] as String;
-          buffer.writeln(
-            "  static const Color ${toCamelCase(newKey)} = $targetClass.${toCamelCase(targetVar)};",
-          );
+          result[newKey] = targetVar;
         } else {
           recurse(value, newKey);
         }
@@ -152,9 +143,10 @@ void _extractAliasTokens(
   }
 
   recurse(json, '');
+  return result;
 }
 
-void _extractComponentTokens(
+void extractComponentTokens(
   final Map<String, dynamic> json,
   final String prefix,
   final Map<String, String> target,
@@ -168,7 +160,7 @@ void _extractComponentTokens(
         target[newKey] =
             extensions['com.figma.aliasData']['targetVariableName'] as String;
       } else {
-        _extractComponentTokens(value, newKey, target);
+        extractComponentTokens(value, newKey, target);
       }
     }
   });
@@ -183,12 +175,12 @@ void _writeOverrides(final StringBuffer buffer, final List<String> keys) {
     buffer.writeln("    final Color? ${toCamelCase(key)},");
   }
   buffer.writeln("  }) {");
-  buffer.writeln("  return BisonThemeTokens(");
+  buffer.writeln("    return BisonThemeTokens(");
   for (final key in keys) {
     final name = toCamelCase(key);
-    buffer.writeln("    $name: $name ?? this.$name,");
+    buffer.writeln("      $name: $name ?? this.$name,");
   }
-  buffer.writeln("  );");
+  buffer.writeln("    );");
   buffer.writeln("  }\n");
 
   // lerp
@@ -203,33 +195,4 @@ void _writeOverrides(final StringBuffer buffer, final List<String> keys) {
     buffer.writeln("      $name: Color.lerp($name, other.$name, t)!,");
   }
   buffer.writeln("    );\n  }");
-}
-
-String toCamelCase(final String input) {
-  // Regex handles slashes, spaces, dots, and dashes from Figma
-  final parts = input
-      .split(RegExp(r'[\.\-\s\/]'))
-      .where((final p) => p.isNotEmpty)
-      .toList();
-  if (parts.isEmpty) return 'unknown';
-  var result = parts[0].toLowerCase();
-  for (var i = 1; i < parts.length; i++) {
-    result += parts[i][0].toUpperCase() + parts[i].substring(1).toLowerCase();
-  }
-  return result;
-}
-
-// format Figma hex value (#XXXXXX) for the Color function (0xXXXXXXXX)
-String formatHex(String hex, [final num? alpha]) {
-  final rgbHex = hex.toUpperCase().replaceAll("#", '');
-
-  // calculate alpha (default: 1.0.FF)
-  final double a = (alpha ?? 1.0).toDouble();
-  final int alphaInt = (a * 255).round().clamp(0, 255);
-  final String alphaHex = alphaInt
-      .toRadixString(16)
-      .padLeft(2, '0')
-      .toUpperCase();
-
-  return '0x$alphaHex$rgbHex';
 }

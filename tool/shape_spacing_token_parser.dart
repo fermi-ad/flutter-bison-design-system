@@ -1,7 +1,5 @@
-import 'dart:convert' show jsonDecode;
 import 'dart:io' show File;
-
-import 'color_token_parser.dart' show toCamelCase;
+import 'token_parser_utils.dart' show toCamelCase, loadJson;
 
 void main() {
   const outputPath = 'lib/src/theme/shape_spacing_tokens.g.dart';
@@ -11,10 +9,8 @@ void main() {
   const spacingJson = 'tokens/Spacing.json';
 
   // json data
-  final shapeData =
-      jsonDecode(File(shapeJson).readAsStringSync()) as Map<String, dynamic>;
-  final spacingData =
-      jsonDecode(File(spacingJson).readAsStringSync()) as Map<String, dynamic>;
+  final shapeData = loadJson(shapeJson);
+  final spacingData = loadJson(spacingJson);
 
   final buffer = StringBuffer();
   buffer.writeln("// GENERATED CODE - DO NOT MODIFY BY HAND\n");
@@ -29,7 +25,7 @@ void main() {
     "class BisonSpacingTokens extends ThemeExtension<BisonSpacingTokens>{",
   );
 
-  _extractSpacingTokens(spacingData, '', spacingMap);
+  extractSpacingTokens(spacingData, '', spacingMap);
   spacingMap.forEach((final key, final spacing) {
     buffer.writeln("  final double ${toCamelCase("$key Spacing")};");
   });
@@ -82,7 +78,7 @@ void main() {
   buffer.writeln(
     "class BisonCornerTokens extends ThemeExtension<BisonCornerTokens>{",
   );
-  _extractCornerTokens(shapeData, '', cornerMap);
+  extractCornerTokens(shapeData, '', cornerMap);
   cornerMap.forEach((final key, final value) {
     buffer.writeln("  final double ${toCamelCase(key)};");
   });
@@ -138,7 +134,7 @@ void main() {
   outputFile.writeAsStringSync(buffer.toString());
 }
 
-void _extractSpacingTokens(
+void extractSpacingTokens(
   final Map<String, dynamic> json,
   final String prefix,
   final Map<String, int> target,
@@ -155,7 +151,7 @@ void _extractSpacingTokens(
   });
 }
 
-void _extractCornerTokens(
+void extractCornerTokens(
   final Map<String, dynamic> json,
   final String prefix,
   final Map<String, int> target,
@@ -168,7 +164,7 @@ void _extractCornerTokens(
         final val = value['\$value'];
         target[newKey] = val as int;
       } else {
-        _extractCornerTokens(value as Map<String, dynamic>, newKey, target);
+        extractCornerTokens(value as Map<String, dynamic>, newKey, target);
       }
     }
   });
