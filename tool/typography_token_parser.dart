@@ -1,5 +1,5 @@
 import 'dart:io' show File;
-import 'token_parser_utils.dart' show toCamelCase, loadJson;
+import 'token_parser_utils.dart' show toCamelCase, loadJson, formatFile;
 
 void main() {
   const typescalePath = 'tokens/TypescaleTokens.json';
@@ -77,8 +77,10 @@ void main() {
 
   buffer.writeln("}");
 
-  File(outputPath).parent.createSync(recursive: true);
-  File(outputPath).writeAsStringSync(buffer.toString());
+  final outputFile = File(outputPath);
+  outputFile.parent.createSync(recursive: true);
+  outputFile.writeAsStringSync(buffer.toString());
+  formatFile(outputPath);
 }
 
 /// Navigates the Baseline JSON using the slash-delimited path (e.g. "Weight/Bold")

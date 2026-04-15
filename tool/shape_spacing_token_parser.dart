@@ -1,5 +1,5 @@
 import 'dart:io' show File;
-import 'token_parser_utils.dart' show toCamelCase, loadJson;
+import 'token_parser_utils.dart' show toCamelCase, loadJson, formatFile;
 
 void main() {
   const outputPath = 'lib/src/theme/shape_spacing_tokens.g.dart';
@@ -132,6 +132,7 @@ void main() {
   final outputFile = File(outputPath);
   outputFile.parent.createSync(recursive: true);
   outputFile.writeAsStringSync(buffer.toString());
+  formatFile(outputPath);
 }
 
 void extractSpacingTokens(

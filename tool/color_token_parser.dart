@@ -1,5 +1,6 @@
 import 'dart:io' show File;
-import 'token_parser_utils.dart' show toCamelCase, formatHex, loadJson;
+import 'token_parser_utils.dart'
+    show toCamelCase, formatHex, loadJson, formatFile;
 
 void main() {
   const outputPath = 'lib/src/theme/color_tokens.g.dart';
@@ -98,6 +99,7 @@ void main() {
   final outputFile = File(outputPath);
   outputFile.parent.createSync(recursive: true);
   outputFile.writeAsStringSync(buffer.toString());
+  formatFile(outputPath);
 }
 
 void extractBaseTokens(

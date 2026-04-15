@@ -1,5 +1,5 @@
 import 'dart:convert' show jsonDecode;
-import 'dart:io' show File;
+import 'dart:io' show File, Process, stderr, stdout;
 
 String toCamelCase(final String input) {
   final words = input
@@ -32,4 +32,11 @@ String formatHex(String hex, num? alpha) {
 /// Example: loadJson('tokens/ColorBaseTokens.json')
 Map<String, dynamic> loadJson(final String path) {
   return jsonDecode(File(path).readAsStringSync()) as Map<String, dynamic>;
+}
+
+/// Run `dart format` on the file at [path] after generation.
+void formatFile(final String path) {
+  final result = Process.runSync('dart', <String>['format', path]);
+  stdout.write(result.stdout);
+  if (result.stderr.toString().isNotEmpty) stderr.write(result.stderr);
 }
