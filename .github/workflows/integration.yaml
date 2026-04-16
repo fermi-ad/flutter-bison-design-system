@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    uses: fermi-ad/.github/.github/workflows/flutter-integration.yaml@5f50b07c95bde8dbe99799785e288b9a5347c20f
+    uses: fermi-ad/.github/.github/workflows/flutter-integration.yaml@6e196e87b3b79167b57bf18cf3ca0cfcd88f958f
     secrets: inherit
     permissions:
       contents: write
@@ -19,4 +19,4 @@ jobs:
     with:
       # Change to true to pull in git submodules during build
       pull-git-submodules: false
-      coverage-exclude: "|tool/setup_git_hooks.dart"
+      coverage-exclude: "|tool/setup_git_hooks.dart|*.g.dart"
