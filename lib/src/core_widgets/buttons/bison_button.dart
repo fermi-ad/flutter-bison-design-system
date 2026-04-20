@@ -1,15 +1,11 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show LogicalKeyboardKey;
+import 'package:flutter/widgets.dart';
 import 'package:bison_design_system/bison_design_system.dart'
-    show
-        BisonContext,
-        BisonThemeTokens,
-        BisonSpacingTokens,
-        BisonCornerTokens,
-        BisonTypographyTokens;
+    show BisonContext, BisonThemeTokens, BisonCornerTokens;
 
 /// Provides different styling options for the `BisonButton` widget.
 ///
-/// The different styling options inluded
+/// The different styling options included
 /// - [BisonButtonType.filled] The most prominent styling option. This is the default option
 /// - [BisonButtonType.outlined]
 /// - [BisonButtonType.ghost]
@@ -29,7 +25,7 @@ enum _BisonButtonType {
 }
 
 /// Provides a set of button types
-class BisonButton extends StatelessWidget {
+class BisonButton extends StatefulWidget {
   final String buttonLabel;
   final _BisonButtonType _buttonType;
   final Icon? icon;
@@ -46,7 +42,7 @@ class BisonButton extends StatelessWidget {
     this.autofocus = false,
   }) : _buttonType = buttonType;
 
-  /// A Filled button with the primary color. The most promininent styling option.
+  /// A Filled button with the primary color. The most prominent styling option.
   factory BisonButton.filled({
     required String buttonLabel,
     required VoidCallback? onPressed,
@@ -119,72 +115,102 @@ class BisonButton extends StatelessWidget {
   }
 
   @override
-  Widget build(final BuildContext context) {
-    final bison = context.bison;
-
-    return FilledButton(
-      focusNode: focusNode,
-      autofocus: autofocus,
-      style: switch (_buttonType) {
-        _BisonButtonType.filled => getFilledBisonButtonStyle(
-          bison.theme,
-          bison.spacing,
-          bison.corners,
-          bison.typography,
-        ),
-        _BisonButtonType.ghost => getGhostBisonButtonStyle(
-          bison.theme,
-          bison.spacing,
-          bison.corners,
-          bison.typography,
-        ),
-        _BisonButtonType.outlined => getOutlinedBisonButtonStyle(
-          bison.theme,
-          bison.spacing,
-          bison.corners,
-          bison.typography,
-        ),
-        _BisonButtonType.destructive => getDestructiveBisonButtonStyle(
-          bison.theme,
-          bison.spacing,
-          bison.corners,
-          bison.typography,
-        ),
-      },
-      onPressed: onPressed,
-      child: icon == null
-          ? Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: bison.spacing.smallSpacing,
-                vertical: bison.spacing.tinySpacing,
-              ),
-              child: Text(buttonLabel),
-            )
-          : Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: bison.spacing.smallSpacing,
-                vertical: bison.spacing.tinySpacing,
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  icon!,
-                  SizedBox(width: bison.spacing.tinySpacing),
-                  Text(buttonLabel),
-                ],
-              ),
-            ),
-    );
-  }
+  State<BisonButton> createState() => _BisonButtonState();
 }
 
-ButtonStyle getFilledBisonButtonStyle(
-  final BisonThemeTokens theme,
-  final BisonSpacingTokens padding,
-  final BisonCornerTokens corners,
-  final BisonTypographyTokens typo,
-) => ButtonStyle(
-  backgroundColor: WidgetStateProperty.resolveWith<Color?>((
+/// Class that holds the styling data for a button
+class _BisonButtonResolvedStyle {
+  final Color backgroundColor;
+  final Color foregroundColor;
+  final BorderSide borderSide;
+  final double borderRadius;
+
+  const _BisonButtonResolvedStyle({
+    required this.backgroundColor,
+    required this.foregroundColor,
+    required this.borderSide,
+    required this.borderRadius,
+  });
+}
+
+class _BisonButtonState extends State<BisonButton> {
+  bool _isHovered = false;
+  bool _isFocused = false;
+  bool _isPressed = false;
+  FocusNode? _internalFocusNode;
+
+  bool get _isEnabled => widget.onPressed != null;
+
+  FocusNode get _effectiveFocusNode {
+    return widget.focusNode ?? (_internalFocusNode ??= FocusNode());
+  }
+
+  @override
+  void dispose() {
+    _internalFocusNode?.dispose();
+    super.dispose();
+  }
+
+  Set<WidgetState> get _states {
+    final states = <WidgetState>{};
+    if (!_isEnabled) states.add(WidgetState.disabled);
+    if (_isHovered) states.add(WidgetState.hovered);
+    if (_isFocused) states.add(WidgetState.focused);
+    if (_isPressed) states.add(WidgetState.pressed);
+    return states;
+  }
+
+  _BisonButtonResolvedStyle _resolveStyle(
+    final BisonThemeTokens theme,
+    final BisonCornerTokens corners,
+  ) {
+    final states = _states;
+
+    final borderSide = states.contains(WidgetState.focused)
+        ? BorderSide(color: theme.borderPrimary, width: 2.0)
+        : switch (widget._buttonType) {
+            _BisonButtonType.outlined => BorderSide(color: theme.borderPlain),
+            _ => BorderSide.none,
+          };
+
+    return switch (widget._buttonType) {
+      _BisonButtonType.filled => _BisonButtonResolvedStyle(
+        backgroundColor: _filledBackground(theme, states),
+        foregroundColor: states.contains(WidgetState.disabled)
+            ? theme.textDisabled
+            : theme.textInverse,
+        borderSide: borderSide,
+        borderRadius: corners.cornerExtraSmall,
+      ),
+      _BisonButtonType.ghost => _BisonButtonResolvedStyle(
+        backgroundColor: _ghostBackground(theme, states),
+        foregroundColor: states.contains(WidgetState.disabled)
+            ? theme.textDisabled
+            : theme.textPrimary,
+        borderSide: borderSide,
+        borderRadius: corners.cornerExtraSmall,
+      ),
+      _BisonButtonType.outlined => _BisonButtonResolvedStyle(
+        backgroundColor: _ghostBackground(theme, states),
+        foregroundColor: states.contains(WidgetState.disabled)
+            ? theme.textDisabled
+            : theme.textPrimary,
+        borderSide: borderSide,
+        borderRadius: corners.cornerExtraSmall,
+      ),
+      _BisonButtonType.destructive => _BisonButtonResolvedStyle(
+        backgroundColor: _destructiveBackground(theme, states),
+        foregroundColor: states.contains(WidgetState.disabled)
+            ? theme.textDisabled
+            : theme.textInverse,
+        borderSide: borderSide,
+        borderRadius: corners.cornerExtraSmall,
+      ),
+    };
+  }
+
+  Color _filledBackground(
+    final BisonThemeTokens theme,
     final Set<WidgetState> states,
   ) {
     if (states.contains(WidgetState.disabled)) {
@@ -198,41 +224,10 @@ ButtonStyle getFilledBisonButtonStyle(
       return theme.buttonPrimaryHovered;
     }
     return theme.buttonPrimary;
-  }),
-  foregroundColor: WidgetStateProperty.resolveWith<Color?>((
-    final Set<WidgetState> states,
-  ) {
-    if (states.contains(WidgetState.disabled)) {
-      return theme.textDisabled;
-    }
-    return theme.textInverse;
-  }),
-  shape: WidgetStateProperty.all(
-    RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(corners.cornerExtraSmall)),
-    ),
-  ),
-  side: WidgetStateProperty.resolveWith<BorderSide?>((
-    final Set<WidgetState> states,
-  ) {
-    if (states.contains(WidgetState.focused)) {
-      return BorderSide(color: theme.borderPrimary, width: 2.0);
-    }
-    return BorderSide(style: BorderStyle.none);
-  }),
-  textStyle: WidgetStatePropertyAll(typo.bodyLarge),
-  elevation: WidgetStatePropertyAll(0.0),
-  // remove default padding given to button
-  padding: WidgetStatePropertyAll(EdgeInsets.zero),
-);
+  }
 
-ButtonStyle getGhostBisonButtonStyle(
-  final BisonThemeTokens theme,
-  final BisonSpacingTokens padding,
-  final BisonCornerTokens corners,
-  final BisonTypographyTokens typo,
-) => ButtonStyle(
-  backgroundColor: WidgetStateProperty.resolveWith<Color?>((
+  Color _ghostBackground(
+    final BisonThemeTokens theme,
     final Set<WidgetState> states,
   ) {
     if (states.contains(WidgetState.pressed)) {
@@ -242,85 +237,10 @@ ButtonStyle getGhostBisonButtonStyle(
       return theme.buttonGhostHovered;
     }
     return theme.surfaceTransparent;
-  }),
-  foregroundColor: WidgetStateProperty.resolveWith<Color?>((
-    final Set<WidgetState> states,
-  ) {
-    if (states.contains(WidgetState.disabled)) {
-      return theme.textDisabled;
-    }
-    return theme.textPrimary;
-  }),
-  shape: WidgetStateProperty.all(
-    RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(corners.cornerExtraSmall)),
-    ),
-  ),
-  side: WidgetStateProperty.resolveWith<BorderSide?>((
-    final Set<WidgetState> states,
-  ) {
-    if (states.contains(WidgetState.focused)) {
-      return BorderSide(color: theme.borderPrimary, width: 2.0);
-    }
-    return BorderSide(style: BorderStyle.none);
-  }),
-  textStyle: WidgetStatePropertyAll(typo.bodyLarge),
-  elevation: WidgetStatePropertyAll(0.0),
-  // remove default padding given to button
-  padding: WidgetStatePropertyAll(EdgeInsets.zero),
-);
+  }
 
-ButtonStyle getOutlinedBisonButtonStyle(
-  final BisonThemeTokens theme,
-  final BisonSpacingTokens padding,
-  final BisonCornerTokens corners,
-  final BisonTypographyTokens typo,
-) => ButtonStyle(
-  backgroundColor: WidgetStateProperty.resolveWith<Color?>((
-    final Set<WidgetState> states,
-  ) {
-    if (states.contains(WidgetState.pressed)) {
-      return theme.buttonGhostPressed;
-    }
-    if (states.contains(WidgetState.hovered)) {
-      return theme.buttonGhostHovered;
-    }
-    return theme.surfaceTransparent;
-  }),
-  foregroundColor: WidgetStateProperty.resolveWith<Color?>((
-    final Set<WidgetState> states,
-  ) {
-    if (states.contains(WidgetState.disabled)) {
-      return theme.textDisabled;
-    }
-    return theme.textPrimary;
-  }),
-  shape: WidgetStateProperty.all(
-    RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(corners.cornerExtraSmall)),
-    ),
-  ),
-  side: WidgetStateProperty.resolveWith<BorderSide?>((
-    final Set<WidgetState> states,
-  ) {
-    if (states.contains(WidgetState.focused)) {
-      return BorderSide(color: theme.borderPrimary, width: 2.0);
-    }
-    return BorderSide(color: theme.borderPlain);
-  }),
-  textStyle: WidgetStatePropertyAll(typo.bodyLarge),
-  elevation: WidgetStatePropertyAll(0.0),
-  // remove default padding given to button
-  padding: WidgetStatePropertyAll(EdgeInsets.zero),
-);
-
-ButtonStyle getDestructiveBisonButtonStyle(
-  final BisonThemeTokens theme,
-  final BisonSpacingTokens padding,
-  final BisonCornerTokens corners,
-  final BisonTypographyTokens typo,
-) => ButtonStyle(
-  backgroundColor: WidgetStateProperty.resolveWith<Color?>((
+  Color _destructiveBackground(
+    final BisonThemeTokens theme,
     final Set<WidgetState> states,
   ) {
     if (states.contains(WidgetState.disabled)) {
@@ -334,30 +254,114 @@ ButtonStyle getDestructiveBisonButtonStyle(
       return theme.buttonDangerHovered;
     }
     return theme.buttonDanger;
-  }),
-  foregroundColor: WidgetStateProperty.resolveWith<Color?>((
-    final Set<WidgetState> states,
-  ) {
-    if (states.contains(WidgetState.disabled)) {
-      return theme.textDisabled;
-    }
-    return theme.textInverse;
-  }),
-  shape: WidgetStateProperty.all(
-    RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(4.0)),
-    ),
-  ),
-  side: WidgetStateProperty.resolveWith<BorderSide?>((
-    final Set<WidgetState> states,
-  ) {
-    if (states.contains(WidgetState.focused)) {
-      return BorderSide(color: theme.borderPrimary, width: 2.0);
-    }
-    return BorderSide(style: BorderStyle.none);
-  }),
-  textStyle: WidgetStatePropertyAll(typo.bodyLarge),
-  elevation: WidgetStatePropertyAll(0.0),
-  // remove default padding given to button
-  padding: WidgetStatePropertyAll(EdgeInsets.zero),
-);
+  }
+
+  Future<void> _handleActivate() async {
+    if (!_isEnabled) return;
+    setState(() => _isPressed = true);
+    await Future<void>.delayed(const Duration(milliseconds: 100));
+    if (mounted) setState(() => _isPressed = false);
+    widget.onPressed?.call();
+  }
+
+  @override
+  Widget build(final BuildContext context) {
+    final bison = context.bison;
+    final style = _resolveStyle(bison.theme, bison.corners);
+
+    final buttonContent = Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: bison.spacing.smallSpacing,
+        vertical: bison.spacing.tinySpacing,
+      ),
+      child: widget.icon == null
+          ? Text(widget.buttonLabel)
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                widget.icon!,
+                SizedBox(width: bison.spacing.tinySpacing),
+                Text(widget.buttonLabel),
+              ],
+            ),
+    );
+
+    final visual = DecoratedBox(
+      decoration: BoxDecoration(
+        color: style.backgroundColor,
+        border: Border.fromBorderSide(style.borderSide),
+        borderRadius: BorderRadius.circular(style.borderRadius),
+      ),
+      child: IconTheme(
+        data: IconThemeData(color: style.foregroundColor),
+        child: DefaultTextStyle(
+          style: bison.typography.bodyLarge.copyWith(
+            color: style.foregroundColor,
+          ),
+          child: buttonContent,
+        ),
+      ),
+    );
+
+    return Semantics(
+      button: true,
+      enabled: _isEnabled,
+      label: widget.buttonLabel,
+      child: FocusableActionDetector(
+        enabled: _isEnabled,
+        focusNode: _effectiveFocusNode,
+        autofocus: widget.autofocus,
+        mouseCursor: _isEnabled
+            ? SystemMouseCursors.click
+            : SystemMouseCursors.basic,
+        shortcuts: const <ShortcutActivator, Intent>{
+          SingleActivator(LogicalKeyboardKey.enter): ActivateIntent(),
+          SingleActivator(LogicalKeyboardKey.space): ActivateIntent(),
+        },
+        actions: <Type, Action<Intent>>{
+          ActivateIntent: CallbackAction<ActivateIntent>(
+            onInvoke: (_) {
+              _handleActivate();
+              return null;
+            },
+          ),
+        },
+        onShowFocusHighlight: (final value) {
+          setState(() => _isFocused = value);
+        },
+        onFocusChange: (final isFocused) {
+          if (!isFocused) {
+            setState(() {
+              _isFocused = false;
+              _isHovered = false;
+              _isPressed = false;
+            });
+          }
+        },
+        child: MouseRegion(
+          onEnter: _isEnabled ? (_) => setState(() => _isHovered = true) : null,
+          onExit: _isEnabled
+              ? (_) => setState(() {
+                  _isHovered = false;
+                  _isPressed = false;
+                })
+              : null,
+          child: GestureDetector(
+            onTapDown: _isEnabled
+                ? (_) => setState(() => _isPressed = true)
+                : null,
+            onTapUp: _isEnabled
+                ? (_) => setState(() => _isPressed = false)
+                : null,
+            onTapCancel: _isEnabled
+                ? () => setState(() => _isPressed = false)
+                : null,
+            onTap: _isEnabled ? widget.onPressed : null,
+            behavior: HitTestBehavior.opaque,
+            child: visual,
+          ),
+        ),
+      ),
+    );
+  }
+}
