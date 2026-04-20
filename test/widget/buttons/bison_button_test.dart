@@ -1,11 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bison_design_system/bison_design_system.dart'
     show BisonButton, BisonThemeTokens, BisonSpacingTokens, BisonCornerTokens;
-import '../common.dart' show buildScaffold, getButtonStyle;
+import '../common.dart' show buildScaffold;
+
+Finder _buttonSurfaceFinder(final String label) {
+  return find.descendant(
+    of: find.widgetWithText(BisonButton, label),
+    matching: find.byWidgetPredicate(
+      (final Widget widget) =>
+          widget is DecoratedBox && widget.decoration is BoxDecoration,
+    ),
+  );
+}
+
+BoxDecoration _buttonSurfaceDecoration(
+  final WidgetTester tester,
+  final String label,
+) {
+  final surfaceFinder = _buttonSurfaceFinder(label);
+  expect(surfaceFinder, findsOneWidget);
+  final decoratedBox = tester.widget<DecoratedBox>(surfaceFinder);
+  return decoratedBox.decoration as BoxDecoration;
+}
+
+Color? _buttonForegroundColor(final WidgetTester tester, final String label) {
+  final styleFinder = find.descendant(
+    of: find.widgetWithText(BisonButton, label),
+    matching: find.byType(DefaultTextStyle),
+  );
+  expect(styleFinder, findsOneWidget);
+  final defaultTextStyle = tester.widget<DefaultTextStyle>(styleFinder);
+  return defaultTextStyle.style.color;
+}
 
 void main() {
-  group("Testing callback function", () {
+  group('Testing callback function', () {
     testWidgets('Disabled Button should not call function', (
       final WidgetTester tester,
     ) async {
@@ -23,7 +54,7 @@ void main() {
       expect(
         callbackCalled,
         isFalse,
-        reason: "Expected callback to set callbackCalled to false",
+        reason: 'Expected callback to set callbackCalled to false',
       );
     });
 
@@ -49,13 +80,58 @@ void main() {
       expect(
         callbackCalled,
         isTrue,
-        reason: "Expected callback to set callbackCalled to true",
+        reason: 'Expected callback to set callbackCalled to true',
       );
+    });
+
+    testWidgets('Pressing Enter triggers callback for autofocus button', (
+      final WidgetTester tester,
+    ) async {
+      var callbackCount = 0;
+
+      await tester.pumpWidget(
+        buildScaffold(
+          BisonButton.filled(
+            buttonLabel: 'Keyboard Action',
+            autofocus: true,
+            onPressed: () {
+              callbackCount++;
+            },
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.pump(const Duration(milliseconds: 150));
+
+      expect(callbackCount, 1);
+    });
+
+    testWidgets('Pressing Enter does not trigger disabled button', (
+      final WidgetTester tester,
+    ) async {
+      final callbackCount = 0;
+
+      await tester.pumpWidget(
+        buildScaffold(
+          BisonButton.filled(
+            buttonLabel: 'Disabled Keyboard Action',
+            autofocus: true,
+            onPressed: null,
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+
+      expect(callbackCount, 0);
     });
   });
 
-  group("Testing Styling for Button Types in default state - light mode", () {
-    testWidgets("Testing background and foreground for filled BisonButton", (
+  group('Testing Styling for Button Types in default state - light mode', () {
+    testWidgets('Testing background and foreground for filled BisonButton', (
       final WidgetTester tester,
     ) async {
       final theme = BisonThemeTokens.light();
@@ -66,19 +142,14 @@ void main() {
         ),
       );
 
-      // BisonButton builds off of [FilledButton]
-      // finding [FilledButton] allows use of style getters provided by [FilledButton]
-      final element = tester.element(find.byType(FilledButton));
-      final filledWidget = element.widget as FilledButton;
-      final style = getButtonStyle(element, filledWidget);
-      final bg = style.backgroundColor?.resolve(<WidgetState>{});
-      final fg = style.foregroundColor?.resolve(<WidgetState>{});
+      final decoration = _buttonSurfaceDecoration(tester, 'Filled');
+      final foreground = _buttonForegroundColor(tester, 'Filled');
 
-      expect(bg, equals(theme.buttonPrimary));
-      expect(fg, equals(theme.textInverse));
+      expect(decoration.color, equals(theme.buttonPrimary));
+      expect(foreground, equals(theme.textInverse));
     });
 
-    testWidgets("Testing background and foreground for ghost BisonButton", (
+    testWidgets('Testing background and foreground for ghost BisonButton', (
       final WidgetTester tester,
     ) async {
       final theme = BisonThemeTokens.light();
@@ -89,19 +160,14 @@ void main() {
         ),
       );
 
-      // BisonButton builds off of [FilledButton]
-      // finding [FilledButton] allows use of style getters provided by [FilledButton]
-      final element = tester.element(find.byType(FilledButton));
-      final filledWidget = element.widget as FilledButton;
-      final style = getButtonStyle(element, filledWidget);
-      final bg = style.backgroundColor?.resolve(<WidgetState>{});
-      final fg = style.foregroundColor?.resolve(<WidgetState>{});
+      final decoration = _buttonSurfaceDecoration(tester, 'ghost');
+      final foreground = _buttonForegroundColor(tester, 'ghost');
 
-      expect(bg, equals(theme.surfaceTransparent));
-      expect(fg, equals(theme.textPrimary));
+      expect(decoration.color, equals(theme.surfaceTransparent));
+      expect(foreground, equals(theme.textPrimary));
     });
 
-    testWidgets("Testing background and foreground for outlined BisonButton", (
+    testWidgets('Testing background and foreground for outlined BisonButton', (
       final WidgetTester tester,
     ) async {
       final theme = BisonThemeTokens.light();
@@ -112,42 +178,36 @@ void main() {
         ),
       );
 
-      // BisonButton builds off of [FilledButton]
-      // finding [FilledButton] allows use of style getters provided by [FilledButton]
-      final element = tester.element(find.byType(FilledButton));
-      final filledWidget = element.widget as FilledButton;
-      final style = getButtonStyle(element, filledWidget);
-      final bg = style.backgroundColor?.resolve(<WidgetState>{});
-      final fg = style.foregroundColor?.resolve(<WidgetState>{});
+      final decoration = _buttonSurfaceDecoration(tester, 'Outlined');
+      final foreground = _buttonForegroundColor(tester, 'Outlined');
 
-      expect(bg, equals(theme.surfaceTransparent));
-      expect(fg, equals(theme.textPrimary));
+      expect(decoration.color, equals(theme.surfaceTransparent));
+      expect(foreground, equals(theme.textPrimary));
     });
 
-    testWidgets("Testing background and foreground for destructive BisonButton", (
-      final WidgetTester tester,
-    ) async {
-      final theme = BisonThemeTokens.light();
+    testWidgets(
+      'Testing background and foreground for destructive BisonButton',
+      (final WidgetTester tester) async {
+        final theme = BisonThemeTokens.light();
 
-      await tester.pumpWidget(
-        buildScaffold(
-          BisonButton.destructive(buttonLabel: 'Destructive', onPressed: () {}),
-        ),
-      );
+        await tester.pumpWidget(
+          buildScaffold(
+            BisonButton.destructive(
+              buttonLabel: 'Destructive',
+              onPressed: () {},
+            ),
+          ),
+        );
 
-      // BisonButton builds off of [FilledButton]
-      // finding [FilledButton] allows use of style getters provided by [FilledButton]
-      final element = tester.element(find.byType(FilledButton));
-      final filledWidget = element.widget as FilledButton;
-      final style = getButtonStyle(element, filledWidget);
-      final bg = style.backgroundColor?.resolve(<WidgetState>{});
-      final fg = style.foregroundColor?.resolve(<WidgetState>{});
+        final decoration = _buttonSurfaceDecoration(tester, 'Destructive');
+        final foreground = _buttonForegroundColor(tester, 'Destructive');
 
-      expect(bg, equals(theme.buttonDanger));
-      expect(fg, equals(theme.textInverse));
-    });
+        expect(decoration.color, equals(theme.buttonDanger));
+        expect(foreground, equals(theme.textInverse));
+      },
+    );
 
-    testWidgets("Testing padding variables without icon", (
+    testWidgets('Testing padding variables without icon', (
       final WidgetTester tester,
     ) async {
       final spacing = BisonSpacingTokens.standard();
@@ -163,20 +223,20 @@ void main() {
 
       final paddingFinder = find.byWidgetPredicate((final Widget widget) {
         if (widget is Padding && widget.child is Text) {
-          final Text t = widget.child as Text;
-          return t.data == 'Label';
+          final text = widget.child as Text;
+          return text.data == 'Label';
         }
         return false;
       });
       expect(paddingFinder, findsOneWidget);
 
-      final Padding paddingWidget = tester.widget<Padding>(paddingFinder);
-      final EdgeInsets padding = paddingWidget.padding as EdgeInsets;
+      final paddingWidget = tester.widget<Padding>(paddingFinder);
+      final padding = paddingWidget.padding as EdgeInsets;
       expect(padding.left, equals(spacing.smallSpacing));
       expect(padding.top, equals(spacing.tinySpacing));
     });
 
-    testWidgets("Testing padding variables with icon", (
+    testWidgets('Testing padding variables with icon', (
       final WidgetTester tester,
     ) async {
       final spacing = BisonSpacingTokens.standard();
@@ -186,16 +246,16 @@ void main() {
           BisonButton.filled(
             buttonLabel: 'WithIcon',
             onPressed: () => debugPrint('test'),
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
           ),
         ),
       );
 
       final paddingFinder = find.byWidgetPredicate((final Widget widget) {
         if (widget is Padding && widget.child is Row) {
-          final Row row = widget.child as Row;
+          final row = widget.child as Row;
           return row.children.any(
-            (final Widget c) => c is Text && (c).data == 'WithIcon',
+            (final Widget child) => child is Text && child.data == 'WithIcon',
           );
         }
         return false;
@@ -203,8 +263,8 @@ void main() {
 
       expect(paddingFinder, findsOneWidget);
 
-      final Padding paddingWidget = tester.widget<Padding>(paddingFinder);
-      final EdgeInsets padding = paddingWidget.padding as EdgeInsets;
+      final paddingWidget = tester.widget<Padding>(paddingFinder);
+      final padding = paddingWidget.padding as EdgeInsets;
       expect(padding.left, equals(spacing.smallSpacing));
       expect(padding.top, equals(spacing.tinySpacing));
 
@@ -224,7 +284,7 @@ void main() {
       expect(find.byIcon(Icons.add), findsOneWidget);
     });
 
-    testWidgets("Testing button uses appropriate corners", (
+    testWidgets('Testing button uses appropriate corners', (
       final WidgetTester tester,
     ) async {
       final corners = BisonCornerTokens.standard();
@@ -233,23 +293,19 @@ void main() {
         buildScaffold(
           BisonButton.filled(
             buttonLabel: 'Corner',
-            onPressed: () => debugPrint(""),
+            onPressed: () => debugPrint(''),
           ),
         ),
       );
 
-      final element = tester.element(find.byType(FilledButton));
-      final widgetFinder = element.widget as FilledButton;
-      final style = getButtonStyle(element, widgetFinder);
-      final shape =
-          style.shape?.resolve(<WidgetState>{}) as RoundedRectangleBorder;
-      final Radius radius = (shape.borderRadius as BorderRadius).topLeft;
-      expect(radius.x, equals(corners.cornerExtraSmall));
+      final decoration = _buttonSurfaceDecoration(tester, 'Corner');
+      final borderRadius = decoration.borderRadius as BorderRadius;
+      expect(borderRadius.topLeft.x, equals(corners.cornerExtraSmall));
     });
   });
 
-  group("Testing theming for disabled button state - light mode", () {
-    testWidgets("Disabled state theme testings - filled button", (
+  group('Testing theming for disabled button state - light mode', () {
+    testWidgets('Disabled state theme testings - filled button', (
       final WidgetTester tester,
     ) async {
       final theme = BisonThemeTokens.light();
@@ -260,28 +316,14 @@ void main() {
         ),
       );
 
-      final filledFinder = find.descendant(
-        of: find.widgetWithText(BisonButton, 'filled'),
-        matching: find.byType(FilledButton),
-      );
+      final decoration = _buttonSurfaceDecoration(tester, 'filled');
+      final foreground = _buttonForegroundColor(tester, 'filled');
 
-      expect(filledFinder, findsOneWidget);
-
-      final element = tester.element(filledFinder);
-      final filledButton = element.widget as FilledButton;
-      final filledStyle = getButtonStyle(element, filledButton);
-      final filledBackground = filledStyle.backgroundColor?.resolve(
-        <WidgetState>{WidgetState.disabled},
-      );
-      final filledForeground = filledStyle.foregroundColor?.resolve(
-        <WidgetState>{WidgetState.disabled},
-      );
-
-      expect(filledBackground, equals(theme.buttonGhostDisabled));
-      expect(filledForeground, equals(theme.textDisabled));
+      expect(decoration.color, equals(theme.buttonGhostDisabled));
+      expect(foreground, equals(theme.textDisabled));
     });
 
-    testWidgets("Disabled state theme testings - ghost buttons", (
+    testWidgets('Disabled state theme testings - ghost buttons', (
       final WidgetTester tester,
     ) async {
       final theme = BisonThemeTokens.light();
@@ -290,28 +332,14 @@ void main() {
         buildScaffold(BisonButton.ghost(buttonLabel: 'ghost', onPressed: null)),
       );
 
-      final ghostFinder = find.descendant(
-        of: find.widgetWithText(BisonButton, 'ghost'),
-        matching: find.byType(FilledButton),
-      );
+      final decoration = _buttonSurfaceDecoration(tester, 'ghost');
+      final foreground = _buttonForegroundColor(tester, 'ghost');
 
-      expect(ghostFinder, findsOneWidget);
-
-      final element = tester.element(ghostFinder);
-      final ghostButton = element.widget as FilledButton;
-      final ghostStyle = getButtonStyle(element, ghostButton);
-      final ghostBackground = ghostStyle.backgroundColor?.resolve(<WidgetState>{
-        WidgetState.disabled,
-      });
-      final ghostForeground = ghostStyle.foregroundColor?.resolve(<WidgetState>{
-        WidgetState.disabled,
-      });
-
-      expect(ghostBackground, equals(theme.surfaceTransparent));
-      expect(ghostForeground, equals(theme.textDisabled));
+      expect(decoration.color, equals(theme.surfaceTransparent));
+      expect(foreground, equals(theme.textDisabled));
     });
 
-    testWidgets("Disabled state theme testings - outlined buttons", (
+    testWidgets('Disabled state theme testings - outlined buttons', (
       final WidgetTester tester,
     ) async {
       final theme = BisonThemeTokens.light();
@@ -322,27 +350,14 @@ void main() {
         ),
       );
 
-      final outlinedFinder = find.descendant(
-        of: find.widgetWithText(BisonButton, 'outlined'),
-        matching: find.byType(FilledButton),
-      );
-      expect(outlinedFinder, findsOneWidget);
-      final element = tester.element(outlinedFinder);
-      final outlinedButton = element.widget as FilledButton;
-      // outlined testing
-      final outlinedStyle = getButtonStyle(element, outlinedButton);
-      final outlinedBackground = outlinedStyle.backgroundColor?.resolve(
-        <WidgetState>{WidgetState.disabled},
-      );
-      final outlinedForeground = outlinedStyle.foregroundColor?.resolve(
-        <WidgetState>{WidgetState.disabled},
-      );
+      final decoration = _buttonSurfaceDecoration(tester, 'outlined');
+      final foreground = _buttonForegroundColor(tester, 'outlined');
 
-      expect(outlinedBackground, equals(theme.surfaceTransparent));
-      expect(outlinedForeground, equals(theme.textDisabled));
+      expect(decoration.color, equals(theme.surfaceTransparent));
+      expect(foreground, equals(theme.textDisabled));
     });
 
-    testWidgets("Disabled state theme testings - destructive buttons", (
+    testWidgets('Disabled state theme testings - destructive buttons', (
       final WidgetTester tester,
     ) async {
       final theme = BisonThemeTokens.light();
@@ -352,25 +367,12 @@ void main() {
           BisonButton.destructive(buttonLabel: 'destructive', onPressed: null),
         ),
       );
-      final destructiveFinder = find.descendant(
-        of: find.widgetWithText(BisonButton, 'destructive'),
-        matching: find.byType(FilledButton),
-      );
 
-      expect(destructiveFinder, findsOneWidget);
+      final decoration = _buttonSurfaceDecoration(tester, 'destructive');
+      final foreground = _buttonForegroundColor(tester, 'destructive');
 
-      final element = tester.element(destructiveFinder);
-      final destructiveButton = element.widget as FilledButton;
-      final destructiveStyle = getButtonStyle(element, destructiveButton);
-      final destructiveBackground = destructiveStyle.backgroundColor?.resolve(
-        <WidgetState>{WidgetState.disabled},
-      );
-      final destructiveForeground = destructiveStyle.foregroundColor?.resolve(
-        <WidgetState>{WidgetState.disabled},
-      );
-
-      expect(destructiveBackground, equals(theme.buttonGhostDisabled));
-      expect(destructiveForeground, equals(theme.textDisabled));
+      expect(decoration.color, equals(theme.buttonGhostDisabled));
+      expect(foreground, equals(theme.textDisabled));
     });
   });
 }
