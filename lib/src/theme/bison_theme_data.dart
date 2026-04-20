@@ -4,7 +4,7 @@ import 'color_tokens.g.dart' show BisonThemeTokens;
 import 'shape_spacing_tokens.g.dart' show BisonSpacingTokens, BisonCornerTokens;
 import 'typography_tokens.g.dart' show BisonTypographyTokens;
 
-import '../core_widgets/buttons/bison_button.dart'
+import 'material_button_styles.dart'
     show
         getFilledBisonButtonStyle,
         getGhostBisonButtonStyle,
