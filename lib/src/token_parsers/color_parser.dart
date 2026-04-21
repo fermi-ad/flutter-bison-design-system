@@ -168,7 +168,7 @@ void extractComponentTokens(
   });
 }
 
-// function that creates overwritten functions copyWith and lerp
+// function that creates overridden functions copyWith and lerp
 void _writeOverrides(final StringBuffer buffer, final List<String> keys) {
   // copyWith
   buffer.writeln("  @override");
