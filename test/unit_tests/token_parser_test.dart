@@ -1,8 +1,12 @@
 import 'package:test/test.dart' show group, test, expect;
-import '../../tool/token_parser_utils.dart' show toCamelCase, formatHex;
-import '../../tool/color_token_parser.dart' as color_parser;
-import '../../tool/shape_spacing_token_parser.dart' as shape_spacing_parser;
-import '../../tool/typography_token_parser.dart' as typography_parser;
+import 'package:bison_design_system/src/token_parsers/token_parser_utils.dart'
+    show toCamelCase, formatHex;
+import 'package:bison_design_system/src/token_parsers/color_parser.dart'
+    as color_parser;
+import 'package:bison_design_system/src/token_parsers/shape_spacing_parser.dart'
+    as shape_spacing_parser;
+import 'package:bison_design_system/src/token_parsers/typography_parser.dart'
+    as typography_parser;
 
 void main() {
   group('toCamelCase', () {
