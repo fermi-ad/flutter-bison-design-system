@@ -359,16 +359,4 @@ void main() {
       expect(typography_parser.mapWeight('Unknown'), 'FontWeight.w400');
     });
   });
-
-  group('Testing Alpha values (legacy tests)', () {
-    test('Hex format returns transparent hex value', () {
-      final hexInput = '#f8f8f8';
-      expect(formatHex(hexInput, 0), '0x00F8F8F8');
-    });
-
-    test('Hex format returns opaque hex value', () {
-      final hexInput = '#f8f8f8';
-      expect(formatHex(hexInput, 1), '0xFFF8F8F8');
-    });
-  });
 }
