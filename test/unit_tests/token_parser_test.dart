@@ -11,7 +11,7 @@ import 'package:bison_design_system/src/token_parsers/typography_parser.dart'
 void main() {
   group('toCamelCase', () {
     test('converts single word to lowercase', () {
-      expect(toCamelCase('primary'), 'primary');
+      expect(toCamelCase('Primary'), 'primary');
     });
 
     test('converts space-separated words to camelCase', () {
