@@ -1,23 +1,10 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
-
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
-
 # Beautiful Interactive System Of desigN
 
 ### A good and nice design system for Flutter apps.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+This design system provides a centralized library for reusable Flutter UI widgets and design tokens.
 
 ## Getting started
 
@@ -33,12 +20,31 @@ Set up the [pre-commit hook](https://pub.dev/packages/dart_pre_commit):
 $ dart tool/setup_git_hooks.dart
 ```
 
+### Design Tokens
+
+Design tokens are predefined values that ensure consistent theming across applications.
+
+The provided design tokens are grouped into 4 categories:
+
+- theme: Defines the color palette.
+- typography: Defines the text styles.
+- spacing: Defines margins, padding, and gaps.
+- corners: Defines border radius values.
+
 ### Generated Design Tokens
 
-Design tokens are handed over from Figma through json files. Parsing files can be found in `tool/` that will generate the appropriate classes. To create the color tokens, for example, run
+Design tokens are exported from Figma as JSON files and can be found in `tokens/`. Parsing scripts in `tool/` generate the corresponding Dart classes.
 
-```
-$ dart run tool/color_token_parser.dart
+There are 3 scripts to handle importing the provided tokens.
+
+- `color_token_parser.dart` will generate the theme tokens
+- `typography_token_parser.dart` will generate the typography tokens
+- `shape_spacing_token_parser.dart` will generate the corners and spacing tokens
+
+Each script can be run independently, or to run together run
+
+```shell
+dart run tool/generate_tokens.dart
 ```
 
 ## Usage
@@ -55,7 +61,15 @@ MaterialApp(
 );
 ```
 
-This will automatically apply Bison design tokens to Flutter's built-in widgets, ensuring consistent styling throughout your application.
+Applying the Bison theme ensures Flutter’s built-in widgets use the design system by default. It also makes the design tokens available from the build context, so you can access them inside your widgets through context.bison. For example, to use a theme token inside a widget's build method:
+
+```dart
+Widget build(final BuildContext context) {
+  final bison = context.bison;
+
+  return Container(color: bison.theme.borderPlain);
+}
+```
 
 ## Additional information
 
