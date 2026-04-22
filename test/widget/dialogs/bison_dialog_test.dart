@@ -15,7 +15,7 @@ void main() {
         buildScaffold(
           BisonDialog(
             title: 'Confirm delete',
-            body: 'This action cannot be undone.',
+            body: Text('This action cannot be undone.'),
             destructiveAction: BisonDialogAction(
               label: 'Delete',
               onPressed: () {},
@@ -45,7 +45,7 @@ void main() {
         buildScaffold(
           BisonDialog(
             title: 'Dialog title',
-            body: 'Dialog body',
+            body: Text('Dialog body'),
             primaryAction: BisonDialogAction(label: 'Okay', onPressed: () {}),
           ),
         ),
@@ -75,7 +75,7 @@ void main() {
                   BisonDialog.show(
                     context: context,
                     title: 'Dialog title',
-                    body: 'Dialog body',
+                    body: Text('Dialog body'),
                     primaryAction: BisonDialogAction(
                       label: 'Okay',
                       onPressed: () {},
@@ -116,7 +116,7 @@ void main() {
                   BisonDialog.show(
                     context: context,
                     title: 'Save changes',
-                    body: 'Apply the pending updates?',
+                    body: Text('Apply the pending updates?'),
                     primaryAction: BisonDialogAction(
                       label: 'Save',
                       onPressed: () {
@@ -154,7 +154,7 @@ void main() {
                   BisonDialog.show(
                     context: context,
                     title: 'Dialog title',
-                    body: 'Dialog body',
+                    body: Text('Dialog body'),
                     primaryAction: BisonDialogAction(
                       label: 'Okay',
                       onPressed: () {},
@@ -193,7 +193,7 @@ void main() {
                   BisonDialog.show(
                     context: context,
                     title: 'Dialog title',
-                    body: 'Dialog body',
+                    body: Text('Dialog body'),
                     secondaryAction: BisonDialogAction(
                       label: 'Secondary',
                       onPressed: () {},
@@ -248,7 +248,7 @@ void main() {
                       BisonDialog.show(
                         context: context,
                         title: 'Dialog title',
-                        body: 'Dialog body',
+                        body: Text('Dialog body'),
                         destructiveAction: BisonDialogAction(
                           label: 'Delete',
                           onPressed: () {},
@@ -310,7 +310,7 @@ void main() {
                     BisonDialog.show(
                       context: context,
                       title: 'Dialog title',
-                      body: 'Dialog body',
+                      body: Text('Dialog body'),
                       primaryAction: BisonDialogAction(
                         label: 'Okay',
                         onPressed: () {},
@@ -319,7 +319,7 @@ void main() {
                     BisonDialog.show(
                       context: context,
                       title: 'Dialog title',
-                      body: 'Dialog body',
+                      body: Text('Dialog body'),
                       primaryAction: BisonDialogAction(
                         label: 'Okay',
                         onPressed: () {},
@@ -366,7 +366,7 @@ void main() {
                     BisonDialog.show(
                       context: context,
                       title: 'Dialog title',
-                      body: 'Dialog body',
+                      body: Text('Dialog body'),
                       primaryAction: BisonDialogAction(
                         label: 'Okay',
                         onPressed: null,
@@ -432,7 +432,7 @@ void main() {
                     BisonDialog.show(
                       context: context,
                       title: 'Dialog title',
-                      body: 'Dialog body',
+                      body: Text('Dialog body'),
                       primaryAction: BisonDialogAction(
                         label: 'Okay',
                         onPressed: null,

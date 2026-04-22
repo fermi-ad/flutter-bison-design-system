@@ -33,7 +33,7 @@ class BisonDialog extends StatelessWidget {
   static bool _isDialogOpening = false;
 
   final String title;
-  final String body;
+  final Widget body;
   final BisonDialogAction primaryAction;
   final BisonDialogAction? secondaryAction;
   final BisonDialogAction? destructiveAction;
@@ -68,7 +68,7 @@ class BisonDialog extends StatelessWidget {
   static Future<void> show({
     required final BuildContext context,
     required final String title,
-    required final String body,
+    required final Widget body,
     required final BisonDialogAction primaryAction,
     final BisonDialogAction? secondaryAction,
     final BisonDialogAction? destructiveAction,
@@ -179,7 +179,7 @@ class BisonDialog extends StatelessWidget {
               children: [
                 Text(title, style: bison.typography.h3),
                 SizedBox(height: bison.spacing.smallSpacing),
-                Text(body, style: bison.typography.bodyLarge),
+                body,
                 SizedBox(height: bison.spacing.standardSpacing),
                 FocusScope(
                   child: FocusTraversalGroup(
@@ -228,7 +228,7 @@ class BisonDialog extends StatelessWidget {
 
 class _BisonDialogOverlay extends StatelessWidget {
   final String title;
-  final String body;
+  final Widget body;
   final BisonDialogAction primaryAction;
   final BisonDialogAction? secondaryAction;
   final BisonDialogAction? destructiveAction;
