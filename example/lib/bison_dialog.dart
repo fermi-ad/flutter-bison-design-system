@@ -1,4 +1,4 @@
-import 'package:bison_design_system/theme.dart' show BisonContext;
+import 'package:bison_design_system/theme.dart' show BisonContext, BisonTokens;
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart' show KnobsExtension;
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
@@ -80,81 +80,78 @@ Widget buildBisonDialogDetails(BuildContext context) {
     onPressed: () {},
   );
 
-  Widget dialogBody() {
-    return Column(
-      spacing: bison.spacing.microSpacing,
-      crossAxisAlignment: .start,
-      children: [
-        Row(
-          children: [
-            Text(
-              'Alarm Type:',
-              style: TextStyle(color: bison.theme.textDisabled),
-            ),
-            Spacer(flex: 1),
-            Text(textAlign: .end, "Normal"),
-          ],
-        ),
-        Row(
-          children: [
-            Text('Status:', style: TextStyle(color: bison.theme.textDisabled)),
-            Spacer(flex: 1),
-            Text(textAlign: .end, "Active"),
-          ],
-        ),
-        Row(
-          children: [
-            Text(
-              'Device Description:',
-              style: TextStyle(color: bison.theme.textDisabled),
-            ),
-            Spacer(flex: 1),
-            Text(textAlign: .end, "Beam position nominal"),
-          ],
-        ),
-        Divider(thickness: 1.0, color: bison.theme.textDisabled),
-        Row(
-          children: [
-            Text(
-              'TimeStamp:',
-              style: TextStyle(color: bison.theme.textDisabled),
-            ),
-            Spacer(flex: 1),
-            Text(textAlign: .end, "Apr 22, 2026, 01:39:05 PM"),
-          ],
-        ),
-        Divider(thickness: 1.0, color: bison.theme.textDisabled),
-        Row(
-          children: [
-            Text('Reading:', style: TextStyle(color: bison.theme.textDisabled)),
-            Spacer(flex: 1),
-            Text(textAlign: .end, "0.1240 mm"),
-          ],
-        ),
-        Row(
-          children: [
-            Text('Minimum:', style: TextStyle(color: bison.theme.textDisabled)),
-            Spacer(flex: 1),
-            Text(textAlign: .end, "-2.000 mm"),
-          ],
-        ),
-        Row(
-          children: [
-            Text('Maximum:', style: TextStyle(color: bison.theme.textDisabled)),
-            Spacer(flex: 1),
-            Text(textAlign: .end, "2.0000 mm"),
-          ],
-        ),
-      ],
-    );
-  }
-
   return BisonDialog(
     title: dialogTitle,
-    body: dialogBody(),
+    body: _buildDialogBody(bison),
     primaryAction: primary,
     secondaryAction: secondaryActionToggle,
     destructiveAction: destructiveActionToggle,
+  );
+}
+
+Widget _buildDialogBody(BisonTokens bison) {
+  return Column(
+    spacing: bison.spacing.microSpacing,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        children: [
+          Text(
+            'Alarm Type:',
+            style: TextStyle(color: bison.theme.textDisabled),
+          ),
+          Spacer(flex: 1),
+          Text(textAlign: TextAlign.end, "Normal"),
+        ],
+      ),
+      Row(
+        children: [
+          Text('Status:', style: TextStyle(color: bison.theme.textDisabled)),
+          Spacer(flex: 1),
+          Text(textAlign: TextAlign.end, "Active"),
+        ],
+      ),
+      Row(
+        children: [
+          Text(
+            'Device Description:',
+            style: TextStyle(color: bison.theme.textDisabled),
+          ),
+          Spacer(flex: 1),
+          Text(textAlign: TextAlign.end, "Beam position nominal"),
+        ],
+      ),
+      Divider(thickness: 1.0, color: bison.theme.textDisabled),
+      Row(
+        children: [
+          Text('TimeStamp:', style: TextStyle(color: bison.theme.textDisabled)),
+          Spacer(flex: 1),
+          Text(textAlign: TextAlign.end, "Apr 22, 2026, 01:39:05 PM"),
+        ],
+      ),
+      Divider(thickness: 1.0, color: bison.theme.textDisabled),
+      Row(
+        children: [
+          Text('Reading:', style: TextStyle(color: bison.theme.textDisabled)),
+          Spacer(flex: 1),
+          Text(textAlign: TextAlign.end, "0.1240 mm"),
+        ],
+      ),
+      Row(
+        children: [
+          Text('Minimum:', style: TextStyle(color: bison.theme.textDisabled)),
+          Spacer(flex: 1),
+          Text(textAlign: TextAlign.end, "-2.000 mm"),
+        ],
+      ),
+      Row(
+        children: [
+          Text('Maximum:', style: TextStyle(color: bison.theme.textDisabled)),
+          Spacer(flex: 1),
+          Text(textAlign: TextAlign.end, "2.0000 mm"),
+        ],
+      ),
+    ],
   );
 }
 
