@@ -107,19 +107,26 @@ class BisonDialog extends StatelessWidget {
       _activeDialogKey = null;
     }
 
+    final capturedThemes = InheritedTheme.capture(
+      from: context,
+      to: overlay.context,
+    );
+
     entry = OverlayEntry(
-      builder: (final overlayContext) => KeyedSubtree(
-        key: dialogKey,
-        child: _BisonDialogOverlay(
-          title: title,
-          body: body,
-          primaryAction: primaryAction,
-          secondaryAction: secondaryAction,
-          destructiveAction: destructiveAction,
-          barrierDismissible: barrierDismissible,
-          minWidth: minWidth,
-          maxWidth: maxWidth,
-          onDismiss: closeDialog,
+      builder: (final overlayContext) => capturedThemes.wrap(
+        KeyedSubtree(
+          key: dialogKey,
+          child: _BisonDialogOverlay(
+            title: title,
+            body: body,
+            primaryAction: primaryAction,
+            secondaryAction: secondaryAction,
+            destructiveAction: destructiveAction,
+            barrierDismissible: barrierDismissible,
+            minWidth: minWidth,
+            maxWidth: maxWidth,
+            onDismiss: closeDialog,
+          ),
         ),
       ),
     );
@@ -144,81 +151,76 @@ class BisonDialog extends StatelessWidget {
     final secondary = secondaryAction;
     final destructive = destructiveAction;
 
-    return DefaultTextStyle(
-      // Added to prevent yellow warning lines.
-      // could potentially be removed as Scaffold defines a DefaultTextStyle
-      style: TextStyle(decoration: TextDecoration.none),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(minWidth: minWidth, maxWidth: maxWidth),
-        child: DecoratedBox(
-          key: _surfaceKey,
-          decoration: BoxDecoration(
-            color: bison.theme.surfaceDefault,
-            borderRadius: BorderRadius.circular(bison.corners.cornerSmall),
-            border: Border.all(style: BorderStyle.none),
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(0, bison.spacing.tinySpacing),
-                blurRadius: bison.spacing.xSmallSpacing,
-                spreadRadius: 6.0,
-                color: const Color(0xFF000000).withValues(alpha: 0.15),
-              ),
-              BoxShadow(
-                offset: Offset(0, bison.spacing.microSpacing),
-                blurRadius: bison.spacing.microSpacing,
-                spreadRadius: 0,
-                color: const Color(0xFF000000).withValues(alpha: .30),
-              ),
-            ],
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(bison.spacing.mediumSpacing),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: bison.typography.h3),
-                SizedBox(height: bison.spacing.smallSpacing),
-                body,
-                SizedBox(height: bison.spacing.standardSpacing),
-                FocusScope(
-                  child: FocusTraversalGroup(
-                    policy: OrderedTraversalPolicy(),
-                    child: Row(
-                      children: [
-                        if (destructive != null)
-                          FocusTraversalOrder(
-                            order: NumericFocusOrder(3.0),
-                            child: BisonButton.destructive(
-                              buttonLabel: destructive.label,
-                              onPressed: destructive.onPressed,
-                            ),
-                          ),
-                        const Spacer(),
-                        if (secondary != null)
-                          FocusTraversalOrder(
-                            order: NumericFocusOrder(2.0),
-                            child: BisonButton.outlined(
-                              buttonLabel: secondary.label,
-                              onPressed: secondary.onPressed,
-                            ),
-                          ),
-                        if (secondary != null)
-                          SizedBox(width: bison.spacing.tinySpacing),
+    return ConstrainedBox(
+      constraints: BoxConstraints(minWidth: minWidth, maxWidth: maxWidth),
+      child: DecoratedBox(
+        key: _surfaceKey,
+        decoration: BoxDecoration(
+          color: bison.theme.surfaceDefault,
+          borderRadius: BorderRadius.circular(bison.corners.cornerSmall),
+          border: Border.all(style: BorderStyle.none),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, bison.spacing.tinySpacing),
+              blurRadius: bison.spacing.xSmallSpacing,
+              spreadRadius: 6.0,
+              color: const Color(0xFF000000).withValues(alpha: 0.15),
+            ),
+            BoxShadow(
+              offset: Offset(0, bison.spacing.microSpacing),
+              blurRadius: bison.spacing.microSpacing,
+              spreadRadius: 0,
+              color: const Color(0xFF000000).withValues(alpha: .30),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(bison.spacing.mediumSpacing),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: bison.typography.h3),
+              SizedBox(height: bison.spacing.smallSpacing),
+              body,
+              SizedBox(height: bison.spacing.standardSpacing),
+              FocusScope(
+                child: FocusTraversalGroup(
+                  policy: OrderedTraversalPolicy(),
+                  child: Row(
+                    children: [
+                      if (destructive != null)
                         FocusTraversalOrder(
-                          order: NumericFocusOrder(1.0),
-                          child: BisonButton.filled(
-                            buttonLabel: primary.label,
-                            onPressed: primary.onPressed,
-                            autofocus: true,
+                          order: NumericFocusOrder(3.0),
+                          child: BisonButton.destructive(
+                            buttonLabel: destructive.label,
+                            onPressed: destructive.onPressed,
                           ),
                         ),
-                      ],
-                    ),
+                      const Spacer(),
+                      if (secondary != null)
+                        FocusTraversalOrder(
+                          order: NumericFocusOrder(2.0),
+                          child: BisonButton.outlined(
+                            buttonLabel: secondary.label,
+                            onPressed: secondary.onPressed,
+                          ),
+                        ),
+                      if (secondary != null)
+                        SizedBox(width: bison.spacing.tinySpacing),
+                      FocusTraversalOrder(
+                        order: NumericFocusOrder(1.0),
+                        child: BisonButton.filled(
+                          buttonLabel: primary.label,
+                          onPressed: primary.onPressed,
+                          autofocus: true,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
