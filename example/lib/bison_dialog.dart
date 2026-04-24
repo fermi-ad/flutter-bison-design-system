@@ -101,14 +101,14 @@ Widget _buildDialogBody(BisonTokens bison) {
             style: TextStyle(color: bison.theme.textDisabled),
           ),
           Spacer(flex: 1),
-          Text(textAlign: TextAlign.end, "Normal"),
+          Text("Normal", textAlign: TextAlign.end),
         ],
       ),
       Row(
         children: [
           Text('Status:', style: TextStyle(color: bison.theme.textDisabled)),
           Spacer(flex: 1),
-          Text(textAlign: TextAlign.end, "Active"),
+          Text("Active", textAlign: TextAlign.end),
         ],
       ),
       Row(
@@ -118,15 +118,15 @@ Widget _buildDialogBody(BisonTokens bison) {
             style: TextStyle(color: bison.theme.textDisabled),
           ),
           Spacer(flex: 1),
-          Text(textAlign: TextAlign.end, "Beam position nominal"),
+          Text("Beam position nominal", textAlign: TextAlign.end),
         ],
       ),
       Divider(thickness: 1.0, color: bison.theme.textDisabled),
       Row(
         children: [
-          Text('TimeStamp:', style: TextStyle(color: bison.theme.textDisabled)),
+          Text('Timestamp:', style: TextStyle(color: bison.theme.textDisabled)),
           Spacer(flex: 1),
-          Text(textAlign: TextAlign.end, "Apr 22, 2026, 01:39:05 PM"),
+          Text("Apr 22, 2026, 01:39:05 PM", textAlign: TextAlign.end),
         ],
       ),
       Divider(thickness: 1.0, color: bison.theme.textDisabled),
@@ -134,21 +134,21 @@ Widget _buildDialogBody(BisonTokens bison) {
         children: [
           Text('Reading:', style: TextStyle(color: bison.theme.textDisabled)),
           Spacer(flex: 1),
-          Text(textAlign: TextAlign.end, "0.1240 mm"),
+          Text("0.1240 mm", textAlign: TextAlign.end),
         ],
       ),
       Row(
         children: [
           Text('Minimum:', style: TextStyle(color: bison.theme.textDisabled)),
           Spacer(flex: 1),
-          Text(textAlign: TextAlign.end, "-2.000 mm"),
+          Text("-2.000 mm", textAlign: TextAlign.end),
         ],
       ),
       Row(
         children: [
           Text('Maximum:', style: TextStyle(color: bison.theme.textDisabled)),
           Spacer(flex: 1),
-          Text(textAlign: TextAlign.end, "2.0000 mm"),
+          Text("2.0000 mm", textAlign: TextAlign.end),
         ],
       ),
     ],
