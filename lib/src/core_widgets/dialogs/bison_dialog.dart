@@ -151,6 +151,11 @@ class BisonDialog extends StatelessWidget {
           ),
         );
 
+        if (!context.mounted) {
+          WidgetsBinding.instance.addPostFrameCallback((_) => closeDialog());
+          return const SizedBox.shrink();
+        }
+
         if (!_isAncestorContext(
           ancestor: overlay.context,
           descendant: context,
