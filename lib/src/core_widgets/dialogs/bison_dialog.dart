@@ -32,6 +32,26 @@ class BisonDialog extends StatelessWidget {
   static GlobalKey? _activeDialogKey;
   static bool _isDialogOpening = false;
 
+  static bool _isAncestorContext({
+    required final BuildContext ancestor,
+    required final BuildContext descendant,
+  }) {
+    var found = identical(ancestor, descendant);
+    if (found) {
+      return true;
+    }
+
+    descendant.visitAncestorElements((final element) {
+      if (identical(element, ancestor)) {
+        found = true;
+        return false;
+      }
+      return true;
+    });
+
+    return found;
+  }
+
   final String title;
   final WidgetBuilder body;
   final BisonDialogAction primaryAction;
@@ -76,8 +96,14 @@ class BisonDialog extends StatelessWidget {
     final double minWidth = 280.0,
     final double maxWidth = 560.0,
   }) {
+    final navigatorOverlay = Navigator.maybeOf(
+      context,
+      rootNavigator: true,
+    )?.overlay;
     final overlay =
-        Overlay.maybeOf(context) ?? Overlay.maybeOf(context, rootOverlay: true);
+        Overlay.maybeOf(context) ??
+        navigatorOverlay ??
+        Overlay.maybeOf(context, rootOverlay: true);
     if (overlay == null) {
       return Future<void>.error(
         StateError('BisonDialog.show requires an Overlay in the widget tree.'),
@@ -110,27 +136,34 @@ class BisonDialog extends StatelessWidget {
 
     entry = OverlayEntry(
       builder: (final _) {
+        final dialogContent = KeyedSubtree(
+          key: dialogKey,
+          child: _BisonDialogOverlay(
+            title: title,
+            body: body,
+            primaryAction: primaryAction,
+            secondaryAction: secondaryAction,
+            destructiveAction: destructiveAction,
+            barrierDismissible: barrierDismissible,
+            minWidth: minWidth,
+            maxWidth: maxWidth,
+            onDismiss: closeDialog,
+          ),
+        );
+
+        if (!_isAncestorContext(
+          ancestor: overlay.context,
+          descendant: context,
+        )) {
+          return dialogContent;
+        }
+
         final capturedThemes = InheritedTheme.capture(
           from: context,
           to: overlay.context,
         );
 
-        return capturedThemes.wrap(
-          KeyedSubtree(
-            key: dialogKey,
-            child: _BisonDialogOverlay(
-              title: title,
-              body: body,
-              primaryAction: primaryAction,
-              secondaryAction: secondaryAction,
-              destructiveAction: destructiveAction,
-              barrierDismissible: barrierDismissible,
-              minWidth: minWidth,
-              maxWidth: maxWidth,
-              onDismiss: closeDialog,
-            ),
-          ),
-        );
+        return capturedThemes.wrap(dialogContent);
       },
     );
 
@@ -185,7 +218,10 @@ class BisonDialog extends StatelessWidget {
             children: [
               Text(title, style: bison.typography.h3),
               SizedBox(height: bison.spacing.smallSpacing),
-              DefaultTextStyle.merge(child: body(context)),
+              DefaultTextStyle.merge(
+                style: bison.typography.bodyLarge,
+                child: body(context),
+              ),
               SizedBox(height: bison.spacing.standardSpacing),
               FocusScope(
                 child: FocusTraversalGroup(

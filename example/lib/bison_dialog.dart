@@ -144,8 +144,9 @@ Widget buildBisonDialogTrigger(BuildContext context) {
   return BisonButton.filled(
     buttonLabel: "Open Dialog",
     onPressed: () {
+      final rootContext = Navigator.of(context, rootNavigator: true).context;
       BisonDialog.show(
-        context: context,
+        context: rootContext,
         title: dialogTitle,
         body: (dialogContext) => _buildDialogBody(dialogContext),
         primaryAction: BisonDialogAction(label: 'Okay', onPressed: () {}),
