@@ -33,7 +33,7 @@ class BisonDialog extends StatelessWidget {
   static bool _isDialogOpening = false;
 
   final String title;
-  final Widget body;
+  final WidgetBuilder body;
   final BisonDialogAction primaryAction;
   final BisonDialogAction? secondaryAction;
   final BisonDialogAction? destructiveAction;
@@ -68,7 +68,7 @@ class BisonDialog extends StatelessWidget {
   static Future<void> show({
     required final BuildContext context,
     required final String title,
-    required final Widget body,
+    required final WidgetBuilder body,
     required final BisonDialogAction primaryAction,
     final BisonDialogAction? secondaryAction,
     final BisonDialogAction? destructiveAction,
@@ -76,7 +76,8 @@ class BisonDialog extends StatelessWidget {
     final double minWidth = 280.0,
     final double maxWidth = 560.0,
   }) {
-    final overlay = Overlay.maybeOf(context, rootOverlay: true);
+    final overlay =
+        Overlay.maybeOf(context) ?? Overlay.maybeOf(context, rootOverlay: true);
     if (overlay == null) {
       return Future<void>.error(
         StateError('BisonDialog.show requires an Overlay in the widget tree.'),
@@ -107,28 +108,30 @@ class BisonDialog extends StatelessWidget {
       _activeDialogKey = null;
     }
 
-    final capturedThemes = InheritedTheme.capture(
-      from: context,
-      to: overlay.context,
-    );
-
     entry = OverlayEntry(
-      builder: (final overlayContext) => capturedThemes.wrap(
-        KeyedSubtree(
-          key: dialogKey,
-          child: _BisonDialogOverlay(
-            title: title,
-            body: body,
-            primaryAction: primaryAction,
-            secondaryAction: secondaryAction,
-            destructiveAction: destructiveAction,
-            barrierDismissible: barrierDismissible,
-            minWidth: minWidth,
-            maxWidth: maxWidth,
-            onDismiss: closeDialog,
+      builder: (final _) {
+        final capturedThemes = InheritedTheme.capture(
+          from: context,
+          to: overlay.context,
+        );
+
+        return capturedThemes.wrap(
+          KeyedSubtree(
+            key: dialogKey,
+            child: _BisonDialogOverlay(
+              title: title,
+              body: body,
+              primaryAction: primaryAction,
+              secondaryAction: secondaryAction,
+              destructiveAction: destructiveAction,
+              barrierDismissible: barrierDismissible,
+              minWidth: minWidth,
+              maxWidth: maxWidth,
+              onDismiss: closeDialog,
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
 
     _activeDialogFuture = completer.future.whenComplete(() {
@@ -182,7 +185,7 @@ class BisonDialog extends StatelessWidget {
             children: [
               Text(title, style: bison.typography.h3),
               SizedBox(height: bison.spacing.smallSpacing),
-              body,
+              DefaultTextStyle.merge(child: body(context)),
               SizedBox(height: bison.spacing.standardSpacing),
               FocusScope(
                 child: FocusTraversalGroup(
@@ -230,7 +233,7 @@ class BisonDialog extends StatelessWidget {
 
 class _BisonDialogOverlay extends StatelessWidget {
   final String title;
-  final Widget body;
+  final WidgetBuilder body;
   final BisonDialogAction primaryAction;
   final BisonDialogAction? secondaryAction;
   final BisonDialogAction? destructiveAction;
@@ -283,23 +286,21 @@ class _BisonDialogOverlay extends StatelessWidget {
                 onDismiss: onDismiss,
               ),
             ),
-            Positioned.fill(
-              child: SafeArea(
-                minimum: EdgeInsets.all(bison.spacing.mediumSpacing),
-                child: Center(
-                  child: BisonDialog(
-                    title: title,
-                    body: body,
-                    minWidth: minWidth,
-                    maxWidth: maxWidth,
-                    destructiveAction: destructiveAction == null
-                        ? null
-                        : _wrapAction(destructiveAction!),
-                    secondaryAction: secondaryAction == null
-                        ? null
-                        : _wrapAction(secondaryAction!),
-                    primaryAction: _wrapAction(primaryAction),
-                  ),
+            SafeArea(
+              minimum: EdgeInsets.all(bison.spacing.mediumSpacing),
+              child: Center(
+                child: BisonDialog(
+                  title: title,
+                  body: body,
+                  minWidth: minWidth,
+                  maxWidth: maxWidth,
+                  destructiveAction: destructiveAction == null
+                      ? null
+                      : _wrapAction(destructiveAction!),
+                  secondaryAction: secondaryAction == null
+                      ? null
+                      : _wrapAction(secondaryAction!),
+                  primaryAction: _wrapAction(primaryAction),
                 ),
               ),
             ),

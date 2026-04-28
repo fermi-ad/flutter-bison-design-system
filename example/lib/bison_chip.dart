@@ -214,7 +214,7 @@ Future<void> _buildObjectDialog(
   return BisonDialog.show(
     context: context,
     title: dialogTitle,
-    body: Text(dialogMessage),
+    body: (context) => Text(dialogMessage),
     primaryAction: BisonDialogAction(label: 'Close', onPressed: () {}),
     secondaryAction: BisonDialogAction(label: 'Snooze', onPressed: () {}),
   );

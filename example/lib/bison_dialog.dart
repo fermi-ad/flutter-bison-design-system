@@ -1,4 +1,4 @@
-import 'package:bison_design_system/theme.dart' show BisonContext, BisonTokens;
+import 'package:bison_design_system/theme.dart' show BisonContext;
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart' show KnobsExtension;
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
@@ -24,8 +24,6 @@ Widget buildBisonDialogText(BuildContext context) {
     label: 'Destructive Action Label',
     initialValue: 'Destroy',
   );
-  final String message =
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
   final secondaryActionToggle =
       context.knobs.boolean(label: 'Secondary Action', initialValue: true)
       ? BisonDialogAction(label: secondaryActionLabel, onPressed: () {})
@@ -41,14 +39,15 @@ Widget buildBisonDialogText(BuildContext context) {
 
   return BisonDialog(
     title: dialogTitle,
-    body: Text(message),
+    body: (context) => _buildDialogBody(context),
     primaryAction: primary,
     secondaryAction: secondaryActionToggle,
     destructiveAction: destructiveActionToggle,
   );
 }
 
-Widget _buildDialogBody(BisonTokens bison) {
+Widget _buildDialogBody(BuildContext context) {
+  final bison = context.bison;
   return Column(
     spacing: bison.spacing.microSpacing,
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,7 +147,7 @@ Widget buildBisonDialogTrigger(BuildContext context) {
       BisonDialog.show(
         context: context,
         title: dialogTitle,
-        body: _buildDialogBody(context.bison),
+        body: (dialogContext) => _buildDialogBody(dialogContext),
         primaryAction: BisonDialogAction(label: 'Okay', onPressed: () {}),
         secondaryAction: secondaryActionToggle,
         destructiveAction: destructiveActionToggle,
