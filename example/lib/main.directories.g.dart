@@ -108,11 +108,6 @@ final directories = <_widgetbook.WidgetbookNode>[
                     .buildBisonDialogText,
               ),
               _widgetbook.WidgetbookUseCase(
-                name: 'Dialog with details',
-                builder: _bison_design_system_catalog_bison_dialog
-                    .buildBisonDialogDetails,
-              ),
-              _widgetbook.WidgetbookUseCase(
                 name: 'Trigger Dialog',
                 builder: _bison_design_system_catalog_bison_dialog
                     .buildBisonDialogTrigger,

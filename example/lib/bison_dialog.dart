@@ -48,47 +48,6 @@ Widget buildBisonDialogText(BuildContext context) {
   );
 }
 
-@widgetbook.UseCase(name: 'Dialog with details', type: BisonDialog)
-Widget buildBisonDialogDetails(BuildContext context) {
-  final bison = context.bison;
-  final String dialogTitle = context.knobs.string(
-    label: 'Dialog Title',
-    initialValue: 'Dialog',
-  );
-  final String primaryActionLabel = context.knobs.string(
-    label: 'Primary Action Label',
-    initialValue: 'Confirm',
-  );
-  final String secondaryActionLabel = context.knobs.string(
-    label: 'Secondary Action Label',
-    initialValue: 'Cancel',
-  );
-  final String destructiveActionLabel = context.knobs.string(
-    label: 'Destructive Action Label',
-    initialValue: 'Destroy',
-  );
-  final secondaryActionToggle =
-      context.knobs.boolean(label: 'Secondary Action', initialValue: true)
-      ? BisonDialogAction(label: secondaryActionLabel, onPressed: () {})
-      : null;
-  final destructiveActionToggle =
-      context.knobs.boolean(label: 'Destructive Action', initialValue: true)
-      ? BisonDialogAction(label: destructiveActionLabel, onPressed: () {})
-      : null;
-  final BisonDialogAction primary = BisonDialogAction(
-    label: primaryActionLabel,
-    onPressed: () {},
-  );
-
-  return BisonDialog(
-    title: dialogTitle,
-    body: _buildDialogBody(bison),
-    primaryAction: primary,
-    secondaryAction: secondaryActionToggle,
-    destructiveAction: destructiveActionToggle,
-  );
-}
-
 Widget _buildDialogBody(BisonTokens bison) {
   return Column(
     spacing: bison.spacing.microSpacing,
@@ -161,8 +120,6 @@ Widget buildBisonDialogTrigger(BuildContext context) {
     label: 'Dialog Title',
     initialValue: 'Dialog',
   );
-  final String message =
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
   final secondaryActionToggle =
       context.knobs.boolean(label: 'Secondary Action', initialValue: true)
       ? BisonDialogAction(label: 'Cancel', onPressed: () {})
@@ -191,7 +148,7 @@ Widget buildBisonDialogTrigger(BuildContext context) {
       BisonDialog.show(
         context: context,
         title: dialogTitle,
-        body: Text(message),
+        body: _buildDialogBody(context.bison),
         primaryAction: BisonDialogAction(label: 'Okay', onPressed: () {}),
         secondaryAction: secondaryActionToggle,
         destructiveAction: destructiveActionToggle,
