@@ -312,40 +312,43 @@ class _BisonDialogOverlay extends StatelessWidget {
   Widget build(final BuildContext context) {
     final bison = context.bison;
 
-    return CallbackShortcuts(
-      bindings: {
-        if (barrierDismissible)
-          const SingleActivator(LogicalKeyboardKey.escape): onDismiss,
-      },
-      child: Focus(
-        autofocus: true,
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: BisonScrim(
-                barrierDismissible: barrierDismissible,
-                onDismiss: onDismiss,
-              ),
-            ),
-            SafeArea(
-              minimum: EdgeInsets.all(bison.spacing.mediumSpacing),
-              child: Center(
-                child: BisonDialog(
-                  title: title,
-                  body: body,
-                  minWidth: minWidth,
-                  maxWidth: maxWidth,
-                  destructiveAction: destructiveAction == null
-                      ? null
-                      : _wrapAction(destructiveAction!),
-                  secondaryAction: secondaryAction == null
-                      ? null
-                      : _wrapAction(secondaryAction!),
-                  primaryAction: _wrapAction(primaryAction),
+    return DefaultTextStyle.merge(
+      style: const TextStyle(decoration: TextDecoration.none),
+      child: CallbackShortcuts(
+        bindings: {
+          if (barrierDismissible)
+            const SingleActivator(LogicalKeyboardKey.escape): onDismiss,
+        },
+        child: Focus(
+          autofocus: true,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: BisonScrim(
+                  barrierDismissible: barrierDismissible,
+                  onDismiss: onDismiss,
                 ),
               ),
-            ),
-          ],
+              SafeArea(
+                minimum: EdgeInsets.all(bison.spacing.mediumSpacing),
+                child: Center(
+                  child: BisonDialog(
+                    title: title,
+                    body: body,
+                    minWidth: minWidth,
+                    maxWidth: maxWidth,
+                    destructiveAction: destructiveAction == null
+                        ? null
+                        : _wrapAction(destructiveAction!),
+                    secondaryAction: secondaryAction == null
+                        ? null
+                        : _wrapAction(secondaryAction!),
+                    primaryAction: _wrapAction(primaryAction),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
