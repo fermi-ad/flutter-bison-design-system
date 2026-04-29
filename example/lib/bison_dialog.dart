@@ -1,3 +1,4 @@
+import 'package:bison_design_system/theme.dart' show BisonContext;
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart' show KnobsExtension;
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
@@ -5,8 +6,8 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 import 'package:bison_design_system/core_widgets.dart'
     show BisonDialog, BisonDialogAction, BisonButton;
 
-@widgetbook.UseCase(name: 'Dialog', type: BisonDialog)
-Widget buildBisonDialog(BuildContext context) {
+@widgetbook.UseCase(name: 'Dialog with Text', type: BisonDialog)
+Widget buildBisonDialogText(BuildContext context) {
   final String dialogTitle = context.knobs.string(
     label: 'Dialog Title',
     initialValue: 'Dialog',
@@ -23,8 +24,6 @@ Widget buildBisonDialog(BuildContext context) {
     label: 'Destructive Action Label',
     initialValue: 'Destroy',
   );
-  final String message =
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
   final secondaryActionToggle =
       context.knobs.boolean(label: 'Secondary Action', initialValue: true)
       ? BisonDialogAction(label: secondaryActionLabel, onPressed: () {})
@@ -40,10 +39,77 @@ Widget buildBisonDialog(BuildContext context) {
 
   return BisonDialog(
     title: dialogTitle,
-    body: message,
+    body: (context) => _buildDialogBody(context),
     primaryAction: primary,
     secondaryAction: secondaryActionToggle,
     destructiveAction: destructiveActionToggle,
+  );
+}
+
+Widget _buildDialogBody(BuildContext context) {
+  final bison = context.bison;
+  return Column(
+    spacing: bison.spacing.microSpacing,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        children: [
+          Text(
+            'Alarm Type:',
+            style: TextStyle(color: bison.theme.textDisabled),
+          ),
+          Spacer(flex: 1),
+          Text("Normal", textAlign: TextAlign.end),
+        ],
+      ),
+      Row(
+        children: [
+          Text('Status:', style: TextStyle(color: bison.theme.textDisabled)),
+          Spacer(flex: 1),
+          Text("Active", textAlign: TextAlign.end),
+        ],
+      ),
+      Row(
+        children: [
+          Text(
+            'Device Description:',
+            style: TextStyle(color: bison.theme.textDisabled),
+          ),
+          Spacer(flex: 1),
+          Text("Beam position nominal", textAlign: TextAlign.end),
+        ],
+      ),
+      Divider(thickness: 1.0, color: bison.theme.textDisabled),
+      Row(
+        children: [
+          Text('Timestamp:', style: TextStyle(color: bison.theme.textDisabled)),
+          Spacer(flex: 1),
+          Text("Apr 22, 2026, 01:39:05 PM", textAlign: TextAlign.end),
+        ],
+      ),
+      Divider(thickness: 1.0, color: bison.theme.textDisabled),
+      Row(
+        children: [
+          Text('Reading:', style: TextStyle(color: bison.theme.textDisabled)),
+          Spacer(flex: 1),
+          Text("0.1240 mm", textAlign: TextAlign.end),
+        ],
+      ),
+      Row(
+        children: [
+          Text('Minimum:', style: TextStyle(color: bison.theme.textDisabled)),
+          Spacer(flex: 1),
+          Text("-2.000 mm", textAlign: TextAlign.end),
+        ],
+      ),
+      Row(
+        children: [
+          Text('Maximum:', style: TextStyle(color: bison.theme.textDisabled)),
+          Spacer(flex: 1),
+          Text("2.0000 mm", textAlign: TextAlign.end),
+        ],
+      ),
+    ],
   );
 }
 
@@ -53,8 +119,6 @@ Widget buildBisonDialogTrigger(BuildContext context) {
     label: 'Dialog Title',
     initialValue: 'Dialog',
   );
-  final String message =
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
   final secondaryActionToggle =
       context.knobs.boolean(label: 'Secondary Action', initialValue: true)
       ? BisonDialogAction(label: 'Cancel', onPressed: () {})
@@ -80,10 +144,11 @@ Widget buildBisonDialogTrigger(BuildContext context) {
   return BisonButton.filled(
     buttonLabel: "Open Dialog",
     onPressed: () {
+      final rootContext = Navigator.of(context, rootNavigator: true).context;
       BisonDialog.show(
-        context: context,
+        context: rootContext,
         title: dialogTitle,
-        body: message,
+        body: (dialogContext) => _buildDialogBody(dialogContext),
         primaryAction: BisonDialogAction(label: 'Okay', onPressed: () {}),
         secondaryAction: secondaryActionToggle,
         destructiveAction: destructiveActionToggle,

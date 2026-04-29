@@ -2,9 +2,208 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bison_design_system/bison_design_system.dart'
-    show BisonDialog, BisonDialogAction, BisonThemeTokens;
+    show
+        BisonContext,
+        BisonDialog,
+        BisonDialogAction,
+        BisonThemeData,
+        BisonThemeTokens,
+        BisonTokens;
 
 import '../common.dart' show buildScaffold, getButtonStyle;
+
+class _ThemeSwitchingDialogHost extends StatefulWidget {
+  final String title;
+  final String body;
+
+  const _ThemeSwitchingDialogHost({
+    super.key,
+    required this.title,
+    required this.body,
+  });
+
+  @override
+  State<_ThemeSwitchingDialogHost> createState() =>
+      _ThemeSwitchingDialogHostState();
+}
+
+class _ThemeSwitchingDialogHostState extends State<_ThemeSwitchingDialogHost> {
+  bool _isDarkTheme = false;
+
+  void setDarkTheme(final bool isDarkTheme) {
+    setState(() {
+      _isDarkTheme = isDarkTheme;
+    });
+  }
+
+  @override
+  Widget build(final BuildContext context) {
+    return MaterialApp(
+      theme: BisonThemeData.light(),
+      darkTheme: BisonThemeData.dark(),
+      themeMode: _isDarkTheme ? ThemeMode.dark : ThemeMode.light,
+      home: Scaffold(
+        body: Center(
+          child: Builder(
+            builder: (final dialogContext) {
+              return FilledButton(
+                onPressed: () {
+                  BisonDialog.show(
+                    context: dialogContext,
+                    title: widget.title,
+                    body: (_) => Text(widget.body),
+                    primaryAction: BisonDialogAction(
+                      label: 'Okay',
+                      onPressed: () {},
+                    ),
+                  );
+                },
+                child: const Text('Open dialog'),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+Widget _buildWidgetbookLikeDialogBody(final BisonTokens bison) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        children: [
+          Text(
+            'Alarm Type:',
+            style: TextStyle(color: bison.theme.textDisabled),
+          ),
+          const Spacer(),
+          const Text('Normal', textAlign: TextAlign.end),
+        ],
+      ),
+      const SizedBox(height: 8),
+      Row(
+        children: [
+          Text('Status:', style: TextStyle(color: bison.theme.textDisabled)),
+          const Spacer(),
+          const Text('Active', textAlign: TextAlign.end),
+        ],
+      ),
+      const SizedBox(height: 8),
+      Divider(thickness: 1.0, color: bison.theme.textDisabled),
+      Row(
+        children: [
+          Text('Reading:', style: TextStyle(color: bison.theme.textDisabled)),
+          const Spacer(),
+          const Text('0.1240 mm', textAlign: TextAlign.end),
+        ],
+      ),
+    ],
+  );
+}
+
+class _WidgetbookLikeDialogHost extends StatefulWidget {
+  const _WidgetbookLikeDialogHost({super.key});
+
+  @override
+  State<_WidgetbookLikeDialogHost> createState() =>
+      _WidgetbookLikeDialogHostState();
+}
+
+class _WidgetbookLikeDialogHostState extends State<_WidgetbookLikeDialogHost> {
+  bool _isDarkTheme = false;
+
+  void setDarkTheme(final bool isDarkTheme) {
+    setState(() {
+      _isDarkTheme = isDarkTheme;
+    });
+  }
+
+  @override
+  Widget build(final BuildContext context) {
+    return MaterialApp(
+      theme: BisonThemeData.light(),
+      darkTheme: BisonThemeData.dark(),
+      themeMode: _isDarkTheme ? ThemeMode.dark : ThemeMode.light,
+      home: Scaffold(
+        body: Center(
+          child: Builder(
+            builder: (final dialogContext) {
+              return FilledButton(
+                onPressed: () {
+                  BisonDialog.show(
+                    context: dialogContext,
+                    title: 'Dialog title',
+                    body: (context) =>
+                        _buildWidgetbookLikeDialogBody(context.bison),
+                    primaryAction: BisonDialogAction(
+                      label: 'Okay',
+                      onPressed: () {},
+                    ),
+                  );
+                },
+                child: const Text('Open dialog'),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NestedThemeDialogHost extends StatefulWidget {
+  const _NestedThemeDialogHost({super.key});
+
+  @override
+  State<_NestedThemeDialogHost> createState() => _NestedThemeDialogHostState();
+}
+
+class _NestedThemeDialogHostState extends State<_NestedThemeDialogHost> {
+  bool _isDarkTheme = false;
+
+  void setDarkTheme(final bool isDarkTheme) {
+    setState(() {
+      _isDarkTheme = isDarkTheme;
+    });
+  }
+
+  @override
+  Widget build(final BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      home: MaterialApp(
+        theme: BisonThemeData.light(),
+        darkTheme: BisonThemeData.dark(),
+        themeMode: _isDarkTheme ? ThemeMode.dark : ThemeMode.light,
+        home: Scaffold(
+          body: Center(
+            child: Builder(
+              builder: (final dialogContext) {
+                return FilledButton(
+                  onPressed: () {
+                    BisonDialog.show(
+                      context: dialogContext,
+                      title: 'Nested theme dialog',
+                      body: (_) => Text('Nested body'),
+                      primaryAction: BisonDialogAction(
+                        label: 'Okay',
+                        onPressed: () {},
+                      ),
+                    );
+                  },
+                  child: const Text('Open dialog'),
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 void main() {
   group('BisonDialog widget', () {
@@ -15,7 +214,7 @@ void main() {
         buildScaffold(
           BisonDialog(
             title: 'Confirm delete',
-            body: 'This action cannot be undone.',
+            body: (context) => Text('This action cannot be undone.'),
             destructiveAction: BisonDialogAction(
               label: 'Delete',
               onPressed: () {},
@@ -45,7 +244,7 @@ void main() {
         buildScaffold(
           BisonDialog(
             title: 'Dialog title',
-            body: 'Dialog body',
+            body: (context) => Text('Dialog body'),
             primaryAction: BisonDialogAction(label: 'Okay', onPressed: () {}),
           ),
         ),
@@ -75,7 +274,7 @@ void main() {
                   BisonDialog.show(
                     context: context,
                     title: 'Dialog title',
-                    body: 'Dialog body',
+                    body: (_) => Text('Dialog body'),
                     primaryAction: BisonDialogAction(
                       label: 'Okay',
                       onPressed: () {},
@@ -116,7 +315,7 @@ void main() {
                   BisonDialog.show(
                     context: context,
                     title: 'Save changes',
-                    body: 'Apply the pending updates?',
+                    body: (_) => Text('Apply the pending updates?'),
                     primaryAction: BisonDialogAction(
                       label: 'Save',
                       onPressed: () {
@@ -154,7 +353,7 @@ void main() {
                   BisonDialog.show(
                     context: context,
                     title: 'Dialog title',
-                    body: 'Dialog body',
+                    body: (_) => Text('Dialog body'),
                     primaryAction: BisonDialogAction(
                       label: 'Okay',
                       onPressed: () {},
@@ -179,7 +378,184 @@ void main() {
       expect(find.byType(BisonDialog), findsNothing);
     });
 
-    testWidgets('autofocuses primary action on open', (
+    testWidgets('updates dialog theme while open when app theme changes', (
+      final WidgetTester tester,
+    ) async {
+      final hostKey = GlobalKey<_ThemeSwitchingDialogHostState>();
+      const titleText = 'Theme test dialog title';
+      const bodyText = 'Theme test dialog body';
+
+      await tester.pumpWidget(
+        _ThemeSwitchingDialogHost(
+          key: hostKey,
+          title: titleText,
+          body: bodyText,
+        ),
+      );
+
+      await tester.tap(find.text('Open dialog'));
+      await tester.pumpAndSettle();
+
+      final surfaceFinder = find.byKey(
+        const ValueKey<String>('bison-dialog-surface'),
+      );
+
+      BoxDecoration getSurfaceDecoration() {
+        return tester.widget<DecoratedBox>(surfaceFinder).decoration
+            as BoxDecoration;
+      }
+
+      Color? getEffectiveTextColor(final String text) {
+        final textFinder = find.text(text);
+        final textWidget = tester.widget<Text>(textFinder);
+        final textElement = tester.element(textFinder);
+        return DefaultTextStyle.of(
+          textElement,
+        ).style.merge(textWidget.style).color;
+      }
+
+      expect(
+        getSurfaceDecoration().color,
+        equals(BisonThemeTokens.light().surfaceDefault),
+      );
+      expect(
+        getEffectiveTextColor(titleText),
+        equals(BisonThemeTokens.light().textPlain),
+      );
+      expect(
+        getEffectiveTextColor(bodyText),
+        equals(BisonThemeTokens.light().textPlain),
+      );
+
+      hostKey.currentState!.setDarkTheme(true);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(BisonDialog), findsOneWidget);
+      expect(
+        getSurfaceDecoration().color,
+        equals(BisonThemeTokens.dark().surfaceDefault),
+      );
+      expect(
+        getEffectiveTextColor(titleText),
+        equals(BisonThemeTokens.dark().textPlain),
+      );
+      expect(
+        getEffectiveTextColor(bodyText),
+        equals(BisonThemeTokens.dark().textPlain),
+      );
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(BisonDialog), findsNothing);
+    });
+
+    testWidgets(
+      'tracks inner themed subtree when nested material apps toggle',
+      (final WidgetTester tester) async {
+        final hostKey = GlobalKey<_NestedThemeDialogHostState>();
+
+        await tester.pumpWidget(_NestedThemeDialogHost(key: hostKey));
+
+        await tester.tap(find.text('Open dialog'));
+        await tester.pumpAndSettle();
+
+        final surfaceFinder = find.byKey(
+          const ValueKey<String>('bison-dialog-surface'),
+        );
+
+        BoxDecoration getSurfaceDecoration() {
+          return tester.widget<DecoratedBox>(surfaceFinder).decoration
+              as BoxDecoration;
+        }
+
+        expect(
+          getSurfaceDecoration().color,
+          equals(BisonThemeTokens.light().surfaceDefault),
+        );
+
+        hostKey.currentState!.setDarkTheme(true);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(BisonDialog), findsOneWidget);
+        expect(
+          getSurfaceDecoration().color,
+          equals(BisonThemeTokens.dark().surfaceDefault),
+        );
+
+        hostKey.currentState!.setDarkTheme(false);
+        await tester.pumpAndSettle();
+
+        expect(
+          getSurfaceDecoration().color,
+          equals(BisonThemeTokens.light().surfaceDefault),
+        );
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(BisonDialog), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'widgetbook-like body with snapshot tokens now updates colors on theme change',
+      (final WidgetTester tester) async {
+        final hostKey = GlobalKey<_WidgetbookLikeDialogHostState>();
+
+        await tester.pumpWidget(_WidgetbookLikeDialogHost(key: hostKey));
+
+        await tester.tap(find.text('Open dialog'));
+        await tester.pumpAndSettle();
+
+        Color? getEffectiveTextColor(final String text) {
+          final textFinder = find.text(text);
+          final textWidget = tester.widget<Text>(textFinder);
+          final textElement = tester.element(textFinder);
+          return DefaultTextStyle.of(
+            textElement,
+          ).style.merge(textWidget.style).color;
+        }
+
+        expect(
+          getEffectiveTextColor('Dialog title'),
+          equals(BisonThemeTokens.light().textPlain),
+        );
+        expect(
+          getEffectiveTextColor('Alarm Type:'),
+          equals(BisonThemeTokens.light().textDisabled),
+        );
+        expect(
+          getEffectiveTextColor('Normal'),
+          equals(BisonThemeTokens.light().textPlain),
+        );
+
+        hostKey.currentState!.setDarkTheme(true);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(BisonDialog), findsOneWidget);
+        expect(
+          getEffectiveTextColor('Dialog title'),
+          equals(BisonThemeTokens.dark().textPlain),
+        );
+        expect(
+          getEffectiveTextColor('Normal'),
+          equals(BisonThemeTokens.dark().textPlain),
+        );
+
+        expect(
+          getEffectiveTextColor('Alarm Type:'),
+          equals(BisonThemeTokens.dark().textDisabled),
+        );
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(BisonDialog), findsNothing);
+      },
+    );
+
+    testWidgets('auto focuses primary action on open', (
       final WidgetTester tester,
     ) async {
       bool primaryPressed = false;
@@ -193,7 +569,7 @@ void main() {
                   BisonDialog.show(
                     context: context,
                     title: 'Dialog title',
-                    body: 'Dialog body',
+                    body: (_) => Text('Dialog body'),
                     secondaryAction: BisonDialogAction(
                       label: 'Secondary',
                       onPressed: () {},
@@ -248,7 +624,7 @@ void main() {
                       BisonDialog.show(
                         context: context,
                         title: 'Dialog title',
-                        body: 'Dialog body',
+                        body: (_) => Text('Dialog body'),
                         destructiveAction: BisonDialogAction(
                           label: 'Delete',
                           onPressed: () {},
@@ -310,7 +686,7 @@ void main() {
                     BisonDialog.show(
                       context: context,
                       title: 'Dialog title',
-                      body: 'Dialog body',
+                      body: (_) => Text('Dialog body'),
                       primaryAction: BisonDialogAction(
                         label: 'Okay',
                         onPressed: () {},
@@ -319,7 +695,7 @@ void main() {
                     BisonDialog.show(
                       context: context,
                       title: 'Dialog title',
-                      body: 'Dialog body',
+                      body: (_) => Text('Dialog body'),
                       primaryAction: BisonDialogAction(
                         label: 'Okay',
                         onPressed: () {},
@@ -366,7 +742,7 @@ void main() {
                     BisonDialog.show(
                       context: context,
                       title: 'Dialog title',
-                      body: 'Dialog body',
+                      body: (_) => Text('Dialog body'),
                       primaryAction: BisonDialogAction(
                         label: 'Okay',
                         onPressed: null,
@@ -432,7 +808,7 @@ void main() {
                     BisonDialog.show(
                       context: context,
                       title: 'Dialog title',
-                      body: 'Dialog body',
+                      body: (_) => Text('Dialog body'),
                       primaryAction: BisonDialogAction(
                         label: 'Okay',
                         onPressed: null,

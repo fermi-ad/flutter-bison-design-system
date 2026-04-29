@@ -32,8 +32,28 @@ class BisonDialog extends StatelessWidget {
   static GlobalKey? _activeDialogKey;
   static bool _isDialogOpening = false;
 
+  static bool _isAncestorContext({
+    required final BuildContext ancestor,
+    required final BuildContext descendant,
+  }) {
+    var found = identical(ancestor, descendant);
+    if (found) {
+      return true;
+    }
+
+    descendant.visitAncestorElements((final element) {
+      if (identical(element, ancestor)) {
+        found = true;
+        return false;
+      }
+      return true;
+    });
+
+    return found;
+  }
+
   final String title;
-  final String body;
+  final WidgetBuilder body;
   final BisonDialogAction primaryAction;
   final BisonDialogAction? secondaryAction;
   final BisonDialogAction? destructiveAction;
@@ -68,7 +88,7 @@ class BisonDialog extends StatelessWidget {
   static Future<void> show({
     required final BuildContext context,
     required final String title,
-    required final String body,
+    required final WidgetBuilder body,
     required final BisonDialogAction primaryAction,
     final BisonDialogAction? secondaryAction,
     final BisonDialogAction? destructiveAction,
@@ -76,7 +96,14 @@ class BisonDialog extends StatelessWidget {
     final double minWidth = 280.0,
     final double maxWidth = 560.0,
   }) {
-    final overlay = Overlay.maybeOf(context, rootOverlay: true);
+    final navigatorOverlay = Navigator.maybeOf(
+      context,
+      rootNavigator: true,
+    )?.overlay;
+    final overlay =
+        Overlay.maybeOf(context) ??
+        navigatorOverlay ??
+        Overlay.maybeOf(context, rootOverlay: true);
     if (overlay == null) {
       return Future<void>.error(
         StateError('BisonDialog.show requires an Overlay in the widget tree.'),
@@ -108,20 +135,41 @@ class BisonDialog extends StatelessWidget {
     }
 
     entry = OverlayEntry(
-      builder: (final overlayContext) => KeyedSubtree(
-        key: dialogKey,
-        child: _BisonDialogOverlay(
-          title: title,
-          body: body,
-          primaryAction: primaryAction,
-          secondaryAction: secondaryAction,
-          destructiveAction: destructiveAction,
-          barrierDismissible: barrierDismissible,
-          minWidth: minWidth,
-          maxWidth: maxWidth,
-          onDismiss: closeDialog,
-        ),
-      ),
+      builder: (final _) {
+        final dialogContent = KeyedSubtree(
+          key: dialogKey,
+          child: _BisonDialogOverlay(
+            title: title,
+            body: body,
+            primaryAction: primaryAction,
+            secondaryAction: secondaryAction,
+            destructiveAction: destructiveAction,
+            barrierDismissible: barrierDismissible,
+            minWidth: minWidth,
+            maxWidth: maxWidth,
+            onDismiss: closeDialog,
+          ),
+        );
+
+        if (!context.mounted) {
+          WidgetsBinding.instance.addPostFrameCallback((_) => closeDialog());
+          return const SizedBox.shrink();
+        }
+
+        if (!_isAncestorContext(
+          ancestor: overlay.context,
+          descendant: context,
+        )) {
+          return dialogContent;
+        }
+
+        final capturedThemes = InheritedTheme.capture(
+          from: context,
+          to: overlay.context,
+        );
+
+        return capturedThemes.wrap(dialogContent);
+      },
     );
 
     _activeDialogFuture = completer.future.whenComplete(() {
@@ -144,81 +192,79 @@ class BisonDialog extends StatelessWidget {
     final secondary = secondaryAction;
     final destructive = destructiveAction;
 
-    return DefaultTextStyle(
-      // Added to prevent yellow warning lines.
-      // could potentially be removed as Scaffold defines a DefaultTextStyle
-      style: TextStyle(decoration: TextDecoration.none),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(minWidth: minWidth, maxWidth: maxWidth),
-        child: DecoratedBox(
-          key: _surfaceKey,
-          decoration: BoxDecoration(
-            color: bison.theme.surfaceDefault,
-            borderRadius: BorderRadius.circular(bison.corners.cornerSmall),
-            border: Border.all(style: BorderStyle.none),
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(0, bison.spacing.tinySpacing),
-                blurRadius: bison.spacing.xSmallSpacing,
-                spreadRadius: 6.0,
-                color: const Color(0xFF000000).withValues(alpha: 0.15),
+    return ConstrainedBox(
+      constraints: BoxConstraints(minWidth: minWidth, maxWidth: maxWidth),
+      child: DecoratedBox(
+        key: _surfaceKey,
+        decoration: BoxDecoration(
+          color: bison.theme.surfaceDefault,
+          borderRadius: BorderRadius.circular(bison.corners.cornerSmall),
+          border: Border.all(style: BorderStyle.none),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, bison.spacing.tinySpacing),
+              blurRadius: bison.spacing.xSmallSpacing,
+              spreadRadius: 6.0,
+              color: const Color(0xFF000000).withValues(alpha: 0.15),
+            ),
+            BoxShadow(
+              offset: Offset(0, bison.spacing.microSpacing),
+              blurRadius: bison.spacing.microSpacing,
+              spreadRadius: 0,
+              color: const Color(0xFF000000).withValues(alpha: .30),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(bison.spacing.mediumSpacing),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: bison.typography.h3),
+              SizedBox(height: bison.spacing.smallSpacing),
+              DefaultTextStyle.merge(
+                style: bison.typography.bodyLarge,
+                child: body(context),
               ),
-              BoxShadow(
-                offset: Offset(0, bison.spacing.microSpacing),
-                blurRadius: bison.spacing.microSpacing,
-                spreadRadius: 0,
-                color: const Color(0xFF000000).withValues(alpha: .30),
-              ),
-            ],
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(bison.spacing.mediumSpacing),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: bison.typography.h3),
-                SizedBox(height: bison.spacing.smallSpacing),
-                Text(body, style: bison.typography.bodyLarge),
-                SizedBox(height: bison.spacing.standardSpacing),
-                FocusScope(
-                  child: FocusTraversalGroup(
-                    policy: OrderedTraversalPolicy(),
-                    child: Row(
-                      children: [
-                        if (destructive != null)
-                          FocusTraversalOrder(
-                            order: NumericFocusOrder(3.0),
-                            child: BisonButton.destructive(
-                              buttonLabel: destructive.label,
-                              onPressed: destructive.onPressed,
-                            ),
-                          ),
-                        const Spacer(),
-                        if (secondary != null)
-                          FocusTraversalOrder(
-                            order: NumericFocusOrder(2.0),
-                            child: BisonButton.outlined(
-                              buttonLabel: secondary.label,
-                              onPressed: secondary.onPressed,
-                            ),
-                          ),
-                        if (secondary != null)
-                          SizedBox(width: bison.spacing.tinySpacing),
+              SizedBox(height: bison.spacing.standardSpacing),
+              FocusScope(
+                child: FocusTraversalGroup(
+                  policy: OrderedTraversalPolicy(),
+                  child: Row(
+                    children: [
+                      if (destructive != null)
                         FocusTraversalOrder(
-                          order: NumericFocusOrder(1.0),
-                          child: BisonButton.filled(
-                            buttonLabel: primary.label,
-                            onPressed: primary.onPressed,
-                            autofocus: true,
+                          order: NumericFocusOrder(3.0),
+                          child: BisonButton.destructive(
+                            buttonLabel: destructive.label,
+                            onPressed: destructive.onPressed,
                           ),
                         ),
-                      ],
-                    ),
+                      const Spacer(),
+                      if (secondary != null)
+                        FocusTraversalOrder(
+                          order: NumericFocusOrder(2.0),
+                          child: BisonButton.outlined(
+                            buttonLabel: secondary.label,
+                            onPressed: secondary.onPressed,
+                          ),
+                        ),
+                      if (secondary != null)
+                        SizedBox(width: bison.spacing.tinySpacing),
+                      FocusTraversalOrder(
+                        order: NumericFocusOrder(1.0),
+                        child: BisonButton.filled(
+                          buttonLabel: primary.label,
+                          onPressed: primary.onPressed,
+                          autofocus: true,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -228,7 +274,7 @@ class BisonDialog extends StatelessWidget {
 
 class _BisonDialogOverlay extends StatelessWidget {
   final String title;
-  final String body;
+  final WidgetBuilder body;
   final BisonDialogAction primaryAction;
   final BisonDialogAction? secondaryAction;
   final BisonDialogAction? destructiveAction;
@@ -266,23 +312,24 @@ class _BisonDialogOverlay extends StatelessWidget {
   Widget build(final BuildContext context) {
     final bison = context.bison;
 
-    return CallbackShortcuts(
-      bindings: {
-        if (barrierDismissible)
-          const SingleActivator(LogicalKeyboardKey.escape): onDismiss,
-      },
-      child: Focus(
-        autofocus: true,
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: BisonScrim(
-                barrierDismissible: barrierDismissible,
-                onDismiss: onDismiss,
+    return DefaultTextStyle.merge(
+      style: const TextStyle(decoration: TextDecoration.none),
+      child: CallbackShortcuts(
+        bindings: {
+          if (barrierDismissible)
+            const SingleActivator(LogicalKeyboardKey.escape): onDismiss,
+        },
+        child: Focus(
+          autofocus: true,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: BisonScrim(
+                  barrierDismissible: barrierDismissible,
+                  onDismiss: onDismiss,
+                ),
               ),
-            ),
-            Positioned.fill(
-              child: SafeArea(
+              SafeArea(
                 minimum: EdgeInsets.all(bison.spacing.mediumSpacing),
                 child: Center(
                   child: BisonDialog(
@@ -300,8 +347,8 @@ class _BisonDialogOverlay extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
