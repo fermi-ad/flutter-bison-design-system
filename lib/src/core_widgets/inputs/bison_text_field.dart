@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:bison_design_system/theme.dart'
-    show BisonContext, BisonThemeTokens, BisonTypographyTokens;
+    show BisonContext, BisonThemeTokens;
 
 /// A text field widget for the Bison design system.
 ///
@@ -243,6 +243,10 @@ class _BisonTextFieldState extends State<BisonTextField> {
     // _InputArea is a StatefulWidget so its element — and the EditableText
     // element inside it — survive rebuilds of _BisonTextFieldState triggered
     // by _interaction notifications.
+    //
+    // Theme and typography are NOT passed as props to avoid triggering
+    // _InputAreaState rebuilds on every parent build (theme objects are
+    // recreated each time). Instead _InputAreaState resolves them from context.
     final Widget inputArea = _InputArea(
       controller: _controller,
       focusNode: _focusNode,
@@ -252,15 +256,13 @@ class _BisonTextFieldState extends State<BisonTextField> {
       keyboardType: widget.keyboardType,
       obscureText: widget.obscureText,
       onChanged: widget.onChanged,
-      theme: theme,
-      typography: typography,
     );
 
     // ListenableBuilder watches only _interaction so the Container decoration
     // updates on hover/focus without rebuilding inputArea.
     final Widget inputContainer = ListenableBuilder(
       listenable: _interaction,
-      builder: (_, final Widget? child) {
+      builder: (final BuildContext ctx, final Widget? child) {
         return Container(
           decoration: BoxDecoration(
             color: _backgroundColor(theme),
@@ -281,10 +283,8 @@ class _BisonTextFieldState extends State<BisonTextField> {
     );
 
     // TapRegion at the BisonTextField level handles tap-outside reliably.
-    // Using onTapOutside on EditableText directly is unreliable because
-    // EditableText re-registers its TapRegion whenever it rebuilds (e.g. when
-    // focus changes trigger a parent rebuild), which can cause the second
-    // tap-out to be swallowed.
+    // The GestureDetector inside the TapRegion focuses the field when the
+    // padding area (outside EditableText's hit area) is tapped.
     final Widget interactiveContainer = TapRegion(
       onTapOutside: widget.enabled ? (_) => _focusNode.unfocus() : null,
       child: MouseRegion(
@@ -293,7 +293,11 @@ class _BisonTextFieldState extends State<BisonTextField> {
             : SystemMouseCursors.basic,
         onEnter: widget.enabled ? (_) => _interaction.isHovered = true : null,
         onExit: widget.enabled ? (_) => _interaction.isHovered = false : null,
-        child: inputContainer,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: widget.enabled ? () => _focusNode.requestFocus() : null,
+          child: inputContainer,
+        ),
       ),
     );
 
@@ -331,6 +335,12 @@ class _BisonTextFieldState extends State<BisonTextField> {
 ///
 /// This must be a [StatefulWidget] so that Flutter preserves its element
 /// across rebuilds of the parent [_BisonTextFieldState].
+///
+/// Theme and typography tokens are resolved from [BuildContext] inside
+/// [_InputAreaState.build] rather than passed as constructor props. This
+/// prevents [_InputAreaState] from rebuilding [EditableText] every time the
+/// parent rebuilds (which would happen because token objects are recreated on
+/// each parent [build] call, making them always "new" by identity).
 class _InputArea extends StatefulWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
@@ -340,8 +350,6 @@ class _InputArea extends StatefulWidget {
   final TextInputType? keyboardType;
   final bool obscureText;
   final ValueChanged<String>? onChanged;
-  final BisonThemeTokens theme;
-  final BisonTypographyTokens typography;
 
   const _InputArea({
     required this.controller,
@@ -352,8 +360,6 @@ class _InputArea extends StatefulWidget {
     required this.keyboardType,
     required this.obscureText,
     required this.onChanged,
-    required this.theme,
-    required this.typography,
   });
 
   @override
@@ -361,27 +367,28 @@ class _InputArea extends StatefulWidget {
 }
 
 class _InputAreaState extends State<_InputArea> {
-  Color get _textColor {
-    if (!widget.enabled) return widget.theme.textDisabled;
-    return widget.theme.textPlain;
-  }
-
-  Color get _placeholderColor {
-    if (!widget.enabled) return widget.theme.textDisabled;
-    return widget.theme.textMuted;
-  }
-
   @override
   Widget build(final BuildContext context) {
+    final bison = context.bison;
+    final theme = bison.theme;
+    final typography = bison.typography;
+
+    final Color textColor = widget.enabled
+        ? theme.textPlain
+        : theme.textDisabled;
+    final Color placeholderColor = widget.enabled
+        ? theme.textMuted
+        : theme.textDisabled;
+
     final Widget editableText = IgnorePointer(
       ignoring: !widget.enabled,
       child: EditableText(
         controller: widget.controller,
         focusNode: widget.focusNode,
-        style: widget.typography.bodyLarge.copyWith(color: _textColor),
-        cursorColor: widget.theme.borderPrimary,
-        backgroundCursorColor: widget.theme.textDisabled,
-        selectionColor: widget.theme.borderPrimary.withValues(alpha: 0.3),
+        style: typography.bodyLarge.copyWith(color: textColor),
+        cursorColor: theme.borderPrimary,
+        backgroundCursorColor: theme.textDisabled,
+        selectionColor: theme.borderPrimary.withValues(alpha: 0.3),
         autofocus: widget.autofocus,
         readOnly: !widget.enabled,
         keyboardType: widget.keyboardType,
@@ -414,8 +421,8 @@ class _InputAreaState extends State<_InputArea> {
                   child: IgnorePointer(
                     child: Text(
                       widget.placeholder!,
-                      style: widget.typography.bodyLarge.copyWith(
-                        color: _placeholderColor,
+                      style: typography.bodyLarge.copyWith(
+                        color: placeholderColor,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
