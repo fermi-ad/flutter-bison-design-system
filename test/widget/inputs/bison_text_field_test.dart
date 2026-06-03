@@ -147,7 +147,8 @@ void main() {
       focusNode.requestFocus();
       await tester.pump();
 
-      expect(_border(tester).bottom.color, equals(theme.borderPrimary));
+      // Focused state uses Border.all — check top side.
+      expect(_border(tester).top.color, equals(theme.borderPrimary));
     });
 
     testWidgets('uses inputFieldField background when focused', (
@@ -247,7 +248,8 @@ void main() {
         buildScaffold(const BisonTextField(hasWarning: true)),
       );
 
-      expect(_border(tester).bottom.color, equals(theme.borderWarning));
+      // Warning state uses Border.all — check top side.
+      expect(_border(tester).top.color, equals(theme.borderWarning));
     });
 
     testWidgets('helper text uses textPlain color', (

@@ -210,12 +210,24 @@ class _BisonTextFieldState extends State<BisonTextField> {
     return theme.inputFieldField;
   }
 
-  Color _borderColor(final BisonThemeTokens theme) {
-    if (!widget.enabled) return theme.borderDisabled;
-    if (widget.hasError) return theme.borderError;
-    if (widget.hasWarning) return theme.borderWarning;
-    if (_interaction.isFocused) return theme.borderPrimary;
-    return theme.borderPlain;
+  /// Returns the appropriate [Border] for the current state.
+  ///
+  /// Focused and warning states show a full border on all sides.
+  /// All other states show only a bottom border.
+  Border _border(final BisonThemeTokens theme) {
+    if (!widget.enabled) {
+      return Border(bottom: BorderSide(color: theme.borderDisabled));
+    }
+    if (widget.hasError) {
+      return Border.all(color: theme.borderError);
+    }
+    if (widget.hasWarning) {
+      return Border.all(color: theme.borderWarning);
+    }
+    if (_interaction.isFocused) {
+      return Border.all(color: theme.borderPrimary);
+    }
+    return Border(bottom: BorderSide(color: theme.borderPlain));
   }
 
   Color _helperTextColor(final BisonThemeTokens theme) {
@@ -266,7 +278,7 @@ class _BisonTextFieldState extends State<BisonTextField> {
         return Container(
           decoration: BoxDecoration(
             color: _backgroundColor(theme),
-            border: Border(bottom: BorderSide(color: _borderColor(theme))),
+            border: _border(theme),
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(corners.cornerExtraSmall),
               topRight: Radius.circular(corners.cornerExtraSmall),
