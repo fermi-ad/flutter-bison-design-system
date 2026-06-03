@@ -264,8 +264,11 @@ class _BisonTextFieldState extends State<BisonTextField> {
         return Container(
           decoration: BoxDecoration(
             color: _backgroundColor(theme),
-            border: Border.all(color: _borderColor(theme)),
-            borderRadius: BorderRadius.circular(corners.cornerSmall),
+            border: Border(bottom: BorderSide(color: _borderColor(theme))),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(corners.cornerExtraSmall),
+              topRight: Radius.circular(corners.cornerExtraSmall),
+            ),
           ),
           padding: EdgeInsets.symmetric(
             horizontal: spacing.tinySpacing,

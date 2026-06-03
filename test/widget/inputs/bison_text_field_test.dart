@@ -56,7 +56,7 @@ void main() {
       await tester.pumpWidget(buildScaffold(const BisonTextField()));
 
       expect(_decoration(tester).color, equals(theme.inputFieldField));
-      expect(_border(tester).top.color, equals(theme.borderPlain));
+      expect(_border(tester).bottom.color, equals(theme.borderPlain));
     });
   });
 
@@ -96,7 +96,7 @@ void main() {
         // First cycle
         await _tapInThenOut(tester);
         expect(
-          _border(tester).top.color,
+          _border(tester).bottom.color,
           equals(theme.borderPlain),
           reason: 'border should be plain after first tap-out',
         );
@@ -104,7 +104,7 @@ void main() {
         // Second cycle — this is the case that was broken
         await _tapInThenOut(tester);
         expect(
-          _border(tester).top.color,
+          _border(tester).bottom.color,
           equals(theme.borderPlain),
           reason: 'border should be plain after second tap-out',
         );
@@ -147,7 +147,7 @@ void main() {
       focusNode.requestFocus();
       await tester.pump();
 
-      expect(_border(tester).top.color, equals(theme.borderPrimary));
+      expect(_border(tester).bottom.color, equals(theme.borderPrimary));
     });
 
     testWidgets('uses inputFieldField background when focused', (
@@ -182,7 +182,7 @@ void main() {
           _decoration(tester).color,
           equals(theme.inputFieldFieldDisabled),
         );
-        expect(_border(tester).top.color, equals(theme.borderDisabled));
+        expect(_border(tester).bottom.color, equals(theme.borderDisabled));
       },
     );
 
@@ -209,7 +209,7 @@ void main() {
         buildScaffold(const BisonTextField(hasError: true)),
       );
 
-      expect(_border(tester).top.color, equals(theme.borderError));
+      expect(_border(tester).bottom.color, equals(theme.borderError));
     });
 
     testWidgets('helper text uses textError color', (
@@ -235,7 +235,7 @@ void main() {
         buildScaffold(const BisonTextField(hasError: true, hasWarning: true)),
       );
 
-      expect(_border(tester).top.color, equals(theme.borderError));
+      expect(_border(tester).bottom.color, equals(theme.borderError));
     });
   });
 
@@ -247,7 +247,7 @@ void main() {
         buildScaffold(const BisonTextField(hasWarning: true)),
       );
 
-      expect(_border(tester).top.color, equals(theme.borderWarning));
+      expect(_border(tester).bottom.color, equals(theme.borderWarning));
     });
 
     testWidgets('helper text uses textPlain color', (
