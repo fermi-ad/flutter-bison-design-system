@@ -20,6 +20,8 @@ import 'package:bison_design_system_catalog/bison_icon_button.dart'
     as _bison_design_system_catalog_bison_icon_button;
 import 'package:bison_design_system_catalog/bison_menu.dart'
     as _bison_design_system_catalog_bison_menu;
+import 'package:bison_design_system_catalog/bison_text_field.dart'
+    as _bison_design_system_catalog_bison_text_field;
 import 'package:widgetbook/widgetbook.dart' as _widgetbook;
 
 final directories = <_widgetbook.WidgetbookNode>[
@@ -111,6 +113,21 @@ final directories = <_widgetbook.WidgetbookNode>[
                 name: 'Trigger Dialog',
                 builder: _bison_design_system_catalog_bison_dialog
                     .buildBisonDialogTrigger,
+              ),
+            ],
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookFolder(
+        name: 'inputs',
+        children: [
+          _widgetbook.WidgetbookComponent(
+            name: 'BisonTextField',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Text Field',
+                builder: _bison_design_system_catalog_bison_text_field
+                    .buildBisonTextField,
               ),
             ],
           ),
