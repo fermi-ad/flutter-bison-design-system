@@ -6,6 +6,17 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../common.dart' show buildScaffold;
 
+// ── Focus lifecycle helpers ───────────────────────────────────────────────────
+
+/// Taps the [BisonTextField] to give it focus, then taps outside to unfocus.
+Future<void> _tapInThenOut(WidgetTester tester) async {
+  await tester.tap(find.byType(BisonTextField));
+  await tester.pump();
+  // Tap outside the field (top-left corner of the screen)
+  await tester.tapAt(Offset.zero);
+  await tester.pump();
+}
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 /// Returns the [Container] that forms the input box inside [BisonTextField].
@@ -68,6 +79,57 @@ void main() {
 
       expect(_decoration(tester).color, equals(theme.inputFieldFieldHovered));
     });
+  });
+
+  group('BisonTextField — focus lifecycle', () {
+    testWidgets(
+      'border returns to borderPlain after tap-in then tap-out (repeated)',
+      (final WidgetTester tester) async {
+        final BisonThemeTokens theme = BisonThemeTokens.light();
+        final FocusNode focusNode = FocusNode();
+        addTearDown(focusNode.dispose);
+
+        await tester.pumpWidget(
+          buildScaffold(BisonTextField(focusNode: focusNode)),
+        );
+
+        // First cycle
+        await _tapInThenOut(tester);
+        expect(
+          _border(tester).top.color,
+          equals(theme.borderPlain),
+          reason: 'border should be plain after first tap-out',
+        );
+
+        // Second cycle — this is the case that was broken
+        await _tapInThenOut(tester);
+        expect(
+          _border(tester).top.color,
+          equals(theme.borderPlain),
+          reason: 'border should be plain after second tap-out',
+        );
+      },
+    );
+
+    testWidgets(
+      'focusNode.hasFocus is false after tap-in then tap-out (repeated)',
+      (final WidgetTester tester) async {
+        final FocusNode focusNode = FocusNode();
+        addTearDown(focusNode.dispose);
+
+        await tester.pumpWidget(
+          buildScaffold(BisonTextField(focusNode: focusNode)),
+        );
+
+        // First cycle
+        await _tapInThenOut(tester);
+        expect(focusNode.hasFocus, isFalse, reason: 'after first tap-out');
+
+        // Second cycle
+        await _tapInThenOut(tester);
+        expect(focusNode.hasFocus, isFalse, reason: 'after second tap-out');
+      },
+    );
   });
 
   group('BisonTextField — focus state', () {

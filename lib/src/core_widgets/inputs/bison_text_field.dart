@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:bison_design_system/theme.dart'
-    show BisonContext, BisonThemeTokens;
+    show BisonContext, BisonThemeTokens, BisonTypographyTokens;
 
 /// A text field widget for the Bison design system.
 ///
@@ -97,16 +97,38 @@ class BisonTextField extends StatefulWidget {
   State<BisonTextField> createState() => _BisonTextFieldState();
 }
 
+/// Holds the hover + focus interaction state and notifies listeners on change.
+///
+/// Using a dedicated [ChangeNotifier] lets us rebuild only the container
+/// decoration without touching [_InputArea], which would cause [EditableText]
+/// to lose focus.
+class _InteractionState extends ChangeNotifier {
+  bool _isHovered = false;
+  bool _isFocused = false;
+
+  bool get isHovered => _isHovered;
+  bool get isFocused => _isFocused;
+
+  set isHovered(final bool value) {
+    if (_isHovered == value) return;
+    _isHovered = value;
+    notifyListeners();
+  }
+
+  set isFocused(final bool value) {
+    if (_isFocused == value) return;
+    _isFocused = value;
+    notifyListeners();
+  }
+}
+
 class _BisonTextFieldState extends State<BisonTextField> {
   late TextEditingController _controller;
   late FocusNode _focusNode;
+  final _InteractionState _interaction = _InteractionState();
 
   bool _ownsController = false;
   bool _ownsFocusNode = false;
-
-  bool _isHovered = false;
-  bool _isFocused = false;
-  bool _isEmpty = true;
 
   @override
   void initState() {
@@ -126,8 +148,6 @@ class _BisonTextFieldState extends State<BisonTextField> {
       _focusNode = widget.focusNode!;
     }
 
-    _isEmpty = _controller.text.isEmpty;
-    _controller.addListener(_onTextChanged);
     _focusNode.addListener(_onFocusChanged);
   }
 
@@ -137,7 +157,6 @@ class _BisonTextFieldState extends State<BisonTextField> {
 
     // Controller swap
     if (widget.controller != oldWidget.controller) {
-      _controller.removeListener(_onTextChanged);
       if (_ownsController) {
         _controller.dispose();
       }
@@ -148,8 +167,6 @@ class _BisonTextFieldState extends State<BisonTextField> {
         _controller = widget.controller!;
         _ownsController = false;
       }
-      _controller.addListener(_onTextChanged);
-      _isEmpty = _controller.text.isEmpty;
     }
 
     // FocusNode swap
@@ -171,62 +188,44 @@ class _BisonTextFieldState extends State<BisonTextField> {
 
   @override
   void dispose() {
-    _controller.removeListener(_onTextChanged);
     _focusNode.removeListener(_onFocusChanged);
+    _interaction.dispose();
     if (_ownsController) _controller.dispose();
     if (_ownsFocusNode) _focusNode.dispose();
     super.dispose();
   }
 
-  void _onTextChanged() {
-    final empty = _controller.text.isEmpty;
-    if (empty != _isEmpty) {
-      setState(() => _isEmpty = empty);
-    }
-  }
-
   void _onFocusChanged() {
-    setState(() => _isFocused = _focusNode.hasFocus);
+    _interaction.isFocused = _focusNode.hasFocus;
   }
 
   // ── Color resolution ──────────────────────────────────────────────────────
 
   /// State priority: disabled > error > warning > focused > hovered > default
-  Color _backgroundColor(BisonThemeTokens theme) {
+  Color _backgroundColor(final BisonThemeTokens theme) {
     if (!widget.enabled) return theme.inputFieldFieldDisabled;
-    if (widget.hasError) return theme.inputFieldField;
-    if (widget.hasWarning) return theme.inputFieldField;
-    if (_isFocused) return theme.inputFieldField;
-    if (_isHovered) return theme.inputFieldFieldHovered;
+    if (_interaction.isHovered && !_interaction.isFocused) {
+      return theme.inputFieldFieldHovered;
+    }
     return theme.inputFieldField;
   }
 
-  Color _borderColor(BisonThemeTokens theme) {
+  Color _borderColor(final BisonThemeTokens theme) {
     if (!widget.enabled) return theme.borderDisabled;
     if (widget.hasError) return theme.borderError;
     if (widget.hasWarning) return theme.borderWarning;
-    if (_isFocused) return theme.borderPrimary;
+    if (_interaction.isFocused) return theme.borderPrimary;
     return theme.borderPlain;
   }
 
-  Color _textColor(BisonThemeTokens theme) {
-    if (!widget.enabled) return theme.textDisabled;
-    return theme.textPlain;
-  }
-
-  Color _placeholderColor(BisonThemeTokens theme) {
-    if (!widget.enabled) return theme.textDisabled;
-    return theme.textMuted;
-  }
-
-  Color _helperTextColor(BisonThemeTokens theme) {
+  Color _helperTextColor(final BisonThemeTokens theme) {
     if (!widget.enabled) return theme.textDisabled;
     if (widget.hasError) return theme.textError;
     if (widget.hasWarning) return theme.textPlain;
     return theme.textMuted;
   }
 
-  Color _labelColor(BisonThemeTokens theme) {
+  Color _labelColor(final BisonThemeTokens theme) {
     if (!widget.enabled) return theme.textDisabled;
     return theme.textMuted;
   }
@@ -234,73 +233,63 @@ class _BisonTextFieldState extends State<BisonTextField> {
   // ── Build ─────────────────────────────────────────────────────────────────
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final bison = context.bison;
     final theme = bison.theme;
     final spacing = bison.spacing;
     final corners = bison.corners;
     final typography = bison.typography;
 
-    final TextStyle textStyle = typography.bodyLarge.copyWith(
-      color: _textColor(theme),
+    // _InputArea is a StatefulWidget so its element — and the EditableText
+    // element inside it — survive rebuilds of _BisonTextFieldState triggered
+    // by _interaction notifications.
+    final Widget inputArea = _InputArea(
+      controller: _controller,
+      focusNode: _focusNode,
+      placeholder: widget.placeholder,
+      enabled: widget.enabled,
+      autofocus: widget.autofocus,
+      keyboardType: widget.keyboardType,
+      obscureText: widget.obscureText,
+      onChanged: widget.onChanged,
+      theme: theme,
+      typography: typography,
     );
 
-    final Widget inputArea = Stack(
-      alignment: Alignment.centerLeft,
-      children: [
-        if (widget.placeholder != null && _isEmpty)
-          IgnorePointer(
-            child: Text(
-              widget.placeholder!,
-              style: typography.bodyLarge.copyWith(
-                color: _placeholderColor(theme),
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
+    // ListenableBuilder watches only _interaction so the Container decoration
+    // updates on hover/focus without rebuilding inputArea.
+    final Widget inputContainer = ListenableBuilder(
+      listenable: _interaction,
+      builder: (final BuildContext ctx, final Widget? child) {
+        return Container(
+          decoration: BoxDecoration(
+            color: _backgroundColor(theme),
+            border: Border.all(color: _borderColor(theme)),
+            borderRadius: BorderRadius.circular(corners.cornerSmall),
           ),
-        IgnorePointer(
-          ignoring: !widget.enabled,
-          child: EditableText(
-            controller: _controller,
-            focusNode: _focusNode,
-            style: textStyle,
-            cursorColor: theme.borderPrimary,
-            backgroundCursorColor: theme.textDisabled,
-            selectionColor: theme.borderPrimary.withValues(alpha: 0.3),
-            autofocus: widget.autofocus,
-            readOnly: !widget.enabled,
-            keyboardType: widget.keyboardType,
-            obscureText: widget.obscureText,
-            onChanged: widget.onChanged,
-            cursorWidth: 2.0,
-            cursorRadius: const Radius.circular(1.0),
+          padding: EdgeInsets.symmetric(
+            horizontal: spacing.tinySpacing,
+            vertical: spacing.xSmallSpacing,
           ),
-        ),
-      ],
-    );
-
-    final Widget inputContainer = Container(
-      decoration: BoxDecoration(
-        color: _backgroundColor(theme),
-        border: Border.all(color: _borderColor(theme)),
-        borderRadius: BorderRadius.circular(corners.cornerSmall),
-      ),
-      padding: EdgeInsets.symmetric(
-        horizontal: spacing.tinySpacing,
-        vertical: spacing.xSmallSpacing,
-      ),
+          child: child,
+        );
+      },
       child: inputArea,
     );
 
-    final Widget interactiveContainer = MouseRegion(
-      cursor: widget.enabled
-          ? SystemMouseCursors.text
-          : SystemMouseCursors.basic,
-      onEnter: widget.enabled ? (_) => setState(() => _isHovered = true) : null,
-      onExit: widget.enabled ? (_) => setState(() => _isHovered = false) : null,
-      child: GestureDetector(
-        onTap: widget.enabled ? () => _focusNode.requestFocus() : null,
+    // TapRegion at the BisonTextField level handles tap-outside reliably.
+    // Using onTapOutside on EditableText directly is unreliable because
+    // EditableText re-registers its TapRegion whenever it rebuilds (e.g. when
+    // focus changes trigger a parent rebuild), which can cause the second
+    // tap-out to be swallowed.
+    final Widget interactiveContainer = TapRegion(
+      onTapOutside: widget.enabled ? (_) => _focusNode.unfocus() : null,
+      child: MouseRegion(
+        cursor: widget.enabled
+            ? SystemMouseCursors.text
+            : SystemMouseCursors.basic,
+        onEnter: widget.enabled ? (_) => _interaction.isHovered = true : null,
+        onExit: widget.enabled ? (_) => _interaction.isHovered = false : null,
         child: inputContainer,
       ),
     );
@@ -329,6 +318,112 @@ class _BisonTextFieldState extends State<BisonTextField> {
           ),
         ],
       ],
+    );
+  }
+}
+
+// ── Private input area widget ─────────────────────────────────────────────────
+
+/// Owns the [EditableText] and placeholder overlay.
+///
+/// This must be a [StatefulWidget] so that Flutter preserves its element
+/// across rebuilds of the parent [_BisonTextFieldState].
+class _InputArea extends StatefulWidget {
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final String? placeholder;
+  final bool enabled;
+  final bool autofocus;
+  final TextInputType? keyboardType;
+  final bool obscureText;
+  final ValueChanged<String>? onChanged;
+  final BisonThemeTokens theme;
+  final BisonTypographyTokens typography;
+
+  const _InputArea({
+    required this.controller,
+    required this.focusNode,
+    required this.placeholder,
+    required this.enabled,
+    required this.autofocus,
+    required this.keyboardType,
+    required this.obscureText,
+    required this.onChanged,
+    required this.theme,
+    required this.typography,
+  });
+
+  @override
+  State<_InputArea> createState() => _InputAreaState();
+}
+
+class _InputAreaState extends State<_InputArea> {
+  Color get _textColor {
+    if (!widget.enabled) return widget.theme.textDisabled;
+    return widget.theme.textPlain;
+  }
+
+  Color get _placeholderColor {
+    if (!widget.enabled) return widget.theme.textDisabled;
+    return widget.theme.textMuted;
+  }
+
+  @override
+  Widget build(final BuildContext context) {
+    final Widget editableText = IgnorePointer(
+      ignoring: !widget.enabled,
+      child: EditableText(
+        controller: widget.controller,
+        focusNode: widget.focusNode,
+        style: widget.typography.bodyLarge.copyWith(color: _textColor),
+        cursorColor: widget.theme.borderPrimary,
+        backgroundCursorColor: widget.theme.textDisabled,
+        selectionColor: widget.theme.borderPrimary.withValues(alpha: 0.3),
+        autofocus: widget.autofocus,
+        readOnly: !widget.enabled,
+        keyboardType: widget.keyboardType,
+        obscureText: widget.obscureText,
+        onChanged: widget.onChanged,
+        cursorWidth: 2.0,
+        cursorRadius: const Radius.circular(1.0),
+      ),
+    );
+
+    if (widget.placeholder == null) return editableText;
+
+    // Placeholder: ValueListenableBuilder watches the controller so only the
+    // Visibility widget updates. The Stack always has exactly two children at
+    // fixed indices so EditableText is never remounted when the placeholder
+    // toggles.
+    return ValueListenableBuilder<TextEditingValue>(
+      valueListenable: widget.controller,
+      builder:
+          (
+            final BuildContext ctx,
+            final TextEditingValue value,
+            final Widget? child,
+          ) {
+            return Stack(
+              alignment: Alignment.centerLeft,
+              children: [
+                Visibility(
+                  visible: value.text.isEmpty,
+                  child: IgnorePointer(
+                    child: Text(
+                      widget.placeholder!,
+                      style: widget.typography.bodyLarge.copyWith(
+                        color: _placeholderColor,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+                child!,
+              ],
+            );
+          },
+      child: editableText,
     );
   }
 }
