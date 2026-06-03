@@ -260,7 +260,7 @@ class _BisonTextFieldState extends State<BisonTextField> {
     // updates on hover/focus without rebuilding inputArea.
     final Widget inputContainer = ListenableBuilder(
       listenable: _interaction,
-      builder: (final BuildContext ctx, final Widget? child) {
+      builder: (_, final Widget? child) {
         return Container(
           decoration: BoxDecoration(
             color: _backgroundColor(theme),
@@ -271,8 +271,8 @@ class _BisonTextFieldState extends State<BisonTextField> {
             ),
           ),
           padding: EdgeInsets.symmetric(
-            horizontal: spacing.tinySpacing,
-            vertical: spacing.xSmallSpacing,
+            horizontal: spacing.smallSpacing,
+            vertical: spacing.smallSpacing,
           ),
           child: child,
         );

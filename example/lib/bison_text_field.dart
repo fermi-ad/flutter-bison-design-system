@@ -10,5 +10,8 @@ Widget buildBisonTextField(BuildContext context) {
     helperText: 'Help me!!',
     placeholder: "Placeholder Text",
     enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
+    hasWarning: context.knobs.boolean(label: 'Warning'),
+    hasError: context.knobs.boolean(label: 'Error'),
+    obscureText: context.knobs.boolean(label: 'Obscure Text'),
   );
 }
