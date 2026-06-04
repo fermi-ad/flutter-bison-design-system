@@ -125,12 +125,29 @@ class _BisonTextFieldState extends State<BisonTextField> {
   bool _ownsController = false;
   bool _ownsFocusNode = false;
 
+  /// Returns the storage identifier used for [PageStorage] persistence.
+  ///
+  /// Uses the widget's [Key] when one is provided so that multiple
+  /// [BisonTextField] instances on the same page each get their own slot.
+  /// Falls back to a fixed symbol when no key is set — safe for the common
+  /// single-field-per-page case (e.g. widgetbook use-cases).
+  Object get _storageIdentifier => widget.key ?? #BisonTextField_text;
+
   @override
   void initState() {
     super.initState();
 
     if (widget.controller == null) {
-      _controller = TextEditingController();
+      // Restore any previously saved text so that remounts (e.g. caused by
+      // widgetbook's ValueKey(uri)-based use-case rebuilds) do not clear the
+      // field.
+      final String? savedText =
+          PageStorage.maybeOf(
+                context,
+              )?.readState(context, identifier: _storageIdentifier)
+              as String?;
+      _controller = TextEditingController(text: savedText ?? '');
+      _controller.addListener(_saveTextToPageStorage);
       _ownsController = true;
     } else {
       _controller = widget.controller!;
@@ -153,10 +170,17 @@ class _BisonTextFieldState extends State<BisonTextField> {
     // Controller swap
     if (widget.controller != oldWidget.controller) {
       if (_ownsController) {
+        _controller.removeListener(_saveTextToPageStorage);
         _controller.dispose();
       }
       if (widget.controller == null) {
-        _controller = TextEditingController();
+        final String? savedText =
+            PageStorage.maybeOf(
+                  context,
+                )?.readState(context, identifier: _storageIdentifier)
+                as String?;
+        _controller = TextEditingController(text: savedText ?? '');
+        _controller.addListener(_saveTextToPageStorage);
         _ownsController = true;
       } else {
         _controller = widget.controller!;
@@ -185,13 +209,29 @@ class _BisonTextFieldState extends State<BisonTextField> {
   void dispose() {
     _focusNode.removeListener(_onFocusChanged);
     _interaction.dispose();
-    if (_ownsController) _controller.dispose();
+    if (_ownsController) {
+      _controller.removeListener(_saveTextToPageStorage);
+      _controller.dispose();
+    }
     if (_ownsFocusNode) _focusNode.dispose();
     super.dispose();
   }
 
   void _onFocusChanged() {
     _interaction.isFocused = _focusNode.hasFocus;
+  }
+
+  /// Persists the current text to [PageStorage] so it survives remounts.
+  ///
+  /// Only called when [_ownsController] is `true` (i.e. no external controller
+  /// was provided). External controllers are the caller's responsibility.
+  ///
+  /// The storage slot is keyed by [_storageIdentifier], which is the widget's
+  /// [Key] when provided, or a fixed fallback symbol otherwise.
+  void _saveTextToPageStorage() {
+    PageStorage.maybeOf(
+      context,
+    )?.writeState(context, _controller.text, identifier: _storageIdentifier);
   }
 
   // ── Color resolution ──────────────────────────────────────────────────────

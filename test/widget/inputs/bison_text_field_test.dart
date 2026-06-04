@@ -364,4 +364,250 @@ void main() {
       expect(find.text('Type here...'), findsNothing);
     });
   });
+
+  group('BisonTextField — text preserved across remounts (PageStorage)', () {
+    testWidgets(
+      'text is restored after remount using the fallback storage key',
+      (final WidgetTester tester) async {
+        // Simulate widgetbook's ValueKey(uri) pattern: the use-case widget is
+        // wrapped in a keyed container. When the key changes, Flutter remounts
+        // the subtree — exactly what widgetbook does on every knob change.
+        //
+        // A single PageStorageBucket is shared across pumpWidget calls so that
+        // the saved text survives the remount. No key is set on BisonTextField
+        // itself; the implementation falls back to a fixed symbol identifier.
+        final PageStorageBucket bucket = PageStorageBucket();
+
+        Widget buildWithKey(int keyValue) {
+          return buildScaffold(
+            PageStorage(
+              bucket: bucket,
+              child: KeyedSubtree(
+                key: ValueKey(keyValue),
+                child: const BisonTextField(placeholder: 'Type here...'),
+              ),
+            ),
+          );
+        }
+
+        // Initial mount — key = 0
+        await tester.pumpWidget(buildWithKey(0));
+        await tester.tap(find.byType(BisonTextField));
+        await tester.pump();
+        await tester.enterText(find.byType(EditableText), 'hello');
+        await tester.pump();
+
+        expect(
+          tester
+              .widget<EditableText>(find.byType(EditableText))
+              .controller
+              .text,
+          equals('hello'),
+        );
+
+        // Remount with key = 1 (simulates widgetbook knob change)
+        await tester.pumpWidget(buildWithKey(1));
+
+        expect(
+          tester
+              .widget<EditableText>(find.byType(EditableText))
+              .controller
+              .text,
+          equals('hello'),
+          reason: 'text must be restored from PageStorage after remount',
+        );
+      },
+    );
+
+    testWidgets(
+      'two fields with different widget keys use independent storage slots',
+      (final WidgetTester tester) async {
+        final PageStorageBucket bucket = PageStorageBucket();
+
+        Widget buildWithKey(int keyValue) {
+          return buildScaffold(
+            PageStorage(
+              bucket: bucket,
+              child: Column(
+                children: [
+                  KeyedSubtree(
+                    key: ValueKey('a-$keyValue'),
+                    child: const BisonTextField(
+                      key: ValueKey('field-a'),
+                      placeholder: 'Field A',
+                    ),
+                  ),
+                  KeyedSubtree(
+                    key: ValueKey('b-$keyValue'),
+                    child: const BisonTextField(
+                      key: ValueKey('field-b'),
+                      placeholder: 'Field B',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        await tester.pumpWidget(buildWithKey(0));
+
+        // Type into field A
+        await tester.tap(find.byType(BisonTextField).first);
+        await tester.pump();
+        await tester.enterText(find.byType(EditableText).first, 'alpha');
+        await tester.pump();
+
+        // Type into field B
+        await tester.tap(find.byType(BisonTextField).last);
+        await tester.pump();
+        await tester.enterText(find.byType(EditableText).last, 'beta');
+        await tester.pump();
+
+        // Remount both fields
+        await tester.pumpWidget(buildWithKey(1));
+
+        expect(
+          tester
+              .widget<EditableText>(find.byType(EditableText).first)
+              .controller
+              .text,
+          equals('alpha'),
+          reason: 'field A text must survive remount independently',
+        );
+        expect(
+          tester
+              .widget<EditableText>(find.byType(EditableText).last)
+              .controller
+              .text,
+          equals('beta'),
+          reason: 'field B text must survive remount independently',
+        );
+      },
+    );
+  });
+
+  group('BisonTextField — text preserved across state changes', () {
+    testWidgets('text is preserved when hasError toggles', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(
+          const BisonTextField(placeholder: 'Type here...', hasError: false),
+        ),
+      );
+
+      await tester.tap(find.byType(BisonTextField));
+      await tester.pump();
+      await tester.enterText(find.byType(EditableText), 'hello');
+      await tester.pump();
+
+      // Toggle hasError → true
+      await tester.pumpWidget(
+        buildScaffold(
+          const BisonTextField(placeholder: 'Type here...', hasError: true),
+        ),
+      );
+
+      expect(
+        tester.widget<EditableText>(find.byType(EditableText)).controller.text,
+        equals('hello'),
+        reason: 'text must survive hasError toggling to true',
+      );
+
+      // Toggle hasError → false
+      await tester.pumpWidget(
+        buildScaffold(
+          const BisonTextField(placeholder: 'Type here...', hasError: false),
+        ),
+      );
+
+      expect(
+        tester.widget<EditableText>(find.byType(EditableText)).controller.text,
+        equals('hello'),
+        reason: 'text must survive hasError toggling back to false',
+      );
+    });
+
+    testWidgets('text is preserved when hasWarning toggles', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(
+          const BisonTextField(placeholder: 'Type here...', hasWarning: false),
+        ),
+      );
+
+      await tester.tap(find.byType(BisonTextField));
+      await tester.pump();
+      await tester.enterText(find.byType(EditableText), 'world');
+      await tester.pump();
+
+      await tester.pumpWidget(
+        buildScaffold(
+          const BisonTextField(placeholder: 'Type here...', hasWarning: true),
+        ),
+      );
+
+      expect(
+        tester.widget<EditableText>(find.byType(EditableText)).controller.text,
+        equals('world'),
+        reason: 'text must survive hasWarning toggling to true',
+      );
+    });
+
+    testWidgets('text is preserved when obscureText toggles', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(
+          const BisonTextField(placeholder: 'Type here...', obscureText: false),
+        ),
+      );
+
+      await tester.tap(find.byType(BisonTextField));
+      await tester.pump();
+      await tester.enterText(find.byType(EditableText), 'secret');
+      await tester.pump();
+
+      await tester.pumpWidget(
+        buildScaffold(
+          const BisonTextField(placeholder: 'Type here...', obscureText: true),
+        ),
+      );
+
+      expect(
+        tester.widget<EditableText>(find.byType(EditableText)).controller.text,
+        equals('secret'),
+        reason: 'text must survive obscureText toggling to true',
+      );
+    });
+
+    testWidgets('text is preserved when enabled toggles', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(
+          const BisonTextField(placeholder: 'Type here...', enabled: true),
+        ),
+      );
+
+      await tester.tap(find.byType(BisonTextField));
+      await tester.pump();
+      await tester.enterText(find.byType(EditableText), 'data');
+      await tester.pump();
+
+      await tester.pumpWidget(
+        buildScaffold(
+          const BisonTextField(placeholder: 'Type here...', enabled: false),
+        ),
+      );
+
+      expect(
+        tester.widget<EditableText>(find.byType(EditableText)).controller.text,
+        equals('data'),
+        reason: 'text must survive enabled toggling to false',
+      );
+    });
+  });
 }
