@@ -245,24 +245,28 @@ class _BisonTextFieldState extends State<BisonTextField> {
     return theme.inputFieldField;
   }
 
-  /// Returns the appropriate [Border] for the current state.
+  /// Returns the [BisonTextFieldBorderSpec] describing the border for the
+  /// current state.
   ///
-  /// Focused and warning states show a full border on all sides.
-  /// All other states show only a bottom border.
-  Border _border(final BisonThemeTokens theme) {
+  /// A consistent 2px border width is always reserved on all sides to prevent
+  /// layout shifts when transitioning between states. The spec is consumed by
+  /// [BisonTextFieldBorderPainter] which draws the border with the correct
+  /// rounded top corners via [Canvas], bypassing Flutter's [BoxDecoration]
+  /// constraint that forbids non-uniform side colors when borderRadius is set.
+  BisonTextFieldBorderSpec _borderSpec(final BisonThemeTokens theme) {
     if (!widget.enabled) {
-      return Border(bottom: BorderSide(color: theme.borderDisabled));
+      return BisonTextFieldBorderSpec.bottomOnly(theme.borderDisabled);
     }
     if (widget.hasError) {
-      return Border.all(color: theme.borderError);
+      return BisonTextFieldBorderSpec.all(theme.borderError);
     }
     if (widget.hasWarning) {
-      return Border.all(color: theme.borderWarning);
+      return BisonTextFieldBorderSpec.all(theme.borderWarning);
     }
     if (_interaction.isFocused) {
-      return Border.all(color: theme.borderPrimary);
+      return BisonTextFieldBorderSpec.all(theme.borderPrimary);
     }
-    return Border(bottom: BorderSide(color: theme.borderPlain));
+    return BisonTextFieldBorderSpec.bottomOnly(theme.borderPlain);
   }
 
   Color _helperTextColor(final BisonThemeTokens theme) {
@@ -305,25 +309,39 @@ class _BisonTextFieldState extends State<BisonTextField> {
       onChanged: widget.onChanged,
     );
 
-    // ListenableBuilder watches only _interaction so the Container decoration
-    // updates on hover/focus without rebuilding inputArea.
+    // ListenableBuilder watches only _interaction so the decoration updates on
+    // hover/focus without rebuilding inputArea.
+    //
+    // Layout-shift fix: a consistent 2px border is always reserved on all sides
+    // so no shift occurs when transitioning between states (e.g. default →
+    // focused). The border is drawn by [BisonTextFieldBorderPainter] via
+    // [CustomPaint] so it can have rounded top corners and non-uniform side
+    // colors without hitting Flutter's BoxDecoration constraint.
+    final borderRadius = BorderRadius.only(
+      topLeft: Radius.circular(corners.cornerExtraSmall),
+      topRight: Radius.circular(corners.cornerExtraSmall),
+    );
     final Widget inputContainer = ListenableBuilder(
       listenable: _interaction,
       builder: (final BuildContext ctx, final Widget? child) {
-        return Container(
-          decoration: BoxDecoration(
-            color: _backgroundColor(theme),
-            border: _border(theme),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(corners.cornerExtraSmall),
-              topRight: Radius.circular(corners.cornerExtraSmall),
+        return CustomPaint(
+          painter: BisonTextFieldBorderPainter(
+            spec: _borderSpec(theme),
+            borderRadius: borderRadius,
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              color: _backgroundColor(theme),
+              borderRadius: borderRadius,
             ),
+            // Inset padding accounts for the 2px border reserved on all sides.
+            margin: const EdgeInsets.all(2.0),
+            padding: EdgeInsets.symmetric(
+              horizontal: spacing.smallSpacing,
+              vertical: spacing.smallSpacing,
+            ),
+            child: child,
           ),
-          padding: EdgeInsets.symmetric(
-            horizontal: spacing.smallSpacing,
-            vertical: spacing.smallSpacing,
-          ),
-          child: child,
         );
       },
       child: inputArea,
@@ -359,7 +377,7 @@ class _BisonTextFieldState extends State<BisonTextField> {
               color: _labelColor(theme),
             ),
           ),
-          SizedBox(height: spacing.microSpacing),
+          SizedBox(height: spacing.tinySpacing),
         ],
         interactiveContainer,
         if (widget.helperText != null) ...[
@@ -483,4 +501,97 @@ class _InputAreaState extends State<_InputArea> {
       child: editableText,
     );
   }
+}
+
+// ── Border painting helpers ───────────────────────────────────────────────────
+
+/// Describes the border to draw around the input field.
+///
+/// [allColor] — when non-null, all four sides are drawn with this color.
+/// [bottomColor] — when [allColor] is null, only the bottom side is drawn.
+///
+/// Exposed as a public class so widget tests can read the painter's spec via
+/// `tester.widget<CustomPaint>(...)`.
+class BisonTextFieldBorderSpec {
+  final Color? allColor;
+  final Color? bottomColor;
+
+  const BisonTextFieldBorderSpec._({this.allColor, this.bottomColor});
+
+  /// All four sides drawn with [color].
+  const BisonTextFieldBorderSpec.all(final Color color)
+    : this._(allColor: color);
+
+  /// Only the bottom side drawn with [color]; other sides are transparent.
+  const BisonTextFieldBorderSpec.bottomOnly(final Color color)
+    : this._(bottomColor: color);
+
+  @override
+  bool operator ==(Object other) =>
+      other is BisonTextFieldBorderSpec &&
+      other.allColor == allColor &&
+      other.bottomColor == bottomColor;
+
+  @override
+  int get hashCode => Object.hash(allColor, bottomColor);
+}
+
+/// Draws the input field border with rounded top corners via [Canvas].
+///
+/// Using a [CustomPainter] lets us:
+///   1. Reserve a consistent 2px inset on all sides (no layout shift).
+///   2. Draw rounded top corners on the border regardless of whether all sides
+///      or only the bottom side are visible.
+///   3. Avoid Flutter's [BoxDecoration] constraint that forbids non-uniform
+///      border side colors when [borderRadius] is also set.
+///
+/// Exposed as a public class so widget tests can read the painter's spec via
+/// `tester.widget<CustomPaint>(...)`.
+class BisonTextFieldBorderPainter extends CustomPainter {
+  final BisonTextFieldBorderSpec spec;
+  final BorderRadius borderRadius;
+
+  const BisonTextFieldBorderPainter({
+    required this.spec,
+    required this.borderRadius,
+  });
+
+  @override
+  void paint(final Canvas canvas, final Size size) {
+    const double w = 2.0; // border width
+    final Paint paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = w;
+
+    // The painter draws on the outer edge of the widget (before the 2px margin
+    // applied to the inner Container). We inset by w/2 so the stroke is fully
+    // within the widget bounds.
+    final double half = w / 2;
+    final Rect rect = Rect.fromLTWH(
+      half,
+      half,
+      size.width - w,
+      size.height - w,
+    );
+
+    if (spec.allColor != null) {
+      // Full border with rounded top corners.
+      paint.color = spec.allColor!;
+      final RRect rrect = borderRadius.toRRect(rect);
+      canvas.drawRRect(rrect, paint);
+    } else if (spec.bottomColor != null) {
+      // Bottom-only border: draw a straight horizontal line at the bottom,
+      // inset by [half] on each side so it aligns with the inner container.
+      paint.color = spec.bottomColor!;
+      canvas.drawLine(
+        Offset(half, size.height - half),
+        Offset(size.width - half, size.height - half),
+        paint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(final BisonTextFieldBorderPainter oldDelegate) =>
+      oldDelegate.spec != spec || oldDelegate.borderRadius != borderRadius;
 }

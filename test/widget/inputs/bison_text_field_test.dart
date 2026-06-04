@@ -1,5 +1,7 @@
 import 'package:bison_design_system/bison_design_system.dart'
     show BisonTextField, BisonThemeTokens;
+import 'package:bison_design_system/src/core_widgets/inputs/bison_text_field.dart'
+    show BisonTextFieldBorderPainter, BisonTextFieldBorderSpec;
 import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -19,9 +21,24 @@ Future<void> _tapInThenOut(WidgetTester tester) async {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-/// Returns the [Container] that forms the input box inside [BisonTextField].
-Container _inputContainer(WidgetTester tester) {
-  return tester.widget<Container>(
+/// Returns the [BisonTextFieldBorderSpec] from the [CustomPaint] border painter
+/// inside [BisonTextField].
+BisonTextFieldBorderSpec _borderSpec(WidgetTester tester) {
+  final customPaint = tester.widget<CustomPaint>(
+    find
+        .descendant(
+          of: find.byType(BisonTextField),
+          matching: find.byType(CustomPaint),
+        )
+        .first,
+  );
+  return (customPaint.painter! as BisonTextFieldBorderPainter).spec;
+}
+
+/// Returns the background [Color] from the inner [Container] inside
+/// [BisonTextField].
+Color _backgroundColor(WidgetTester tester) {
+  final container = tester.widget<Container>(
     find
         .descendant(
           of: find.byType(BisonTextField),
@@ -29,12 +46,8 @@ Container _inputContainer(WidgetTester tester) {
         )
         .first,
   );
+  return (container.decoration! as BoxDecoration).color!;
 }
-
-BoxDecoration _decoration(WidgetTester tester) =>
-    _inputContainer(tester).decoration! as BoxDecoration;
-
-Border _border(WidgetTester tester) => _decoration(tester).border! as Border;
 
 /// Returns the first [Text] widget inside [BisonTextField] whose data matches
 /// [text].
@@ -55,8 +68,8 @@ void main() {
 
       await tester.pumpWidget(buildScaffold(const BisonTextField()));
 
-      expect(_decoration(tester).color, equals(theme.inputFieldField));
-      expect(_border(tester).bottom.color, equals(theme.borderPlain));
+      expect(_backgroundColor(tester), equals(theme.inputFieldField));
+      expect(_borderSpec(tester).bottomColor, equals(theme.borderPlain));
     });
   });
 
@@ -77,7 +90,7 @@ void main() {
       await gesture.moveTo(tester.getCenter(find.byType(BisonTextField)));
       await tester.pump();
 
-      expect(_decoration(tester).color, equals(theme.inputFieldFieldHovered));
+      expect(_backgroundColor(tester), equals(theme.inputFieldFieldHovered));
     });
   });
 
@@ -96,7 +109,7 @@ void main() {
         // First cycle
         await _tapInThenOut(tester);
         expect(
-          _border(tester).bottom.color,
+          _borderSpec(tester).bottomColor,
           equals(theme.borderPlain),
           reason: 'border should be plain after first tap-out',
         );
@@ -104,7 +117,7 @@ void main() {
         // Second cycle — this is the case that was broken
         await _tapInThenOut(tester);
         expect(
-          _border(tester).bottom.color,
+          _borderSpec(tester).bottomColor,
           equals(theme.borderPlain),
           reason: 'border should be plain after second tap-out',
         );
@@ -147,8 +160,8 @@ void main() {
       focusNode.requestFocus();
       await tester.pump();
 
-      // Focused state uses Border.all — check top side.
-      expect(_border(tester).top.color, equals(theme.borderPrimary));
+      // Focused state uses allColor (all sides uniform).
+      expect(_borderSpec(tester).allColor, equals(theme.borderPrimary));
     });
 
     testWidgets('uses inputFieldField background when focused', (
@@ -165,7 +178,7 @@ void main() {
       focusNode.requestFocus();
       await tester.pump();
 
-      expect(_decoration(tester).color, equals(theme.inputFieldField));
+      expect(_backgroundColor(tester), equals(theme.inputFieldField));
     });
   });
 
@@ -179,11 +192,8 @@ void main() {
           buildScaffold(const BisonTextField(enabled: false)),
         );
 
-        expect(
-          _decoration(tester).color,
-          equals(theme.inputFieldFieldDisabled),
-        );
-        expect(_border(tester).bottom.color, equals(theme.borderDisabled));
+        expect(_backgroundColor(tester), equals(theme.inputFieldFieldDisabled));
+        expect(_borderSpec(tester).bottomColor, equals(theme.borderDisabled));
       },
     );
 
@@ -210,7 +220,8 @@ void main() {
         buildScaffold(const BisonTextField(hasError: true)),
       );
 
-      expect(_border(tester).bottom.color, equals(theme.borderError));
+      // Error state uses allColor (all sides uniform).
+      expect(_borderSpec(tester).allColor, equals(theme.borderError));
     });
 
     testWidgets('helper text uses textError color', (
@@ -236,7 +247,8 @@ void main() {
         buildScaffold(const BisonTextField(hasError: true, hasWarning: true)),
       );
 
-      expect(_border(tester).bottom.color, equals(theme.borderError));
+      // Error takes precedence — allColor is set.
+      expect(_borderSpec(tester).allColor, equals(theme.borderError));
     });
   });
 
@@ -248,8 +260,8 @@ void main() {
         buildScaffold(const BisonTextField(hasWarning: true)),
       );
 
-      // Warning state uses Border.all — check top side.
-      expect(_border(tester).top.color, equals(theme.borderWarning));
+      // Warning state uses allColor (all sides uniform).
+      expect(_borderSpec(tester).allColor, equals(theme.borderWarning));
     });
 
     testWidgets('helper text uses textPlain color', (
