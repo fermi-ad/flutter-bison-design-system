@@ -1,5 +1,5 @@
 import 'package:bison_design_system/bison_design_system.dart'
-    show BisonTextField, BisonThemeTokens;
+    show BisonTextField, BisonTextFieldSize, BisonThemeTokens;
 import 'package:bison_design_system/src/core_widgets/inputs/bison_text_field.dart'
     show BisonTextFieldBorderPainter, BisonTextFieldBorderSpec;
 import 'package:flutter/gestures.dart' show PointerDeviceKind;
@@ -32,7 +32,9 @@ BisonTextFieldBorderSpec _borderSpec(WidgetTester tester) {
         )
         .first,
   );
-  return (customPaint.painter! as BisonTextFieldBorderPainter).spec;
+  final CustomPainter? painter =
+      customPaint.painter ?? customPaint.foregroundPainter;
+  return (painter! as BisonTextFieldBorderPainter).spec;
 }
 
 /// Returns the background [Color] from the inner [Container] inside
@@ -49,6 +51,35 @@ Color _backgroundColor(WidgetTester tester) {
   return (container.decoration! as BoxDecoration).color!;
 }
 
+/// Returns the [Container] that wraps the editable input area.
+Container _inputContainer(WidgetTester tester) {
+  return tester.widget<Container>(
+    find
+        .descendant(
+          of: find.byType(BisonTextField),
+          matching: find.byType(Container),
+        )
+        .first,
+  );
+}
+
+/// Returns the configured input padding from the input [Container].
+EdgeInsets _inputPadding(WidgetTester tester) {
+  return _inputContainer(tester).padding! as EdgeInsets;
+}
+
+/// Returns the rendered outer size of the input area.
+Size _inputSize(WidgetTester tester) {
+  return tester.getSize(
+    find
+        .descendant(
+          of: find.byType(BisonTextField),
+          matching: find.byType(CustomPaint),
+        )
+        .first,
+  );
+}
+
 /// Returns the first [Text] widget inside [BisonTextField] whose data matches
 /// [text].
 Text _findText(WidgetTester tester, String text) {
@@ -60,6 +91,57 @@ Text _findText(WidgetTester tester, String text) {
 // ── Tests ─────────────────────────────────────────────────────────────────────
 
 void main() {
+  group('BisonTextField — size', () {
+    testWidgets('defaults to medium size', (final WidgetTester tester) async {
+      await tester.pumpWidget(buildScaffold(const BisonTextField()));
+
+      expect(_inputSize(tester).height, equals(40.0));
+      expect(
+        _inputPadding(tester),
+        equals(const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0)),
+      );
+    });
+
+    testWidgets('large size uses 48px height and all-small padding', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(const BisonTextField(size: BisonTextFieldSize.large)),
+      );
+
+      expect(_inputSize(tester).height, equals(48.0));
+      expect(_inputPadding(tester), equals(const EdgeInsets.all(16.0)));
+    });
+
+    testWidgets('medium size uses 40px height and tiny/small padding', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(const BisonTextField(size: BisonTextFieldSize.medium)),
+      );
+
+      expect(_inputSize(tester).height, equals(40.0));
+      expect(
+        _inputPadding(tester),
+        equals(const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0)),
+      );
+    });
+
+    testWidgets('small size uses 32px height and tiny/small padding', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(const BisonTextField(size: BisonTextFieldSize.small)),
+      );
+
+      expect(_inputSize(tester).height, equals(32.0));
+      expect(
+        _inputPadding(tester),
+        equals(const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0)),
+      );
+    });
+  });
+
   group('BisonTextField — default state', () {
     testWidgets('uses inputFieldField background and borderPlain border', (
       final WidgetTester tester,

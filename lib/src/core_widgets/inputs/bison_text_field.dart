@@ -1,6 +1,19 @@
 import 'package:flutter/widgets.dart';
 import 'package:bison_design_system/theme.dart'
-    show BisonContext, BisonThemeTokens;
+    show BisonContext, BisonSpacingTokens, BisonThemeTokens;
+
+/// Controls the size of [BisonTextField]'s input area.
+enum BisonTextFieldSize {
+  /// 48px input height with [BisonSpacingTokens.smallSpacing] padding on all
+  /// sides.
+  large,
+
+  /// 40px input height with tiny vertical and small horizontal padding.
+  medium,
+
+  /// 32px input height with tiny vertical and small horizontal padding.
+  small,
+}
 
 /// A text field widget for the Bison design system.
 ///
@@ -72,6 +85,11 @@ class BisonTextField extends StatefulWidget {
   /// Whether to obscure the text, e.g. for password fields.
   final bool obscureText;
 
+  /// The overall size of the input area.
+  ///
+  /// Defaults to [BisonTextFieldSize.medium].
+  final BisonTextFieldSize size;
+
   const BisonTextField({
     super.key,
     this.label,
@@ -86,6 +104,7 @@ class BisonTextField extends StatefulWidget {
     this.autofocus = false,
     this.keyboardType,
     this.obscureText = false,
+    this.size = BisonTextFieldSize.medium,
   });
 
   @override
@@ -281,6 +300,30 @@ class _BisonTextFieldState extends State<BisonTextField> {
     return theme.textMuted;
   }
 
+  double _inputHeight() {
+    switch (widget.size) {
+      case BisonTextFieldSize.large:
+        return 48;
+      case BisonTextFieldSize.medium:
+        return 40;
+      case BisonTextFieldSize.small:
+        return 32;
+    }
+  }
+
+  EdgeInsets _inputPadding(final BisonSpacingTokens spacing) {
+    switch (widget.size) {
+      case BisonTextFieldSize.large:
+        return EdgeInsets.all(spacing.smallSpacing);
+      case BisonTextFieldSize.medium:
+      case BisonTextFieldSize.small:
+        return EdgeInsets.symmetric(
+          vertical: spacing.tinySpacing,
+          horizontal: spacing.smallSpacing,
+        );
+    }
+  }
+
   // ── Build ─────────────────────────────────────────────────────────────────
 
   @override
@@ -290,6 +333,8 @@ class _BisonTextFieldState extends State<BisonTextField> {
     final spacing = bison.spacing;
     final corners = bison.corners;
     final typography = bison.typography;
+    final double inputHeight = _inputHeight();
+    final EdgeInsets inputPadding = _inputPadding(spacing);
 
     // _InputArea is a StatefulWidget so its element — and the EditableText
     // element inside it — survive rebuilds of _BisonTextFieldState triggered
@@ -324,23 +369,21 @@ class _BisonTextFieldState extends State<BisonTextField> {
     final Widget inputContainer = ListenableBuilder(
       listenable: _interaction,
       builder: (final BuildContext ctx, final Widget? child) {
-        return CustomPaint(
-          painter: BisonTextFieldBorderPainter(
-            spec: _borderSpec(theme),
-            borderRadius: borderRadius,
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              color: _backgroundColor(theme),
+        return SizedBox(
+          height: inputHeight,
+          child: CustomPaint(
+            foregroundPainter: BisonTextFieldBorderPainter(
+              spec: _borderSpec(theme),
               borderRadius: borderRadius,
             ),
-            // Inset padding accounts for the 2px border reserved on all sides.
-            margin: const EdgeInsets.all(2.0),
-            padding: EdgeInsets.symmetric(
-              horizontal: spacing.smallSpacing,
-              vertical: spacing.smallSpacing,
+            child: Container(
+              decoration: BoxDecoration(
+                color: _backgroundColor(theme),
+                borderRadius: borderRadius,
+              ),
+              padding: inputPadding,
+              child: child,
             ),
-            child: child,
           ),
         );
       },
@@ -563,9 +606,7 @@ class BisonTextFieldBorderPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = w;
 
-    // The painter draws on the outer edge of the widget (before the 2px margin
-    // applied to the inner Container). We inset by w/2 so the stroke is fully
-    // within the widget bounds.
+    // We inset by w/2 so the stroke is fully within the widget bounds.
     final double half = w / 2;
     final Rect rect = Rect.fromLTWH(
       half,
