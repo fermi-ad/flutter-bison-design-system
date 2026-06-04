@@ -18,18 +18,11 @@ import 'package:bison_design_system/theme.dart'
 /// )
 /// ```
 class BisonTextField extends StatefulWidget {
-  /// Optional label displayed above the input field.
-  ///
-  /// Rendered using the `capitalizedLabel` typography token.
+  /// Label displayed above the input field.
   final String? label;
 
-  /// Optional helper text displayed below the input field.
-  ///
-  /// Color adapts to the current state:
-  /// - Error → `textError`
-  /// - Warning → `textPlain`
-  /// - Disabled → `textDisabled`
-  /// - Default → `textMuted`
+  /// Helper text displayed below the input field. It can be used
+  /// for more information on error/warning states
   final String? helperText;
 
   /// Placeholder text shown inside the field when it is empty.
@@ -69,6 +62,8 @@ class BisonTextField extends StatefulWidget {
   final ValueChanged<String>? onChanged;
 
   /// Whether the field should request focus as soon as it is mounted.
+  ///
+  /// `false` by default.
   final bool autofocus;
 
   /// The type of keyboard to display for editing.
