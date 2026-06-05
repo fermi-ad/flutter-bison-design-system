@@ -188,16 +188,16 @@ ButtonStyle getFilledBisonButtonStyle(
     final Set<WidgetState> states,
   ) {
     if (states.contains(WidgetState.disabled)) {
-      return theme.buttonGhostDisabled;
+      return Colors.yellow;
     }
     if (states.contains(WidgetState.focused) ||
         states.contains(WidgetState.pressed)) {
-      return theme.buttonPrimaryFocusedPressed;
+      return Colors.purpleAccent;
     }
     if (states.contains(WidgetState.hovered)) {
-      return theme.buttonPrimaryHovered;
+      return Colors.black;
     }
-    return theme.buttonPrimary;
+    return Colors.deepOrange;
   }),
   foregroundColor: WidgetStateProperty.resolveWith<Color?>((
     final Set<WidgetState> states,
@@ -208,9 +208,7 @@ ButtonStyle getFilledBisonButtonStyle(
     return theme.textInverse;
   }),
   shape: WidgetStateProperty.all(
-    RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(corners.cornerExtraSmall)),
-    ),
+    RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(30))),
   ),
   side: WidgetStateProperty.resolveWith<BorderSide?>((
     final Set<WidgetState> states,
@@ -252,9 +250,7 @@ ButtonStyle getGhostBisonButtonStyle(
     return theme.textPrimary;
   }),
   shape: WidgetStateProperty.all(
-    RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(corners.cornerExtraSmall)),
-    ),
+    RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50))),
   ),
   side: WidgetStateProperty.resolveWith<BorderSide?>((
     final Set<WidgetState> states,
