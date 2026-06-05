@@ -459,126 +459,73 @@ void main() {
     });
   });
 
-  group('BisonTextField — text preserved across remounts (PageStorage)', () {
-    testWidgets(
-      'text is restored after remount using the fallback storage key',
-      (final WidgetTester tester) async {
-        // Simulate widgetbook's ValueKey(uri) pattern: the use-case widget is
-        // wrapped in a keyed container. When the key changes, Flutter remounts
-        // the subtree — exactly what widgetbook does on every knob change.
-        //
-        // A single PageStorageBucket is shared across pumpWidget calls so that
-        // the saved text survives the remount. No key is set on BisonTextField
-        // itself; the implementation falls back to a fixed symbol identifier.
-        final PageStorageBucket bucket = PageStorageBucket();
+  group('BisonTextField — remount behavior', () {
+    testWidgets('uncontrolled field does not restore text after remount', (
+      final WidgetTester tester,
+    ) async {
+      Widget buildWithKey(int keyValue) {
+        return buildScaffold(
+          KeyedSubtree(
+            key: ValueKey(keyValue),
+            child: const BisonTextField(placeholder: 'Type here...'),
+          ),
+        );
+      }
 
-        Widget buildWithKey(int keyValue) {
-          return buildScaffold(
-            PageStorage(
-              bucket: bucket,
-              child: KeyedSubtree(
-                key: ValueKey(keyValue),
-                child: const BisonTextField(placeholder: 'Type here...'),
-              ),
+      await tester.pumpWidget(buildWithKey(0));
+      await tester.tap(find.byType(BisonTextField));
+      await tester.pump();
+      await tester.enterText(find.byType(EditableText), 'hello');
+      await tester.pump();
+
+      expect(
+        tester.widget<EditableText>(find.byType(EditableText)).controller.text,
+        equals('hello'),
+      );
+
+      await tester.pumpWidget(buildWithKey(1));
+
+      expect(
+        tester.widget<EditableText>(find.byType(EditableText)).controller.text,
+        equals(''),
+        reason: 'internal controller is recreated on remount',
+      );
+    });
+
+    testWidgets('controlled field preserves text after remount', (
+      final WidgetTester tester,
+    ) async {
+      final TextEditingController controller = TextEditingController();
+      addTearDown(controller.dispose);
+
+      Widget buildWithKey(int keyValue) {
+        return buildScaffold(
+          KeyedSubtree(
+            key: ValueKey(keyValue),
+            child: BisonTextField(
+              placeholder: 'Type here...',
+              controller: controller,
             ),
-          );
-        }
-
-        // Initial mount — key = 0
-        await tester.pumpWidget(buildWithKey(0));
-        await tester.tap(find.byType(BisonTextField));
-        await tester.pump();
-        await tester.enterText(find.byType(EditableText), 'hello');
-        await tester.pump();
-
-        expect(
-          tester
-              .widget<EditableText>(find.byType(EditableText))
-              .controller
-              .text,
-          equals('hello'),
+          ),
         );
+      }
 
-        // Remount with key = 1 (simulates widgetbook knob change)
-        await tester.pumpWidget(buildWithKey(1));
+      await tester.pumpWidget(buildWithKey(0));
+      await tester.tap(find.byType(BisonTextField));
+      await tester.pump();
+      await tester.enterText(find.byType(EditableText), 'hello');
+      await tester.pump();
 
-        expect(
-          tester
-              .widget<EditableText>(find.byType(EditableText))
-              .controller
-              .text,
-          equals('hello'),
-          reason: 'text must be restored from PageStorage after remount',
-        );
-      },
-    );
+      expect(controller.text, equals('hello'));
 
-    testWidgets(
-      'two fields with different widget keys use independent storage slots',
-      (final WidgetTester tester) async {
-        final PageStorageBucket bucket = PageStorageBucket();
+      await tester.pumpWidget(buildWithKey(1));
 
-        Widget buildWithKey(int keyValue) {
-          return buildScaffold(
-            PageStorage(
-              bucket: bucket,
-              child: Column(
-                children: [
-                  KeyedSubtree(
-                    key: ValueKey('a-$keyValue'),
-                    child: const BisonTextField(
-                      key: ValueKey('field-a'),
-                      placeholder: 'Field A',
-                    ),
-                  ),
-                  KeyedSubtree(
-                    key: ValueKey('b-$keyValue'),
-                    child: const BisonTextField(
-                      key: ValueKey('field-b'),
-                      placeholder: 'Field B',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
-
-        await tester.pumpWidget(buildWithKey(0));
-
-        // Type into field A
-        await tester.tap(find.byType(BisonTextField).first);
-        await tester.pump();
-        await tester.enterText(find.byType(EditableText).first, 'alpha');
-        await tester.pump();
-
-        // Type into field B
-        await tester.tap(find.byType(BisonTextField).last);
-        await tester.pump();
-        await tester.enterText(find.byType(EditableText).last, 'beta');
-        await tester.pump();
-
-        // Remount both fields
-        await tester.pumpWidget(buildWithKey(1));
-
-        expect(
-          tester
-              .widget<EditableText>(find.byType(EditableText).first)
-              .controller
-              .text,
-          equals('alpha'),
-          reason: 'field A text must survive remount independently',
-        );
-        expect(
-          tester
-              .widget<EditableText>(find.byType(EditableText).last)
-              .controller
-              .text,
-          equals('beta'),
-          reason: 'field B text must survive remount independently',
-        );
-      },
-    );
+      expect(
+        tester.widget<EditableText>(find.byType(EditableText)).controller.text,
+        equals('hello'),
+        reason: 'externally owned controller persists across remounts',
+      );
+    });
   });
 
   group('BisonTextField — text preserved across state changes', () {
