@@ -43,7 +43,7 @@ jobs:
 
       - name: Build Widgetbook Web
         working-directory: ./example
-        run: flutter build web -t lib/widgetbook.main.dart
+        run: flutter build web -t lib/main.dart
 
       - name: Upload to Widgetbook Cloud
         working-directory: ./example
