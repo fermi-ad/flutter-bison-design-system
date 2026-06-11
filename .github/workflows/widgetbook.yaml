@@ -39,7 +39,7 @@ jobs:
         if: github.event_name == 'pull_request'
         run: |
           export PATH="$PATH":"$HOME/.pub-cache/bin"
-          widgetbook coverage --path ./lib
+          widgetbook coverage --package ./ --widgetbook ./example
 
       - name: Build Widgetbook Web
         working-directory: ./example
