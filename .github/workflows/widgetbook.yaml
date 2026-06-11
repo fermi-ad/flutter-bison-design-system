@@ -49,4 +49,6 @@ jobs:
         working-directory: ./example
         run: |
           export PATH="$PATH":"$HOME/.pub-cache/bin"
-          widgetbook cloud build push --api-key ${{ secrets.WIDGETBOOK_API_KEY }}
+          widgetbook cloud build push \
+          --api-key ${{ secrets.WIDGETBOOK_API_KEY }} \
+          --branch ${{ github.head_ref || github.ref_name }}
