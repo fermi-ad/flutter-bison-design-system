@@ -53,3 +53,4 @@ jobs:
           widgetbook cloud build push \
           --api-key ${{ secrets.WIDGETBOOK_API_KEY }} \
           --branch ${{ github.head_ref || github.ref_name }}
+          --commit ${{ github.event.pull_request.head.sha || github.sha }}
