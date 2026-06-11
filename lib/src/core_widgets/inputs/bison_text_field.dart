@@ -21,7 +21,8 @@ enum BisonTextFieldSize {
 ///
 /// Supports an optional [label] displayed above the input and optional
 /// [helperText] displayed below. Visual state (border color, background)
-/// adapts to disabled, error, warning, focused, hovered, and default states.
+/// adapts to disabled, skeleton, read-only, error, warning, focused, hovered,
+/// and default states.
 ///
 /// State ownership:
 /// - When [controller] is provided, text state is owned by the caller and can
@@ -80,6 +81,21 @@ class BisonTextField extends StatefulWidget {
   /// also `true`.
   final bool hasWarning;
 
+  /// Whether the field is read-only.
+  ///
+  /// When `true`, the text cannot be edited. The background is transparent,
+  /// only a bottom border is shown using `borderPlain`, and the text color is
+  /// `textPlain`. Hover and focus interactions are suppressed. Ignored when
+  /// [enabled] is `false` or [isLoading] is `true`.
+  final bool readOnly;
+
+  /// Whether the field is in a loading/skeleton state.
+  ///
+  /// When `true`, the label, input box, and helper text are replaced with
+  /// filled placeholder boxes using `miscellaneousSkeletonBackground`. No text
+  /// or interaction is shown. Takes precedence over all other states.
+  final bool isLoading;
+
   /// Called whenever the text changes.
   final ValueChanged<String>? onChanged;
 
@@ -109,6 +125,8 @@ class BisonTextField extends StatefulWidget {
     this.enabled = true,
     this.hasError = false,
     this.hasWarning = false,
+    this.readOnly = false,
+    this.isLoading = false,
     this.onChanged,
     this.autofocus = false,
     this.keyboardType,
@@ -226,9 +244,11 @@ class _BisonTextFieldState extends State<BisonTextField> {
 
   // ── Color resolution ──────────────────────────────────────────────────────
 
-  /// State priority: disabled > error > warning > focused > hovered > default
+  /// State priority:
+  /// disabled > readOnly > error > warning > focused > hovered > default
   Color _backgroundColor(final BisonThemeTokens theme) {
     if (!widget.enabled) return theme.inputFieldFieldDisabled;
+    if (widget.readOnly) return const Color(0x00000000); // transparent
     if (_interaction.isHovered && !_interaction.isFocused) {
       return theme.inputFieldFieldHovered;
     }
@@ -246,6 +266,9 @@ class _BisonTextFieldState extends State<BisonTextField> {
   BisonTextFieldBorderSpec _borderSpec(final BisonThemeTokens theme) {
     if (!widget.enabled) {
       return BisonTextFieldBorderSpec.bottomOnly(theme.borderDisabled);
+    }
+    if (widget.readOnly) {
+      return BisonTextFieldBorderSpec.bottomOnly(theme.borderPlain);
     }
     if (widget.hasError) {
       return BisonTextFieldBorderSpec.all(theme.borderError);
@@ -307,6 +330,49 @@ class _BisonTextFieldState extends State<BisonTextField> {
     final double inputHeight = _inputHeight();
     final EdgeInsets inputPadding = _inputPadding(spacing);
 
+    // ── Skeleton state ───────────────────────────────────────────────────────
+    // When isLoading is true, replace the entire widget tree with filled
+    // placeholder boxes. No text, border, or interaction is shown.
+    if (widget.isLoading) {
+      final Color skeletonColor = theme.miscellaneousSkeletonBackground;
+      final BorderRadius skeletonRadius = BorderRadius.circular(
+        corners.cornerExtraSmall,
+      );
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (widget.label != null) ...[
+            Container(
+              height: 16,
+              decoration: BoxDecoration(
+                color: skeletonColor,
+                borderRadius: skeletonRadius,
+              ),
+            ),
+            SizedBox(height: spacing.tinySpacing),
+          ],
+          Container(
+            height: inputHeight,
+            decoration: BoxDecoration(
+              color: skeletonColor,
+              borderRadius: skeletonRadius,
+            ),
+          ),
+          if (widget.helperText != null) ...[
+            SizedBox(height: spacing.microSpacing),
+            Container(
+              height: 14,
+              decoration: BoxDecoration(
+                color: skeletonColor,
+                borderRadius: skeletonRadius,
+              ),
+            ),
+          ],
+        ],
+      );
+    }
+
     // _InputArea is a StatefulWidget so its element — and the EditableText
     // element inside it — survive rebuilds of _BisonTextFieldState triggered
     // by _interaction notifications.
@@ -319,6 +385,7 @@ class _BisonTextFieldState extends State<BisonTextField> {
       focusNode: _focusNode,
       placeholder: widget.placeholder,
       enabled: widget.enabled,
+      readOnly: widget.readOnly,
       autofocus: widget.autofocus,
       keyboardType: widget.keyboardType,
       obscureText: widget.obscureText,
@@ -364,17 +431,18 @@ class _BisonTextFieldState extends State<BisonTextField> {
     // TapRegion at the BisonTextField level handles tap-outside reliably.
     // The GestureDetector inside the TapRegion focuses the field when the
     // padding area (outside EditableText's hit area) is tapped.
+    final bool interactive = widget.enabled && !widget.readOnly;
     final Widget interactiveContainer = TapRegion(
-      onTapOutside: widget.enabled ? (_) => _focusNode.unfocus() : null,
+      onTapOutside: interactive ? (_) => _focusNode.unfocus() : null,
       child: MouseRegion(
-        cursor: widget.enabled
+        cursor: interactive
             ? SystemMouseCursors.text
             : SystemMouseCursors.basic,
-        onEnter: widget.enabled ? (_) => _interaction.isHovered = true : null,
-        onExit: widget.enabled ? (_) => _interaction.isHovered = false : null,
+        onEnter: interactive ? (_) => _interaction.isHovered = true : null,
+        onExit: interactive ? (_) => _interaction.isHovered = false : null,
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: widget.enabled ? () => _focusNode.requestFocus() : null,
+          onTap: interactive ? () => _focusNode.requestFocus() : null,
           child: inputContainer,
         ),
       ),
@@ -425,6 +493,7 @@ class _InputArea extends StatefulWidget {
   final FocusNode focusNode;
   final String? placeholder;
   final bool enabled;
+  final bool readOnly;
   final bool autofocus;
   final TextInputType? keyboardType;
   final bool obscureText;
@@ -435,6 +504,7 @@ class _InputArea extends StatefulWidget {
     required this.focusNode,
     required this.placeholder,
     required this.enabled,
+    required this.readOnly,
     required this.autofocus,
     required this.keyboardType,
     required this.obscureText,
@@ -452,15 +522,17 @@ class _InputAreaState extends State<_InputArea> {
     final theme = bison.theme;
     final typography = bison.typography;
 
-    final Color textColor = widget.enabled
-        ? theme.textPlain
-        : theme.textDisabled;
+    final Color textColor = !widget.enabled
+        ? theme.textDisabled
+        : theme.textPlain;
     final Color placeholderColor = widget.enabled
         ? theme.textMuted
         : theme.textDisabled;
 
+    final bool isReadOnly = !widget.enabled || widget.readOnly;
+
     final Widget editableText = IgnorePointer(
-      ignoring: !widget.enabled,
+      ignoring: isReadOnly,
       child: EditableText(
         controller: widget.controller,
         focusNode: widget.focusNode,
@@ -469,7 +541,7 @@ class _InputAreaState extends State<_InputArea> {
         backgroundCursorColor: theme.textDisabled,
         selectionColor: theme.borderPrimary.withValues(alpha: 0.3),
         autofocus: widget.autofocus,
-        readOnly: !widget.enabled,
+        readOnly: isReadOnly,
         keyboardType: widget.keyboardType,
         obscureText: widget.obscureText,
         onChanged: widget.onChanged,

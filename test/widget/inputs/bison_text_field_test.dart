@@ -651,4 +651,289 @@ void main() {
       );
     });
   });
+
+  group('BisonTextField — read-only state', () {
+    testWidgets('uses transparent background', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(const BisonTextField(readOnly: true)),
+      );
+
+      expect(_backgroundColor(tester), equals(const Color(0x00000000)));
+    });
+
+    testWidgets('uses bottom-only borderPlain border', (
+      final WidgetTester tester,
+    ) async {
+      final BisonThemeTokens theme = BisonThemeTokens.light();
+
+      await tester.pumpWidget(
+        buildScaffold(const BisonTextField(readOnly: true)),
+      );
+
+      final BisonTextFieldBorderSpec spec = _borderSpec(tester);
+      expect(spec.allColor, isNull);
+      expect(spec.bottomColor, equals(theme.borderPlain));
+    });
+
+    testWidgets('EditableText.readOnly is true', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(const BisonTextField(readOnly: true)),
+      );
+
+      final EditableText editableText = tester.widget<EditableText>(
+        find.byType(EditableText),
+      );
+      expect(editableText.readOnly, isTrue);
+    });
+
+    testWidgets('does not respond to hover (background stays transparent)', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(const BisonTextField(readOnly: true)),
+      );
+
+      final TestGesture gesture = await tester.createGesture(
+        kind: PointerDeviceKind.mouse,
+      );
+      await gesture.addPointer(location: Offset.zero);
+      addTearDown(gesture.removePointer);
+
+      await gesture.moveTo(tester.getCenter(find.byType(BisonTextField)));
+      await tester.pump();
+
+      // Background must remain transparent — no hover tint applied.
+      expect(_backgroundColor(tester), equals(const Color(0x00000000)));
+    });
+
+    testWidgets('disabled takes precedence over readOnly', (
+      final WidgetTester tester,
+    ) async {
+      final BisonThemeTokens theme = BisonThemeTokens.light();
+
+      await tester.pumpWidget(
+        buildScaffold(const BisonTextField(enabled: false, readOnly: true)),
+      );
+
+      expect(_backgroundColor(tester), equals(theme.inputFieldFieldDisabled));
+      expect(_borderSpec(tester).bottomColor, equals(theme.borderDisabled));
+    });
+
+    testWidgets('text is preserved when readOnly toggles', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(
+          const BisonTextField(placeholder: 'Type here...', readOnly: false),
+        ),
+      );
+
+      await tester.tap(find.byType(BisonTextField));
+      await tester.pump();
+      await tester.enterText(find.byType(EditableText), 'preserved');
+      await tester.pump();
+
+      await tester.pumpWidget(
+        buildScaffold(
+          const BisonTextField(placeholder: 'Type here...', readOnly: true),
+        ),
+      );
+
+      expect(
+        tester.widget<EditableText>(find.byType(EditableText)).controller.text,
+        equals('preserved'),
+        reason: 'text must survive readOnly toggling to true',
+      );
+    });
+  });
+
+  group('BisonTextField — skeleton state', () {
+    testWidgets('does not render EditableText when isLoading is true', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(const BisonTextField(isLoading: true)),
+      );
+
+      expect(find.byType(EditableText), findsNothing);
+    });
+
+    testWidgets('renders input skeleton box with correct height (medium)', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(
+          const BisonTextField(
+            isLoading: true,
+            size: BisonTextFieldSize.medium,
+          ),
+        ),
+      );
+
+      // The input skeleton Container should have height 40 (medium size).
+      final Iterable<Container> containers = tester.widgetList<Container>(
+        find.descendant(
+          of: find.byType(BisonTextField),
+          matching: find.byType(Container),
+        ),
+      );
+      expect(
+        containers.any((c) => c.constraints?.maxHeight == 40.0),
+        isTrue,
+        reason: 'medium skeleton input box should be 40px tall',
+      );
+    });
+
+    testWidgets('renders input skeleton box with correct height (large)', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(
+          const BisonTextField(isLoading: true, size: BisonTextFieldSize.large),
+        ),
+      );
+
+      final Iterable<Container> containers = tester.widgetList<Container>(
+        find.descendant(
+          of: find.byType(BisonTextField),
+          matching: find.byType(Container),
+        ),
+      );
+      expect(
+        containers.any((c) => c.constraints?.maxHeight == 48.0),
+        isTrue,
+        reason: 'large skeleton input box should be 48px tall',
+      );
+    });
+
+    testWidgets('renders input skeleton box with correct height (small)', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(
+          const BisonTextField(isLoading: true, size: BisonTextFieldSize.small),
+        ),
+      );
+
+      final Iterable<Container> containers = tester.widgetList<Container>(
+        find.descendant(
+          of: find.byType(BisonTextField),
+          matching: find.byType(Container),
+        ),
+      );
+      expect(
+        containers.any((c) => c.constraints?.maxHeight == 32.0),
+        isTrue,
+        reason: 'small skeleton input box should be 32px tall',
+      );
+    });
+
+    testWidgets(
+      'all skeleton boxes use miscellaneousSkeletonBackground color',
+      (final WidgetTester tester) async {
+        final BisonThemeTokens theme = BisonThemeTokens.light();
+
+        await tester.pumpWidget(
+          buildScaffold(
+            const BisonTextField(
+              isLoading: true,
+              label: 'Name',
+              helperText: 'Enter your name',
+            ),
+          ),
+        );
+
+        final Iterable<Container> containers = tester.widgetList<Container>(
+          find.descendant(
+            of: find.byType(BisonTextField),
+            matching: find.byType(Container),
+          ),
+        );
+
+        for (final Container c in containers) {
+          final BoxDecoration? decoration = c.decoration as BoxDecoration?;
+          if (decoration != null) {
+            expect(
+              decoration.color,
+              equals(theme.miscellaneousSkeletonBackground),
+              reason:
+                  'every skeleton box must use miscellaneousSkeletonBackground',
+            );
+          }
+        }
+      },
+    );
+
+    testWidgets(
+      'renders three skeleton boxes when label and helperText are set',
+      (final WidgetTester tester) async {
+        await tester.pumpWidget(
+          buildScaffold(
+            const BisonTextField(
+              isLoading: true,
+              label: 'Name',
+              helperText: 'Enter your name',
+            ),
+          ),
+        );
+
+        final int containerCount = tester
+            .widgetList<Container>(
+              find.descendant(
+                of: find.byType(BisonTextField),
+                matching: find.byType(Container),
+              ),
+            )
+            .length;
+
+        expect(containerCount, equals(3));
+      },
+    );
+
+    testWidgets(
+      'renders one skeleton box when label and helperText are absent',
+      (final WidgetTester tester) async {
+        await tester.pumpWidget(
+          buildScaffold(const BisonTextField(isLoading: true)),
+        );
+
+        final int containerCount = tester
+            .widgetList<Container>(
+              find.descendant(
+                of: find.byType(BisonTextField),
+                matching: find.byType(Container),
+              ),
+            )
+            .length;
+
+        expect(containerCount, equals(1));
+      },
+    );
+
+    testWidgets('isLoading takes precedence over readOnly', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(const BisonTextField(isLoading: true, readOnly: true)),
+      );
+
+      // Skeleton path: no EditableText rendered.
+      expect(find.byType(EditableText), findsNothing);
+    });
+
+    testWidgets('isLoading takes precedence over disabled', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(const BisonTextField(isLoading: true, enabled: false)),
+      );
+
+      // Skeleton path: no EditableText rendered.
+      expect(find.byType(EditableText), findsNothing);
+    });
+  });
 }

@@ -4,9 +4,6 @@ import 'package:flutter/widgets.dart';
 import 'package:widgetbook/widgetbook.dart' show KnobsExtension;
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
-String _firstNameDraft = '';
-String _lastNameDraft = '';
-
 @widgetbook.UseCase(name: 'Text Field', type: BisonTextField)
 Widget buildBisonTextField(BuildContext context) {
   return const _BisonTextFieldUseCase();
@@ -20,35 +17,6 @@ class _BisonTextFieldUseCase extends StatefulWidget {
 }
 
 class _BisonTextFieldUseCaseState extends State<_BisonTextFieldUseCase> {
-  late final TextEditingController _firstNameController;
-  late final TextEditingController _lastNameController;
-
-  void _syncFirstNameDraft() {
-    _firstNameDraft = _firstNameController.text;
-  }
-
-  void _syncLastNameDraft() {
-    _lastNameDraft = _lastNameController.text;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _firstNameController = TextEditingController(text: _firstNameDraft);
-    _lastNameController = TextEditingController(text: _lastNameDraft);
-    _firstNameController.addListener(_syncFirstNameDraft);
-    _lastNameController.addListener(_syncLastNameDraft);
-  }
-
-  @override
-  void dispose() {
-    _firstNameController.removeListener(_syncFirstNameDraft);
-    _lastNameController.removeListener(_syncLastNameDraft);
-    _firstNameController.dispose();
-    _lastNameController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final BisonTextFieldSize size = context.knobs.object
@@ -59,26 +27,42 @@ class _BisonTextFieldUseCaseState extends State<_BisonTextFieldUseCase> {
           labelBuilder: (value) => value.name,
         );
 
+    final String labelText = context.knobs.string(
+      label: 'Label',
+      initialValue: 'Label',
+    );
+    final String helperText = context.knobs.string(
+      label: 'Helper Text',
+      initialValue: 'Helpful Text',
+    );
+    final String placeholderText = context.knobs.string(
+      label: 'Placeholder Text',
+    );
+
+    final bool enabled = context.knobs.boolean(
+      label: 'Enabled',
+      initialValue: true,
+    );
+    final bool readOnly = context.knobs.boolean(label: 'Read Only');
+    final bool isLoading = context.knobs.boolean(label: 'Loading (skeleton)');
+    final bool hasWarning = context.knobs.boolean(label: 'Warning');
+    final bool hasError = context.knobs.boolean(label: 'Error');
+    final bool obscureText = context.knobs.boolean(label: 'Obscure Text');
+
     return Column(
       spacing: 12,
       children: [
         BisonTextField(
-          label: 'Test Label',
-          helperText: 'Help me!!',
-          placeholder: 'First Name',
-          controller: _firstNameController,
+          label: labelText,
+          helperText: helperText,
+          placeholder: placeholderText,
           size: size,
-          enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
-          hasWarning: context.knobs.boolean(label: 'Warning'),
-          hasError: context.knobs.boolean(label: 'Error'),
-          obscureText: context.knobs.boolean(label: 'Obscure Text'),
-        ),
-        BisonTextField(
-          label: 'Test Label',
-          helperText: 'Help me!!',
-          placeholder: 'Last Name',
-          controller: _lastNameController,
-          size: size,
+          enabled: enabled,
+          readOnly: readOnly,
+          isLoading: isLoading,
+          hasWarning: hasWarning,
+          hasError: hasError,
+          obscureText: obscureText,
         ),
       ],
     );
