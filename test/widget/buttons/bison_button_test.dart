@@ -186,7 +186,7 @@ void main() {
           BisonButton.filled(
             buttonLabel: 'WithIcon',
             onPressed: () => debugPrint('test'),
-            icon: Icon(Icons.add),
+            leftIcon: Icon(Icons.add),
           ),
         ),
       );
