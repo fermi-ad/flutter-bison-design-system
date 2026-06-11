@@ -20,6 +20,8 @@ import 'package:bison_design_system_catalog/bison_icon_button.dart'
     as _bison_design_system_catalog_bison_icon_button;
 import 'package:bison_design_system_catalog/bison_menu.dart'
     as _bison_design_system_catalog_bison_menu;
+import 'package:bison_design_system_catalog/bison_scrim.dart'
+    as _bison_design_system_catalog_bison_scrim;
 import 'package:bison_design_system_catalog/bison_text_field.dart'
     as _bison_design_system_catalog_bison_text_field;
 import 'package:widgetbook/widgetbook.dart' as _widgetbook;
@@ -148,6 +150,21 @@ final directories = <_widgetbook.WidgetbookNode>[
                 name: 'Right Click (Context Menu)',
                 builder: _bison_design_system_catalog_bison_menu
                     .buildRightClickContextMenuUseCase,
+              ),
+            ],
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookFolder(
+        name: 'overlays',
+        children: [
+          _widgetbook.WidgetbookComponent(
+            name: 'BisonScrim',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Default',
+                builder: _bison_design_system_catalog_bison_scrim
+                    .buildBisonScrimUseCase,
               ),
             ],
           ),
