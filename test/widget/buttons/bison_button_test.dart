@@ -162,9 +162,11 @@ void main() {
       );
 
       final paddingFinder = find.byWidgetPredicate((final Widget widget) {
-        if (widget is Padding && widget.child is Text) {
-          final Text t = widget.child as Text;
-          return t.data == 'Label';
+        if (widget is Padding && widget.child is Row) {
+          final Row row = widget.child as Row;
+          return row.children.any(
+            (final Widget c) => c is Text && c.data == 'Label',
+          );
         }
         return false;
       });
