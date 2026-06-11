@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `BisonTextField` widget.
+- `BisonTextField` widget was added to the design system.
+- A `BisonScrim` Use Case was added to the widgetbook.
 
 ### Changed
 
