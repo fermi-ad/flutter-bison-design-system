@@ -12,7 +12,7 @@ Widget buildBisonMenuUseCase(BuildContext context) {
       width: 130,
       height: 32,
       child: BisonMenu(
-        builder: (_, final focusNode, {required toggleMenu, required isOpen}) {
+        builder: (_, focusNode, {required toggleMenu, required isOpen}) {
           return FilledButton(
             style: ButtonStyle(
               shape: WidgetStateProperty.all(
@@ -87,7 +87,7 @@ Widget buildBisonMenuUseCase(BuildContext context) {
 @widgetbook.UseCase(name: 'Right Click (Context Menu)', type: BisonMenu)
 Widget buildRightClickContextMenuUseCase(BuildContext context) {
   return BisonMenu(
-    builder: (_, final focusNode, {required toggleMenu, required isOpen}) {
+    builder: (_, focusNode, {required toggleMenu, required isOpen}) {
       return Focus(
         focusNode: focusNode,
         child: Container(
