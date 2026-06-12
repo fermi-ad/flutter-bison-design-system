@@ -346,7 +346,7 @@ void main() {
       expect(_borderSpec(tester).allColor, equals(theme.borderWarning));
     });
 
-    testWidgets('helper text uses textPlain color', (
+    testWidgets('helper text uses textSecondary color', (
       final WidgetTester tester,
     ) async {
       final BisonThemeTokens theme = BisonThemeTokens.light();
@@ -359,7 +359,7 @@ void main() {
       );
 
       final Text helperWidget = _findText(tester, helper);
-      expect(helperWidget.style?.color, equals(theme.textPlain));
+      expect(helperWidget.style?.color, equals(theme.textSecondary));
     });
   });
 
@@ -415,7 +415,7 @@ void main() {
       );
     });
 
-    testWidgets('default helper text uses textMuted color', (
+    testWidgets('default helper text uses textSecondary color', (
       final WidgetTester tester,
     ) async {
       final BisonThemeTokens theme = BisonThemeTokens.light();
@@ -426,7 +426,7 @@ void main() {
       );
 
       final Text helperWidget = _findText(tester, helper);
-      expect(helperWidget.style?.color, equals(theme.textMuted));
+      expect(helperWidget.style?.color, equals(theme.textSecondary));
     });
   });
 
