@@ -285,13 +285,12 @@ class _BisonTextFieldState extends State<BisonTextField> {
   Color _helperTextColor(final BisonThemeTokens theme) {
     if (!widget.enabled) return theme.textDisabled;
     if (widget.hasError) return theme.textError;
-    if (widget.hasWarning) return theme.textPlain;
-    return theme.textMuted;
+    return theme.textSecondary;
   }
 
   Color _labelColor(final BisonThemeTokens theme) {
     if (!widget.enabled) return theme.textDisabled;
-    return theme.textMuted;
+    return theme.textPlain;
   }
 
   double _inputHeight() {
@@ -455,9 +454,7 @@ class _BisonTextFieldState extends State<BisonTextField> {
         if (widget.label != null) ...[
           Text(
             widget.label!,
-            style: typography.capitalizedLabel.copyWith(
-              color: _labelColor(theme),
-            ),
+            style: typography.bodySmall.copyWith(color: _labelColor(theme)),
           ),
           SizedBox(height: spacing.tinySpacing),
         ],
