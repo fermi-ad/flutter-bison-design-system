@@ -304,19 +304,18 @@ class _BisonSwitchState extends State<BisonSwitch> {
     final double tinySpacing,
   ) {
     final skeletonColor = theme.miscellaneousSkeletonBackground;
-    final cornerRadius = _trackHeight / 2;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Pill-shaped track skeleton
+        // Circular track skeleton
         Container(
           width: _trackWidth,
           height: _trackHeight,
           decoration: BoxDecoration(
             color: skeletonColor,
-            borderRadius: BorderRadius.circular(cornerRadius),
+            shape: BoxShape.circle,
           ),
         ),
         SizedBox(width: tinySpacing),
@@ -326,7 +325,7 @@ class _BisonSwitchState extends State<BisonSwitch> {
           height: _thumbDiameter,
           decoration: BoxDecoration(
             color: skeletonColor,
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.zero,
           ),
         ),
       ],
