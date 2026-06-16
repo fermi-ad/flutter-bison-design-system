@@ -951,7 +951,7 @@ void main() {
       final Icon icon = tester.widget<Icon>(
         find.descendant(
           of: find.byType(BisonTextField),
-          matching: find.byIcon(Icons.error),
+          matching: find.byIcon(Icons.error_outline_outlined),
         ),
       );
       expect(icon.color, equals(theme.iconError));
@@ -969,7 +969,7 @@ void main() {
         final Icon icon = tester.widget<Icon>(
           find.descendant(
             of: find.byType(BisonTextField),
-            matching: find.byIcon(Icons.warning),
+            matching: find.byIcon(Icons.warning_amber),
           ),
         );
         expect(icon.color, equals(theme.iconWarning));
@@ -986,14 +986,14 @@ void main() {
         expect(
           find.descendant(
             of: find.byType(BisonTextField),
-            matching: find.byIcon(Icons.error),
+            matching: find.byIcon(Icons.error_outline_outlined),
           ),
           findsOneWidget,
         );
         expect(
           find.descendant(
             of: find.byType(BisonTextField),
-            matching: find.byIcon(Icons.warning),
+            matching: find.byIcon(Icons.warning_amber),
           ),
           findsNothing,
         );
