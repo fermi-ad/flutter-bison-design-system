@@ -268,9 +268,14 @@ class _BisonSwitchState extends State<BisonSwitch> {
         track,
         if (widget.stateText != null) ...[
           SizedBox(width: bison.spacing.tinySpacing),
-          Text(
-            widget.stateText!,
-            style: bison.typography.bodyLarge.copyWith(color: textColor),
+          SizedBox(
+            width: 20.0,
+            child: Text(
+              widget.stateText!,
+              style: bison.typography.bodyLarge.copyWith(color: textColor),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       ],
