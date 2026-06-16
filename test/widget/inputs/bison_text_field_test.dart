@@ -3,6 +3,7 @@ import 'package:bison_design_system/bison_design_system.dart'
 import 'package:bison_design_system/src/core_widgets/inputs/bison_text_field.dart'
     show BisonTextFieldBorderPainter, BisonTextFieldBorderSpec;
 import 'package:flutter/gestures.dart' show PointerDeviceKind;
+import 'package:flutter/material.dart' show Icons;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -934,6 +935,99 @@ void main() {
 
       // Skeleton path: no EditableText rendered.
       expect(find.byType(EditableText), findsNothing);
+    });
+  });
+
+  group('BisonTextField — trailing icon', () {
+    testWidgets('shows error icon with iconError color when hasError is true', (
+      final WidgetTester tester,
+    ) async {
+      final BisonThemeTokens theme = BisonThemeTokens.light();
+
+      await tester.pumpWidget(
+        buildScaffold(const BisonTextField(hasError: true)),
+      );
+
+      final Icon icon = tester.widget<Icon>(
+        find.descendant(
+          of: find.byType(BisonTextField),
+          matching: find.byIcon(Icons.error),
+        ),
+      );
+      expect(icon.color, equals(theme.iconError));
+    });
+
+    testWidgets(
+      'shows warning icon with iconWarning color when hasWarning is true',
+      (final WidgetTester tester) async {
+        final BisonThemeTokens theme = BisonThemeTokens.light();
+
+        await tester.pumpWidget(
+          buildScaffold(const BisonTextField(hasWarning: true)),
+        );
+
+        final Icon icon = tester.widget<Icon>(
+          find.descendant(
+            of: find.byType(BisonTextField),
+            matching: find.byIcon(Icons.warning),
+          ),
+        );
+        expect(icon.color, equals(theme.iconWarning));
+      },
+    );
+
+    testWidgets(
+      'shows error icon (not warning) when both hasError and hasWarning are true',
+      (final WidgetTester tester) async {
+        await tester.pumpWidget(
+          buildScaffold(const BisonTextField(hasError: true, hasWarning: true)),
+        );
+
+        expect(
+          find.descendant(
+            of: find.byType(BisonTextField),
+            matching: find.byIcon(Icons.error),
+          ),
+          findsOneWidget,
+        );
+        expect(
+          find.descendant(
+            of: find.byType(BisonTextField),
+            matching: find.byIcon(Icons.warning),
+          ),
+          findsNothing,
+        );
+      },
+    );
+
+    testWidgets('shows no trailing icon in default state', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(buildScaffold(const BisonTextField()));
+
+      expect(
+        find.descendant(
+          of: find.byType(BisonTextField),
+          matching: find.byType(Icon),
+        ),
+        findsNothing,
+      );
+    });
+
+    testWidgets('shows no trailing icon when disabled', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(const BisonTextField(enabled: false)),
+      );
+
+      expect(
+        find.descendant(
+          of: find.byType(BisonTextField),
+          matching: find.byType(Icon),
+        ),
+        findsNothing,
+      );
     });
   });
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart' show Icons;
 import 'package:flutter/widgets.dart';
 import 'package:bison_design_system/theme.dart'
     show BisonContext, BisonSpacingTokens, BisonThemeTokens;
@@ -288,6 +289,23 @@ class _BisonTextFieldState extends State<BisonTextField> {
     return theme.textSecondary;
   }
 
+  /// Returns the trailing icon widget for error/warning states, or null.
+  ///
+  /// Error takes precedence over warning (matching [_borderSpec] priority).
+  Widget? _trailingIcon(final BisonThemeTokens theme) {
+    if (widget.hasError) {
+      return Icon(
+        Icons.error_outline_outlined,
+        color: theme.iconError,
+        size: 20,
+      );
+    }
+    if (widget.hasWarning) {
+      return Icon(Icons.warning_amber, color: theme.iconWarning, size: 20);
+    }
+    return null;
+  }
+
   Color _labelColor(final BisonThemeTokens theme) {
     if (!widget.enabled) return theme.textDisabled;
     return theme.textPlain;
@@ -403,6 +421,8 @@ class _BisonTextFieldState extends State<BisonTextField> {
       topLeft: Radius.circular(corners.cornerExtraSmall),
       topRight: Radius.circular(corners.cornerExtraSmall),
     );
+    final Widget? trailingIcon = _trailingIcon(theme);
+
     final Widget inputContainer = ListenableBuilder(
       listenable: _interaction,
       builder: (final BuildContext ctx, final Widget? child) {
@@ -424,7 +444,14 @@ class _BisonTextFieldState extends State<BisonTextField> {
           ),
         );
       },
-      child: inputArea,
+      child: trailingIcon != null
+          ? Row(
+              children: [
+                Expanded(child: inputArea),
+                trailingIcon,
+              ],
+            )
+          : inputArea,
     );
 
     // TapRegion at the BisonTextField level handles tap-outside reliably.
