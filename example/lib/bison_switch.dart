@@ -7,17 +7,22 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 @widgetbook.UseCase(name: 'Switch', type: BisonSwitch)
 Widget buildBisonSwitch(BuildContext context) {
   final variant = context.knobs.object.dropdown<BisonSwitchVariant>(
-    label: 'Variant',
+    label: 'State Variant',
     options: BisonSwitchVariant.values,
     initialOption: BisonSwitchVariant.normal,
     labelBuilder: (v) => v.name,
   );
 
   final size = context.knobs.object.dropdown<BisonSwitchSize>(
-    label: 'Size',
+    label: 'Switch Size',
     options: BisonSwitchSize.values,
     initialOption: BisonSwitchSize.medium,
     labelBuilder: (s) => s.name,
+  );
+
+  final labelText = context.knobs.string(
+    label: 'Label Text',
+    initialValue: 'Label',
   );
 
   final showLabel = context.knobs.boolean(
@@ -29,11 +34,24 @@ Widget buildBisonSwitch(BuildContext context) {
     initialValue: true,
   );
 
+  final positiveStateText = context.knobs.string(
+    label: 'Positive State',
+    initialValue: 'On',
+  );
+
+  final negativeStateText = context.knobs.string(
+    label: 'Negative State',
+    initialValue: 'Off',
+  );
+
   return _InteractiveSwitchUseCase(
     variant: variant,
     size: size,
+    labelText: labelText,
     showLabel: showLabel,
     showStateText: showStateText,
+    positiveStateText: positiveStateText,
+    negativeStateText: negativeStateText,
   );
 }
 
@@ -41,14 +59,20 @@ Widget buildBisonSwitch(BuildContext context) {
 class _InteractiveSwitchUseCase extends StatefulWidget {
   final BisonSwitchVariant variant;
   final BisonSwitchSize size;
+  final String labelText;
   final bool showLabel;
   final bool showStateText;
+  final String positiveStateText;
+  final String negativeStateText;
 
   const _InteractiveSwitchUseCase({
     required this.variant,
     required this.size,
+    required this.labelText,
     required this.showLabel,
     required this.showStateText,
+    required this.positiveStateText,
+    required this.negativeStateText,
   });
 
   @override
@@ -68,8 +92,10 @@ class _InteractiveSwitchUseCaseState extends State<_InteractiveSwitchUseCase> {
           : null,
       variant: widget.variant,
       size: widget.size,
-      label: widget.showLabel ? 'Label' : null,
-      stateText: widget.showStateText ? (_value ? 'On' : 'Off') : null,
+      label: widget.showLabel ? widget.labelText : null,
+      stateText: widget.showStateText
+          ? (_value ? widget.positiveStateText : widget.negativeStateText)
+          : null,
     );
   }
 }
