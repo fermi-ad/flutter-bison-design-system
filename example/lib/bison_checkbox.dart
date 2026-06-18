@@ -36,46 +36,35 @@ Widget buildBisonCheckboxAllStatesUseCase(BuildContext context) {
 
 @widgetbook.UseCase(name: 'Interactive', type: BisonCheckbox)
 Widget buildBisonCheckboxInteractiveUseCase(BuildContext context) {
-  return _InteractiveBisonCheckboxExample();
+  final enabled = context.knobs.boolean(label: 'Enabled', initialValue: true);
+  return ValueListenableBuilder<BisonCheckboxValue>(
+    valueListenable: _interactiveCheckboxValue,
+    builder: (context, value, _) {
+      return BisonCheckbox(
+        value: value,
+        enabled: enabled,
+        onChanged: enabled
+            ? (_) {
+                _interactiveCheckboxValue.value = _nextInteractiveCheckboxValue(
+                  value,
+                );
+              }
+            : null,
+      );
+    },
+  );
 }
 
-class _InteractiveBisonCheckboxExample extends StatefulWidget {
-  const _InteractiveBisonCheckboxExample();
+final ValueNotifier<BisonCheckboxValue> _interactiveCheckboxValue =
+    ValueNotifier(BisonCheckboxValue.unselected);
 
-  @override
-  State<_InteractiveBisonCheckboxExample> createState() =>
-      _InteractiveBisonCheckboxExampleState();
-}
-
-class _InteractiveBisonCheckboxExampleState
-    extends State<_InteractiveBisonCheckboxExample> {
-  BisonCheckboxValue _value = BisonCheckboxValue.unselected;
-
-  BisonCheckboxValue _nextValue(BisonCheckboxValue value) {
-    switch (value) {
-      case BisonCheckboxValue.unselected:
-        return BisonCheckboxValue.selected;
-      case BisonCheckboxValue.selected:
-        return BisonCheckboxValue.indeterminate;
-      case BisonCheckboxValue.indeterminate:
-        return BisonCheckboxValue.unselected;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final enabled = context.knobs.boolean(label: 'Enabled', initialValue: true);
-
-    return BisonCheckbox(
-      value: _value,
-      enabled: enabled,
-      onChanged: enabled
-          ? (newValue) {
-              setState(() {
-                _value = _nextValue(_value);
-              });
-            }
-          : null,
-    );
+BisonCheckboxValue _nextInteractiveCheckboxValue(BisonCheckboxValue value) {
+  switch (value) {
+    case BisonCheckboxValue.unselected:
+      return BisonCheckboxValue.selected;
+    case BisonCheckboxValue.selected:
+      return BisonCheckboxValue.indeterminate;
+    case BisonCheckboxValue.indeterminate:
+      return BisonCheckboxValue.unselected;
   }
 }
