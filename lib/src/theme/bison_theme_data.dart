@@ -9,8 +9,6 @@ import '../core_widgets/buttons/bison_button.dart'
         getFilledBisonButtonStyle,
         getGhostBisonButtonStyle,
         getOutlinedBisonButtonStyle;
-import '../core_widgets/buttons/bison_icon_button.dart'
-    show filledIconButtonStyle;
 import '../core_widgets/menus/bison_menu.dart'
     show getBisonMenuStyle, getBisonMenuButtonStyle;
 
@@ -59,6 +57,15 @@ class BisonThemeData {
       // These presets allow us to style base Material widgets like we do in our
       // custom Bison widgets. As we add new Bison widgets, consider setting the
       // appropriate base Material widget styles here as well.
+      appBarTheme: AppBarThemeData(
+        backgroundColor: themeTokens.surfaceSlate,
+        foregroundColor: themeTokens.textWhiteFixed,
+        iconTheme: IconThemeData(color: themeTokens.iconWhiteFixed),
+        centerTitle: false,
+        titleTextStyle: typographyTokens.h2.copyWith(
+          color: themeTokens.textWhiteFixed,
+        ),
+      ),
       filledButtonTheme: FilledButtonThemeData(
         style: getFilledBisonButtonStyle(
           themeTokens,
@@ -77,14 +84,6 @@ class BisonThemeData {
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: getOutlinedBisonButtonStyle(
-          themeTokens,
-          spacingTokens,
-          cornerTokens,
-          typographyTokens,
-        ),
-      ),
-      iconButtonTheme: IconButtonThemeData(
-        style: filledIconButtonStyle(
           themeTokens,
           spacingTokens,
           cornerTokens,
