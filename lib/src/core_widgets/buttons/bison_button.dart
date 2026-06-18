@@ -32,7 +32,8 @@ enum _BisonButtonType {
 class BisonButton extends StatelessWidget {
   final String buttonLabel;
   final _BisonButtonType _buttonType;
-  final Icon? icon;
+  final Icon? leftIcon;
+  final Icon? rightIcon;
   final VoidCallback? onPressed;
   final FocusNode? focusNode;
   final bool autofocus;
@@ -41,7 +42,8 @@ class BisonButton extends StatelessWidget {
     required this.buttonLabel,
     required this.onPressed,
     required _BisonButtonType buttonType,
-    this.icon,
+    this.leftIcon,
+    this.rightIcon,
     this.focusNode,
     this.autofocus = false,
   }) : _buttonType = buttonType;
@@ -50,7 +52,8 @@ class BisonButton extends StatelessWidget {
   factory BisonButton.filled({
     required String buttonLabel,
     required VoidCallback? onPressed,
-    Icon? icon,
+    Icon? leftIcon,
+    Icon? rightIcon,
     FocusNode? focusNode,
     bool autofocus = false,
   }) {
@@ -58,7 +61,8 @@ class BisonButton extends StatelessWidget {
       buttonLabel: buttonLabel,
       onPressed: onPressed,
       buttonType: _BisonButtonType.filled,
-      icon: icon,
+      leftIcon: leftIcon,
+      rightIcon: rightIcon,
       focusNode: focusNode,
       autofocus: autofocus,
     );
@@ -68,7 +72,8 @@ class BisonButton extends StatelessWidget {
   factory BisonButton.ghost({
     required String buttonLabel,
     required VoidCallback? onPressed,
-    Icon? icon,
+    Icon? leftIcon,
+    Icon? rightIcon,
     FocusNode? focusNode,
     bool autofocus = false,
   }) {
@@ -76,7 +81,8 @@ class BisonButton extends StatelessWidget {
       buttonLabel: buttonLabel,
       onPressed: onPressed,
       buttonType: _BisonButtonType.ghost,
-      icon: icon,
+      leftIcon: leftIcon,
+      rightIcon: rightIcon,
       focusNode: focusNode,
       autofocus: autofocus,
     );
@@ -86,7 +92,8 @@ class BisonButton extends StatelessWidget {
   factory BisonButton.outlined({
     required String buttonLabel,
     required VoidCallback? onPressed,
-    Icon? icon,
+    Icon? leftIcon,
+    Icon? rightIcon,
     FocusNode? focusNode,
     bool autofocus = false,
   }) {
@@ -94,7 +101,8 @@ class BisonButton extends StatelessWidget {
       buttonLabel: buttonLabel,
       onPressed: onPressed,
       buttonType: _BisonButtonType.outlined,
-      icon: icon,
+      leftIcon: leftIcon,
+      rightIcon: rightIcon,
       focusNode: focusNode,
       autofocus: autofocus,
     );
@@ -104,7 +112,8 @@ class BisonButton extends StatelessWidget {
   factory BisonButton.destructive({
     required String buttonLabel,
     required VoidCallback? onPressed,
-    Icon? icon,
+    Icon? leftIcon,
+    Icon? rightIcon,
     FocusNode? focusNode,
     bool autofocus = false,
   }) {
@@ -112,7 +121,8 @@ class BisonButton extends StatelessWidget {
       buttonLabel: buttonLabel,
       onPressed: onPressed,
       buttonType: _BisonButtonType.destructive,
-      icon: icon,
+      leftIcon: leftIcon,
+      rightIcon: rightIcon,
       focusNode: focusNode,
       autofocus: autofocus,
     );
@@ -152,28 +162,26 @@ class BisonButton extends StatelessWidget {
         ),
       },
       onPressed: onPressed,
-      child: icon == null
-          ? Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: bison.spacing.smallSpacing,
-                vertical: bison.spacing.tinySpacing,
-              ),
-              child: Text(buttonLabel),
-            )
-          : Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: bison.spacing.smallSpacing,
-                vertical: bison.spacing.tinySpacing,
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  icon!,
-                  SizedBox(width: bison.spacing.tinySpacing),
-                  Text(buttonLabel),
-                ],
-              ),
-            ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: bison.spacing.smallSpacing,
+          vertical: bison.spacing.tinySpacing,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (leftIcon != null) ...[
+              leftIcon!,
+              SizedBox(width: bison.spacing.tinySpacing),
+            ],
+            Text(buttonLabel),
+            if (rightIcon != null) ...[
+              SizedBox(width: bison.spacing.tinySpacing),
+              rightIcon!,
+            ],
+          ],
+        ),
+      ),
     );
   }
 }

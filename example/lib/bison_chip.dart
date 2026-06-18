@@ -164,7 +164,7 @@ Widget _buildObjectChip(
   String dialogMessage,
 ) {
   return BisonMenu(
-    builder: (_, final focusNode, {required toggleMenu, required isOpen}) {
+    builder: (_, focusNode, {required toggleMenu, required isOpen}) {
       return BisonChip.object(
         focusNode: focusNode,
         label: chipLabel,

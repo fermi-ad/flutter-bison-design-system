@@ -8,7 +8,8 @@ typedef _ButtonBuilder =
     BisonButton Function({
       required String buttonLabel,
       required VoidCallback? onPressed,
-      Icon? icon,
+      Icon? leftIcon,
+      Icon? rightIcon,
     });
 
 class _ButtonVariant {
@@ -40,8 +41,8 @@ Widget buildBisonButtonUseCase(BuildContext context) {
 
   final onPressed = context.knobs.boolean(label: 'Disabled') ? null : () {};
 
-  final icon = context.knobs.objectOrNull.dropdown<Icon>(
-    label: 'Icon',
+  final leftIcon = context.knobs.objectOrNull.dropdown<Icon>(
+    label: 'Left Icon',
     labelBuilder: (icon) => switch (icon.icon) {
       Icons.add => 'Add',
       Icons.save => 'Save',
@@ -50,10 +51,27 @@ Widget buildBisonButtonUseCase(BuildContext context) {
     },
     options: const [Icon(Icons.add), Icon(Icons.save), Icon(Icons.delete)],
   );
+  final rightIcon = context.knobs.objectOrNull.dropdown<Icon>(
+    label: 'Right Icon',
+    labelBuilder: (icon) => switch (icon.icon) {
+      Icons.add => 'Add',
+      Icons.expand_more => 'Dropdown',
+      Icons.save => 'Save',
+      Icons.delete => 'Delete',
+      _ => '',
+    },
+    options: const [
+      Icon(Icons.add),
+      Icon(Icons.expand_more),
+      Icon(Icons.save),
+      Icon(Icons.delete),
+    ],
+  );
 
   return variant.builder(
     buttonLabel: buttonLabel,
     onPressed: onPressed,
-    icon: icon,
+    leftIcon: leftIcon,
+    rightIcon: rightIcon,
   );
 }

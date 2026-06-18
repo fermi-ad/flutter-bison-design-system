@@ -1,0 +1,56 @@
+name: Widgetbook Cloud Review
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  widgetbook-review:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # CRITICAL: Widgetbook needs git history to calculate visual diffs
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+
+      - name: Install Library Dependencies
+        run: flutter pub get
+
+      - name: Install Widgetbook Dependencies & Generate Code
+        working-directory: ./example
+        run: |
+          flutter pub get
+          dart run build_runner build --delete-conflicting-outputs
+
+      - name: Install Widgetbook CLI
+        run: flutter pub global activate widgetbook_cli
+
+      # 7. GATEKEEPER: Ensure developers didn't skip adding new widgets to Widgetbook
+      # This will fail the PR immediately if coverage drops below 100%
+      - name: Check Widgetbook Coverage
+        if: github.event_name == 'pull_request'
+        run: |
+          export PATH="$PATH":"$HOME/.pub-cache/bin"
+          widgetbook coverage --package ./ --widgetbook ./example
+
+      - name: Build Widgetbook Web
+        working-directory: ./example
+        run: flutter build web -t lib/main.dart
+
+      - name: Upload to Widgetbook Cloud
+        working-directory: ./example
+        run: |
+          export PATH="$PATH":"$HOME/.pub-cache/bin"
+          widgetbook cloud build push \
+          --api-key ${{ secrets.WIDGETBOOK_API_KEY }} \
+          --branch ${{ github.head_ref || github.ref_name }} \
+          --commit ${{ github.event.pull_request.head.sha || github.sha }}
