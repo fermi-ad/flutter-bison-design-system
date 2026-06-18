@@ -12,6 +12,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:bison_design_system_catalog/bison_button.dart'
     as _bison_design_system_catalog_bison_button;
+import 'package:bison_design_system_catalog/bison_checkbox.dart'
+    as _bison_design_system_catalog_bison_checkbox;
 import 'package:bison_design_system_catalog/bison_chip.dart'
     as _bison_design_system_catalog_bison_chip;
 import 'package:bison_design_system_catalog/bison_dialog.dart'
@@ -72,6 +74,31 @@ final directories = <_widgetbook.WidgetbookNode>[
                 name: 'White Ghost',
                 builder: _bison_design_system_catalog_bison_icon_button
                     .buildBisonIconButtonWhiteGhostUseCase,
+              ),
+            ],
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookFolder(
+        name: 'checkboxes',
+        children: [
+          _widgetbook.WidgetbookComponent(
+            name: 'BisonCheckbox',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'All States',
+                builder: _bison_design_system_catalog_bison_checkbox
+                    .buildBisonCheckboxAllStatesUseCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Default',
+                builder: _bison_design_system_catalog_bison_checkbox
+                    .buildBisonCheckboxUseCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Interactive',
+                builder: _bison_design_system_catalog_bison_checkbox
+                    .buildBisonCheckboxInteractiveUseCase,
               ),
             ],
           ),
