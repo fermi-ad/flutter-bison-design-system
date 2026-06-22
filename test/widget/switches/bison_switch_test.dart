@@ -543,6 +543,73 @@ void main() {
       expect(find.text('Off'), findsOneWidget);
     });
 
+    testWidgets('track position stays stable when stateText length changes', (
+      final WidgetTester tester,
+    ) async {
+      var value = false;
+
+      await tester.pumpWidget(
+        buildScaffold(
+          StatefulBuilder(
+            builder: (final context, final setState) {
+              return BisonSwitch(
+                value: value,
+                onChanged: (final v) => setState(() => value = v),
+                stateText: value ? 'Enabled' : 'Off',
+              );
+            },
+          ),
+        ),
+      );
+
+      final before = tester.getTopLeft(
+        find
+            .descendant(
+              of: find.byType(BisonSwitch),
+              matching: find.byType(AnimatedContainer),
+            )
+            .first,
+      );
+
+      await tester.tap(find.byType(BisonSwitch));
+      await tester.pumpAndSettle();
+
+      final after = tester.getTopLeft(
+        find
+            .descendant(
+              of: find.byType(BisonSwitch),
+              matching: find.byType(AnimatedContainer),
+            )
+            .first,
+      );
+
+      expect(after.dx, equals(before.dx));
+    });
+
+    testWidgets('stateText remains present when ellipsis is applied', (
+      final WidgetTester tester,
+    ) async {
+      const longStateText =
+          'This is a very long state label that should truncate with ellipsis';
+
+      await tester.pumpWidget(
+        buildScaffold(
+          BisonSwitch(value: true, onChanged: (_) {}, stateText: longStateText),
+        ),
+      );
+
+      final stateTextFinder = find.text(longStateText);
+      expect(stateTextFinder, findsOneWidget);
+
+      final stateTextWidget = tester.widget<Text>(stateTextFinder);
+      expect(stateTextWidget.overflow, equals(TextOverflow.ellipsis));
+      expect(stateTextWidget.maxLines, equals(1));
+
+      final stateTextSize = tester.getSize(stateTextFinder);
+      expect(stateTextSize.width, greaterThan(0));
+      expect(stateTextSize.height, greaterThan(0));
+    });
+
     testWidgets('label uses textPlain color in normal variant', (
       final WidgetTester tester,
     ) async {
