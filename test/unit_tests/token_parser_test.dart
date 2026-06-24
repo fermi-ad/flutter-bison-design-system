@@ -1,4 +1,4 @@
-import 'package:test/test.dart' show group, test, expect;
+import 'package:flutter_test/flutter_test.dart' show group, test, expect;
 import 'package:bison_design_system/src/token_parsers/token_parser_utils.dart'
     show toCamelCase, formatHex;
 import 'package:bison_design_system/src/token_parsers/color_parser.dart'
