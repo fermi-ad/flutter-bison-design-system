@@ -623,8 +623,18 @@ void main() {
             .first,
       );
 
-      await tester.tap(find.byType(BisonSwitch));
+      await tester.tap(
+        find
+            .descendant(
+              of: find.byType(BisonSwitch),
+              matching: find.byType(AnimatedContainer),
+            )
+            .first,
+      );
       await tester.pumpAndSettle();
+
+      // Guard against false positives if the tap target ever changes.
+      expect(find.text('Enabled'), findsOneWidget);
 
       final after = tester.getTopLeft(
         find
