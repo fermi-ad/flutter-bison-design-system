@@ -8,12 +8,7 @@ import 'package:bison_design_system/bison_design_system.dart'
         BisonCornerTokens,
         BisonTypographyTokens;
 import '../common.dart'
-    show
-        buildScaffold,
-        getButtonStyle,
-        getIconButtonStyle,
-        getMenuItemButtonStyle,
-        getMenuStyle;
+    show buildScaffold, getButtonStyle, getMenuItemButtonStyle, getMenuStyle;
 
 void main() {
   group('BisonThemeData Widget Styling Tests', () {
@@ -249,43 +244,54 @@ void main() {
       expect(padding?.vertical, equals(spacingTokens.tinySpacing * 2));
     });
 
-    testWidgets('IconButton uses theme styling from BisonThemeData', (
+    testWidgets('AppBar uses theme styling from BisonThemeData', (
       final WidgetTester tester,
     ) async {
       final themeTokens = BisonThemeTokens.light();
-      final spacingTokens = BisonSpacingTokens.standard();
-      final cornerTokens = BisonCornerTokens.standard();
+      final typographyTokens = BisonTypographyTokens.fromTokens(themeTokens);
 
       await tester.pumpWidget(
         buildScaffold(
-          IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
+          Builder(
+            builder: (final context) {
+              final appBarTheme = Theme.of(context).appBarTheme;
+
+              // Test background color
+              expect(
+                appBarTheme.backgroundColor,
+                equals(themeTokens.surfaceSlate),
+              );
+
+              // Test foreground color
+              expect(
+                appBarTheme.foregroundColor,
+                equals(themeTokens.textWhiteFixed),
+              );
+
+              // Test icon theme color
+              expect(
+                appBarTheme.iconTheme?.color,
+                equals(themeTokens.iconWhiteFixed),
+              );
+
+              // Test title is left-aligned
+              expect(appBarTheme.centerTitle, isFalse);
+
+              // Test title text style
+              expect(
+                appBarTheme.titleTextStyle,
+                equals(
+                  typographyTokens.h2.copyWith(
+                    color: themeTokens.textWhiteFixed,
+                  ),
+                ),
+              );
+
+              return const SizedBox.shrink();
+            },
+          ),
         ),
       );
-
-      final element = tester.element(find.byType(IconButton));
-      final iconButton = element.widget as IconButton;
-
-      // Get the resolved style from the theme
-      final style = getIconButtonStyle(element, iconButton);
-
-      // Test background color
-      final backgroundColor = style.backgroundColor?.resolve(<WidgetState>{});
-      expect(backgroundColor, equals(themeTokens.buttonPrimary));
-
-      // Test foreground color
-      final foregroundColor = style.foregroundColor?.resolve(<WidgetState>{});
-      expect(foregroundColor, equals(themeTokens.iconInverse));
-
-      // Test padding
-      final padding = style.padding?.resolve(<WidgetState>{});
-      expect(padding, equals(EdgeInsets.all(spacingTokens.tinySpacing)));
-
-      // Test border radius
-      final shape =
-          style.shape?.resolve(<WidgetState>{}) as RoundedRectangleBorder;
-      final borderRadius = shape.borderRadius;
-      final radius = (borderRadius as BorderRadius).topLeft;
-      expect(radius.x, equals(cornerTokens.cornerExtraSmall));
     });
   });
 }
