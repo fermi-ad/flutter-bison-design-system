@@ -1,5 +1,5 @@
 import 'package:bison_design_system/bison_design_system.dart'
-    show BisonSwitch, BisonSwitchSize, BisonSwitchVariant, BisonThemeTokens;
+    show BisonSwitch, BisonSwitchSize, BisonThemeTokens;
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -46,9 +46,9 @@ BoxDecoration _thumbDecoration(final WidgetTester tester) =>
 
 void main() {
   // -------------------------------------------------------------------------
-  // Default (normal) state
+  // Default (interactive) state
   // -------------------------------------------------------------------------
-  group('BisonSwitch - normal variant', () {
+  group('BisonSwitch - interactive (onChanged non-null)', () {
     testWidgets('track is selectorSelectorPrimary when value is true', (
       final WidgetTester tester,
     ) async {
@@ -94,7 +94,7 @@ void main() {
       );
     });
 
-    testWidgets('no border in default state', (
+    testWidgets('no border in interactive state', (
       final WidgetTester tester,
     ) async {
       await tester.pumpWidget(
@@ -142,18 +142,16 @@ void main() {
   });
 
   // -------------------------------------------------------------------------
-  // Disabled state
+  // Disabled state (onChanged == null)
   // -------------------------------------------------------------------------
-  group('BisonSwitch - disabled variant', () {
+  group('BisonSwitch - disabled (onChanged null)', () {
     testWidgets('track uses selectorSelectorSwitchFillDisabled', (
       final WidgetTester tester,
     ) async {
       final theme = BisonThemeTokens.light();
 
       await tester.pumpWidget(
-        buildScaffold(
-          const BisonSwitch(value: true, variant: BisonSwitchVariant.disabled),
-        ),
+        buildScaffold(const BisonSwitch(value: true, onChanged: null)),
       );
 
       expect(
@@ -168,9 +166,7 @@ void main() {
       final theme = BisonThemeTokens.light();
 
       await tester.pumpWidget(
-        buildScaffold(
-          const BisonSwitch(value: true, variant: BisonSwitchVariant.disabled),
-        ),
+        buildScaffold(const BisonSwitch(value: true, onChanged: null)),
       );
 
       expect(
@@ -179,7 +175,7 @@ void main() {
       );
     });
 
-    testWidgets('label uses textDisabled color', (
+    testWidgets('label and offLabel use textDisabled color', (
       final WidgetTester tester,
     ) async {
       final theme = BisonThemeTokens.light();
@@ -188,9 +184,9 @@ void main() {
         buildScaffold(
           const BisonSwitch(
             value: false,
-            variant: BisonSwitchVariant.disabled,
+            onChanged: null,
             label: 'My label',
-            stateText: 'Off',
+            offLabel: 'Off',
           ),
         ),
       );
@@ -207,37 +203,28 @@ void main() {
       }
     });
 
-    testWidgets('onChanged is not called when tapped in disabled variant', (
+    testWidgets('onChanged is not called when tapped in disabled state', (
       final WidgetTester tester,
     ) async {
-      var callCount = 0;
-
+      // onChanged is null — there is nothing to call, and no GestureDetector
+      // is wired up. Tapping should not throw.
       await tester.pumpWidget(
-        buildScaffold(
-          BisonSwitch(
-            value: false,
-            onChanged: (_) => callCount++,
-            variant: BisonSwitchVariant.disabled,
-          ),
-        ),
+        buildScaffold(const BisonSwitch(value: false, onChanged: null)),
       );
 
       await tester.tap(find.byType(BisonSwitch));
       await tester.pump();
-
-      expect(callCount, equals(0));
+      // No assertion needed – test passes if no exception is thrown.
     });
   });
 
   // -------------------------------------------------------------------------
   // Read-only state
   // -------------------------------------------------------------------------
-  group('BisonSwitch - readOnly variant', () {
+  group('BisonSwitch - readOnly constructor', () {
     testWidgets('track is transparent', (final WidgetTester tester) async {
       await tester.pumpWidget(
-        buildScaffold(
-          const BisonSwitch(value: true, variant: BisonSwitchVariant.readOnly),
-        ),
+        buildScaffold(const BisonSwitch.readOnly(value: true)),
       );
 
       expect(_trackDecoration(tester).color, equals(const Color(0x00FFFFFF)));
@@ -249,9 +236,7 @@ void main() {
       final theme = BisonThemeTokens.light();
 
       await tester.pumpWidget(
-        buildScaffold(
-          const BisonSwitch(value: false, variant: BisonSwitchVariant.readOnly),
-        ),
+        buildScaffold(const BisonSwitch.readOnly(value: false)),
       );
 
       final decoration = _trackDecoration(tester);
@@ -267,40 +252,29 @@ void main() {
       final theme = BisonThemeTokens.light();
 
       await tester.pumpWidget(
-        buildScaffold(
-          const BisonSwitch(value: true, variant: BisonSwitchVariant.readOnly),
-        ),
+        buildScaffold(const BisonSwitch.readOnly(value: true)),
       );
 
       expect(_thumbDecoration(tester).color, equals(theme.iconPlain));
     });
 
-    testWidgets('onChanged is not called when tapped in readOnly variant', (
+    testWidgets('tapping a readOnly switch does not throw', (
       final WidgetTester tester,
     ) async {
-      var callCount = 0;
-
       await tester.pumpWidget(
-        buildScaffold(
-          BisonSwitch(
-            value: false,
-            onChanged: (_) => callCount++,
-            variant: BisonSwitchVariant.readOnly,
-          ),
-        ),
+        buildScaffold(const BisonSwitch.readOnly(value: false)),
       );
 
       await tester.tap(find.byType(BisonSwitch));
       await tester.pump();
-
-      expect(callCount, equals(0));
+      // No assertion needed – test passes if no exception is thrown.
     });
   });
 
   // -------------------------------------------------------------------------
-  // Skeleton state
+  // Loading skeleton (isLoading: true)
   // -------------------------------------------------------------------------
-  group('BisonSwitch – skeleton variant', () {
+  group('BisonSwitch – isLoading skeleton', () {
     testWidgets('renders two Containers with skeleton background color', (
       final WidgetTester tester,
     ) async {
@@ -308,7 +282,7 @@ void main() {
 
       await tester.pumpWidget(
         buildScaffold(
-          const BisonSwitch(value: false, variant: BisonSwitchVariant.skeleton),
+          const BisonSwitch(value: false, onChanged: null, isLoading: true),
         ),
       );
 
@@ -328,12 +302,63 @@ void main() {
       }
     });
 
-    testWidgets('no AnimatedContainer (no interactive track) in skeleton', (
+    testWidgets('no AnimatedContainer (no interactive track) when loading', (
       final WidgetTester tester,
     ) async {
       await tester.pumpWidget(
         buildScaffold(
-          const BisonSwitch(value: false, variant: BisonSwitchVariant.skeleton),
+          const BisonSwitch(value: false, onChanged: null, isLoading: true),
+        ),
+      );
+
+      expect(
+        find.descendant(
+          of: find.byType(BisonSwitch),
+          matching: find.byType(AnimatedContainer),
+        ),
+        findsNothing,
+      );
+    });
+
+    testWidgets('renders three Containers when label is provided', (
+      final WidgetTester tester,
+    ) async {
+      final theme = BisonThemeTokens.light();
+
+      await tester.pumpWidget(
+        buildScaffold(
+          const BisonSwitch(
+            value: false,
+            onChanged: null,
+            isLoading: true,
+            label: 'Notifications',
+          ),
+        ),
+      );
+
+      final containers = tester
+          .widgetList<Container>(
+            find.descendant(
+              of: find.byType(BisonSwitch),
+              matching: find.byType(Container),
+            ),
+          )
+          .toList();
+
+      // track skeleton + label skeleton + label-above skeleton = 3
+      expect(containers.length, equals(3));
+      for (final c in containers) {
+        final decoration = c.decoration! as BoxDecoration;
+        expect(decoration.color, equals(theme.miscellaneousSkeletonBackground));
+      }
+    });
+
+    testWidgets('readOnly switch can also be in loading state', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(
+          const BisonSwitch.readOnly(value: false, isLoading: true),
         ),
       );
 
@@ -468,11 +493,12 @@ void main() {
       expect(received, isTrue);
     });
 
-    testWidgets('onChanged is not called when onChanged is null', (
+    testWidgets('tapping a disabled switch (onChanged null) does not throw', (
       final WidgetTester tester,
     ) async {
-      // Should not throw; just silently ignores the tap.
-      await tester.pumpWidget(buildScaffold(const BisonSwitch(value: false)));
+      await tester.pumpWidget(
+        buildScaffold(const BisonSwitch(value: false, onChanged: null)),
+      );
 
       await tester.tap(find.byType(BisonSwitch));
       await tester.pump();
@@ -481,9 +507,9 @@ void main() {
   });
 
   // -------------------------------------------------------------------------
-  // Label and state text
+  // Label and onLabel / offLabel
   // -------------------------------------------------------------------------
-  group('BisonSwitch - label and stateText', () {
+  group('BisonSwitch - label and onLabel/offLabel', () {
     testWidgets('label text is rendered when provided', (
       final WidgetTester tester,
     ) async {
@@ -513,19 +539,43 @@ void main() {
       );
     });
 
-    testWidgets('stateText is rendered when provided', (
+    testWidgets('onLabel is rendered when value is true', (
       final WidgetTester tester,
     ) async {
       await tester.pumpWidget(
         buildScaffold(
-          BisonSwitch(value: true, onChanged: (_) {}, stateText: 'On'),
+          BisonSwitch(
+            value: true,
+            onChanged: (_) {},
+            onLabel: 'On',
+            offLabel: 'Off',
+          ),
         ),
       );
 
       expect(find.text('On'), findsOneWidget);
+      expect(find.text('Off'), findsNothing);
     });
 
-    testWidgets('both label and stateText render together', (
+    testWidgets('offLabel is rendered when value is false', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(
+          BisonSwitch(
+            value: false,
+            onChanged: (_) {},
+            onLabel: 'On',
+            offLabel: 'Off',
+          ),
+        ),
+      );
+
+      expect(find.text('Off'), findsOneWidget);
+      expect(find.text('On'), findsNothing);
+    });
+
+    testWidgets('both label and offLabel render together', (
       final WidgetTester tester,
     ) async {
       await tester.pumpWidget(
@@ -534,7 +584,8 @@ void main() {
             value: false,
             onChanged: (_) {},
             label: 'Notifications',
-            stateText: 'Off',
+            onLabel: 'On',
+            offLabel: 'Off',
           ),
         ),
       );
@@ -543,7 +594,7 @@ void main() {
       expect(find.text('Off'), findsOneWidget);
     });
 
-    testWidgets('track position stays stable when stateText length changes', (
+    testWidgets('track position stays stable when label length changes', (
       final WidgetTester tester,
     ) async {
       var value = false;
@@ -555,7 +606,8 @@ void main() {
               return BisonSwitch(
                 value: value,
                 onChanged: (final v) => setState(() => value = v),
-                stateText: value ? 'Enabled' : 'Off',
+                onLabel: 'Enabled',
+                offLabel: 'Off',
               );
             },
           ),
@@ -586,31 +638,36 @@ void main() {
       expect(after.dx, equals(before.dx));
     });
 
-    testWidgets('stateText remains present when ellipsis is applied', (
+    testWidgets('long onLabel is truncated with ellipsis', (
       final WidgetTester tester,
     ) async {
-      const longStateText =
+      const longLabel =
           'This is a very long state label that should truncate with ellipsis';
 
       await tester.pumpWidget(
         buildScaffold(
-          BisonSwitch(value: true, onChanged: (_) {}, stateText: longStateText),
+          BisonSwitch(
+            value: true,
+            onChanged: (_) {},
+            onLabel: longLabel,
+            offLabel: 'Off',
+          ),
         ),
       );
 
-      final stateTextFinder = find.text(longStateText);
-      expect(stateTextFinder, findsOneWidget);
+      final labelFinder = find.text(longLabel);
+      expect(labelFinder, findsOneWidget);
 
-      final stateTextWidget = tester.widget<Text>(stateTextFinder);
-      expect(stateTextWidget.overflow, equals(TextOverflow.ellipsis));
-      expect(stateTextWidget.maxLines, equals(1));
+      final labelWidget = tester.widget<Text>(labelFinder);
+      expect(labelWidget.overflow, equals(TextOverflow.ellipsis));
+      expect(labelWidget.maxLines, equals(1));
 
-      final stateTextSize = tester.getSize(stateTextFinder);
-      expect(stateTextSize.width, greaterThan(0));
-      expect(stateTextSize.height, greaterThan(0));
+      final labelSize = tester.getSize(labelFinder);
+      expect(labelSize.width, greaterThan(0));
+      expect(labelSize.height, greaterThan(0));
     });
 
-    testWidgets('label uses textPlain color in normal variant', (
+    testWidgets('label uses textPlain color in interactive state', (
       final WidgetTester tester,
     ) async {
       final theme = BisonThemeTokens.light();
