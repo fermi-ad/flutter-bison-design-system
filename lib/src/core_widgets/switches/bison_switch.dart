@@ -12,20 +12,7 @@ enum BisonSwitchSize {
   small,
 }
 
-/// The visual/interactive variant of a [BisonSwitch].
-enum BisonSwitchVariant {
-  /// Interactive switch with default styling.
-  normal,
-
-  /// Non-interactive; uses disabled color tokens.
-  disabled,
-
-  /// Non-interactive; transparent background with a plain border.
-  readOnly,
-
-  /// Loading placeholder; renders skeleton shapes.
-  skeleton,
-}
+enum _BisonSwitchType { interactive, disabled, readOnly }
 
 // ---------------------------------------------------------------------------
 // Internal size constants – not part of the design-token system but kept as
@@ -54,13 +41,40 @@ const Color _focusRingColor = Color(0xFF0A30DA);
 /// )
 /// ```
 ///
-/// ## With label and state text
+/// ## Disabled (pass null to onChanged)
+/// ```dart
+/// BisonSwitch(
+///   value: _isOn,
+///   onChanged: null,
+/// )
+/// ```
+///
+/// ## Read-only (value driven by an external source, no user interaction)
+/// ```dart
+/// BisonSwitch.readOnly(
+///   value: _sensorReading,
+///   onLabel: 'Active',
+///   offLabel: 'Inactive',
+/// )
+/// ```
+///
+/// ## With label and state labels
 /// ```dart
 /// BisonSwitch(
 ///   value: _isOn,
 ///   onChanged: (v) => setState(() => _isOn = v),
 ///   label: 'Notifications',
-///   stateText: _isOn ? 'On' : 'Off',
+///   onLabel: 'On',
+///   offLabel: 'Off',
+/// )
+/// ```
+///
+/// ## Loading skeleton
+/// ```dart
+/// BisonSwitch(
+///   value: false,
+///   onChanged: null,
+///   isLoading: true,
 /// )
 /// ```
 class BisonSwitch extends StatefulWidget {
@@ -69,40 +83,126 @@ class BisonSwitch extends StatefulWidget {
 
   /// Called when the user taps the switch (or activates it via keyboard).
   ///
-  /// Pass `null` to make the switch non-interactive (equivalent to
-  /// [BisonSwitchVariant.readOnly] or [BisonSwitchVariant.disabled]).
+  /// Pass `null` to render the switch in a disabled state — it will use
+  /// disabled color tokens and ignore all interaction.
+  ///
+  /// Not available on [BisonSwitch.readOnly].
   final ValueChanged<bool>? onChanged;
 
   /// Optional label rendered above the switch.
   final String? label;
 
-  /// Optional text rendered to the right of the switch.
-  final String? stateText;
+  /// Text rendered to the right of the switch when [value] is `true`.
+  ///
+  /// The widget resolves which string to display internally based on [value],
+  /// so both [onLabel] and [offLabel] should be provided together.
+  final String? onLabel;
+
+  /// Text rendered to the right of the switch when [value] is `false`.
+  ///
+  /// The widget resolves which string to display internally based on [value],
+  /// so both [onLabel] and [offLabel] should be provided together.
+  final String? offLabel;
 
   /// Controls the track/thumb dimensions.
   final BisonSwitchSize size;
 
-  /// Controls the visual and interactive behavior of the switch.
-  final BisonSwitchVariant variant;
+  /// When `true`, renders skeleton placeholder shapes instead of the live
+  /// switch. Use this while the underlying data is loading.
+  final bool isLoading;
 
   /// An optional [FocusNode] to control focus externally.
+  ///
+  /// Only meaningful for the interactive variant (non-null [onChanged]).
   final FocusNode? focusNode;
 
   /// Whether the switch should request focus automatically.
+  ///
+  /// Only meaningful for the interactive variant (non-null [onChanged]).
   /// Defaults to false.
   final bool autofocus;
 
-  const BisonSwitch({
+  // Internal type — derived at construction time, never set by the caller.
+  final _BisonSwitchType _type;
+
+  // ---------------------------------------------------------------------------
+  // Private base constructor
+  // ---------------------------------------------------------------------------
+
+  const BisonSwitch._({
     super.key,
     required this.value,
+    required _BisonSwitchType type,
     this.onChanged,
     this.label,
-    this.stateText,
+    this.onLabel,
+    this.offLabel,
     this.size = BisonSwitchSize.medium,
-    this.variant = BisonSwitchVariant.normal,
+    this.isLoading = false,
     this.focusNode,
     this.autofocus = false,
-  });
+  }) : _type = type;
+
+  // ---------------------------------------------------------------------------
+  // Public constructors
+  // ---------------------------------------------------------------------------
+
+  /// Creates an interactive or disabled switch.
+  ///
+  /// - When [onChanged] is non-null the switch is **interactive**: it responds
+  ///   to taps and keyboard activation and calls [onChanged] with the new value.
+  /// - When [onChanged] is `null` the switch is **disabled**: it uses disabled
+  ///   color tokens and ignores all interaction.
+  ///
+  const BisonSwitch({
+    Key? key,
+    required bool value,
+    required ValueChanged<bool>? onChanged,
+    String? label,
+    String? onLabel,
+    String? offLabel,
+    BisonSwitchSize size = BisonSwitchSize.medium,
+    bool isLoading = false,
+    FocusNode? focusNode,
+    bool autofocus = false,
+  }) : this._(
+         key: key,
+         value: value,
+         type: onChanged != null
+             ? _BisonSwitchType.interactive
+             : _BisonSwitchType.disabled,
+         onChanged: onChanged,
+         label: label,
+         onLabel: onLabel,
+         offLabel: offLabel,
+         size: size,
+         isLoading: isLoading,
+         focusNode: focusNode,
+         autofocus: autofocus,
+       );
+
+  /// Creates a read-only switch.
+  ///
+  /// The switch uses a distinct visual treatment (transparent background with
+  /// a plain border) and does not respond to user interaction.
+  const BisonSwitch.readOnly({
+    Key? key,
+    required bool value,
+    String? label,
+    String? onLabel,
+    String? offLabel,
+    BisonSwitchSize size = BisonSwitchSize.medium,
+    bool isLoading = false,
+  }) : this._(
+         key: key,
+         value: value,
+         type: _BisonSwitchType.readOnly,
+         label: label,
+         onLabel: onLabel,
+         offLabel: offLabel,
+         size: size,
+         isLoading: isLoading,
+       );
 
   @override
   State<BisonSwitch> createState() => _BisonSwitchState();
@@ -115,8 +215,7 @@ class _BisonSwitchState extends State<BisonSwitch> {
   // Helpers
   // -------------------------------------------------------------------------
 
-  bool get _isInteractive =>
-      widget.variant == BisonSwitchVariant.normal && widget.onChanged != null;
+  bool get _isInteractive => widget._type == _BisonSwitchType.interactive;
 
   double get _trackWidth => widget.size == BisonSwitchSize.medium
       ? _defaultTrackWidth
@@ -130,19 +229,22 @@ class _BisonSwitchState extends State<BisonSwitch> {
       ? _defaultThumbDiameter
       : _smallThumbDiameter;
 
+  /// The status string to display to the right of the switch, resolved from
+  /// [value] and the [onLabel]/[offLabel] pair.
+  String? get _resolvedStatusLabel =>
+      widget.value ? widget.onLabel : widget.offLabel;
+
   // -------------------------------------------------------------------------
   // Color resolution
   // -------------------------------------------------------------------------
 
   Color _trackColor(final BisonThemeTokens theme) {
-    switch (widget.variant) {
-      case BisonSwitchVariant.disabled:
+    switch (widget._type) {
+      case _BisonSwitchType.disabled:
         return theme.selectorSelectorSwitchFillDisabled;
-      case BisonSwitchVariant.readOnly:
+      case _BisonSwitchType.readOnly:
         return theme.surfaceTransparent;
-      case BisonSwitchVariant.skeleton:
-        return theme.miscellaneousSkeletonBackground;
-      case BisonSwitchVariant.normal:
+      case _BisonSwitchType.interactive:
         return widget.value
             ? theme.selectorSelectorPrimary
             : theme.selectorSelectorSwitchFill;
@@ -150,20 +252,18 @@ class _BisonSwitchState extends State<BisonSwitch> {
   }
 
   Color _thumbColor(final BisonThemeTokens theme) {
-    switch (widget.variant) {
-      case BisonSwitchVariant.disabled:
+    switch (widget._type) {
+      case _BisonSwitchType.disabled:
         return theme.selectorSelectorSwitchDisabled;
-      case BisonSwitchVariant.readOnly:
+      case _BisonSwitchType.readOnly:
         return theme.iconPlain;
-      case BisonSwitchVariant.skeleton:
-        return theme.miscellaneousSkeletonBackground;
-      case BisonSwitchVariant.normal:
+      case _BisonSwitchType.interactive:
         return theme.selectorSelectorCheckboxCheck;
     }
   }
 
   Color _textColor(final BisonThemeTokens theme) {
-    return widget.variant == BisonSwitchVariant.disabled
+    return widget._type == _BisonSwitchType.disabled
         ? theme.textDisabled
         : theme.textPlain;
   }
@@ -186,7 +286,7 @@ class _BisonSwitchState extends State<BisonSwitch> {
   Widget build(final BuildContext context) {
     final bison = context.bison;
 
-    if (widget.variant == BisonSwitchVariant.skeleton) {
+    if (widget.isLoading) {
       return _buildSkeleton(bison.theme, bison.spacing.tinySpacing);
     }
 
@@ -208,10 +308,10 @@ class _BisonSwitchState extends State<BisonSwitch> {
       decoration: BoxDecoration(
         color: trackColor,
         borderRadius: BorderRadius.circular(cornerRadius),
-        border: widget.variant == BisonSwitchVariant.readOnly
+        border: widget._type == _BisonSwitchType.readOnly
             ? Border.all(color: bison.theme.borderPlain, width: 1.0)
             : null,
-        boxShadow: _isFocused && widget.variant == BisonSwitchVariant.normal
+        boxShadow: _isFocused && _isInteractive
             ? const [
                 BoxShadow(
                   color: _focusRingColor,
@@ -232,7 +332,7 @@ class _BisonSwitchState extends State<BisonSwitch> {
       ),
     );
 
-    // Wrap in interaction handlers only for the normal interactive variant.
+    // Wrap in interaction handlers only for the interactive variant.
     if (_isInteractive) {
       track = FocusableActionDetector(
         focusNode: widget.focusNode,
@@ -253,25 +353,23 @@ class _BisonSwitchState extends State<BisonSwitch> {
         onShowFocusHighlight: (final value) {
           setState(() => _isFocused = value);
         },
-        onFocusChange: (final isFocused) {
-          if (!isFocused) setState(() => _isFocused = false);
-        },
         child: GestureDetector(onTap: _handleTap, child: track),
       );
     }
 
-    // Row: [track] [optional stateText]
+    // Row: [track] [optional status label]
+    final statusLabel = _resolvedStatusLabel;
     final Widget switchRow = Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         track,
-        if (widget.stateText != null) ...[
+        if (statusLabel != null) ...[
           SizedBox(width: bison.spacing.tinySpacing),
           SizedBox(
             width: _trackWidth,
             child: Text(
-              widget.stateText!,
+              statusLabel,
               style: bison.typography.bodyLarge.copyWith(color: textColor),
               maxLines: 1,
               softWrap: false,
@@ -310,31 +408,59 @@ class _BisonSwitchState extends State<BisonSwitch> {
     final double tinySpacing,
   ) {
     final skeletonColor = theme.miscellaneousSkeletonBackground;
+    final cornerRadius = _trackHeight / 2;
 
-    return Row(
+    final trackSkeleton = Container(
+      width: _trackWidth,
+      height: _trackHeight,
+      decoration: BoxDecoration(
+        color: skeletonColor,
+        borderRadius: BorderRadius.circular(cornerRadius),
+      ),
+    );
+
+    // Rectangular label skeleton — same width as the track, height matches
+    // the thumb diameter so it aligns visually with the track centre.
+    final labelSkeleton = Container(
+      width: _trackWidth,
+      height: _thumbDiameter,
+      decoration: BoxDecoration(
+        color: skeletonColor,
+        borderRadius: BorderRadius.circular(2.0),
+      ),
+    );
+
+    final switchRow = Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Circular track skeleton
-        Container(
-          width: _trackWidth,
-          height: _trackHeight,
-          decoration: BoxDecoration(
-            color: skeletonColor,
-            shape: BoxShape.circle,
-          ),
-        ),
+        trackSkeleton,
         SizedBox(width: tinySpacing),
-        // Rectangular label skeleton
-        Container(
-          width: _trackWidth,
-          height: _thumbDiameter,
-          decoration: BoxDecoration(
-            color: skeletonColor,
-            borderRadius: BorderRadius.zero,
-          ),
-        ),
+        labelSkeleton,
       ],
     );
+
+    // Mirror the live layout: if a label was provided, render a label
+    // placeholder above the switch row.
+    if (widget.label != null) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: _trackWidth * 1.5,
+            height: _thumbDiameter,
+            decoration: BoxDecoration(
+              color: skeletonColor,
+              borderRadius: BorderRadius.circular(2.0),
+            ),
+          ),
+          SizedBox(height: tinySpacing),
+          switchRow,
+        ],
+      );
+    }
+
+    return switchRow;
   }
 }

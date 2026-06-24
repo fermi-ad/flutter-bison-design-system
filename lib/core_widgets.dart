@@ -9,4 +9,4 @@ export 'src/core_widgets/chips/bison_chip.dart' show BisonChip, ObjectChipStyle;
 export 'src/core_widgets/inputs/bison_text_field.dart'
     show BisonTextField, BisonTextFieldSize;
 export 'src/core_widgets/switches/bison_switch.dart'
-    show BisonSwitch, BisonSwitchSize, BisonSwitchVariant;
+    show BisonSwitch, BisonSwitchSize;
