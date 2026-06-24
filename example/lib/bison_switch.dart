@@ -1,5 +1,5 @@
 import 'package:bison_design_system/core_widgets.dart'
-    show BisonSwitch, BisonSwitchSize, BisonSwitchVariant;
+    show BisonSwitch, BisonSwitchSize;
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart' show KnobsExtension;
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
@@ -32,18 +32,26 @@ class _InteractiveSwitchUseCaseState extends State<_InteractiveSwitchUseCase> {
 
   @override
   Widget build(BuildContext context) {
-    final variant = context.knobs.object.dropdown<BisonSwitchVariant>(
-      label: 'State Variant',
-      options: BisonSwitchVariant.values,
-      initialOption: BisonSwitchVariant.normal,
-      labelBuilder: (v) => v.name,
-    );
-
     final size = context.knobs.object.dropdown<BisonSwitchSize>(
       label: 'Switch Size',
       options: BisonSwitchSize.values,
       initialOption: BisonSwitchSize.medium,
       labelBuilder: (s) => s.name,
+    );
+
+    final isDisabled = context.knobs.boolean(
+      label: 'Disabled',
+      initialValue: false,
+    );
+
+    final isReadOnly = context.knobs.boolean(
+      label: 'Read-only',
+      initialValue: false,
+    );
+
+    final isLoading = context.knobs.boolean(
+      label: 'Loading',
+      initialValue: false,
     );
 
     final labelText = context.knobs.string(
@@ -55,35 +63,50 @@ class _InteractiveSwitchUseCaseState extends State<_InteractiveSwitchUseCase> {
       label: 'Show label',
       initialValue: true,
     );
-    final showStateText = context.knobs.boolean(
-      label: 'Show state text',
+
+    final showStateLabels = context.knobs.boolean(
+      label: 'Show state labels',
       initialValue: true,
     );
 
     final positiveStateText = context.knobs.string(
-      label: 'Positive State',
+      label: 'On Label',
       initialValue: 'On',
     );
 
     final negativeStateText = context.knobs.string(
-      label: 'Negative State',
+      label: 'Off Label',
       initialValue: 'Off',
     );
 
+    final label = showLabel ? labelText : null;
+    final onLabel = showStateLabels ? positiveStateText : null;
+    final offLabel = showStateLabels ? negativeStateText : null;
+
+    if (isReadOnly) {
+      return BisonSwitch.readOnly(
+        value: _value,
+        size: size,
+        label: label,
+        onLabel: onLabel,
+        offLabel: offLabel,
+        isLoading: isLoading,
+      );
+    }
+
     return BisonSwitch(
       value: _value,
-      onChanged: variant == BisonSwitchVariant.normal
-          ? (v) => setState(() {
+      onChanged: isDisabled
+          ? null
+          : (v) => setState(() {
               _value = v;
               _persistedSwitchValue = v;
-            })
-          : null,
-      variant: variant,
+            }),
       size: size,
-      label: showLabel ? labelText : null,
-      stateText: showStateText
-          ? (_value ? positiveStateText : negativeStateText)
-          : null,
+      label: label,
+      onLabel: onLabel,
+      offLabel: offLabel,
+      isLoading: isLoading,
     );
   }
 }
