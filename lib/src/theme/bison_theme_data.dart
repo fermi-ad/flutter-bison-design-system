@@ -62,6 +62,7 @@ class BisonThemeData {
         foregroundColor: themeTokens.textWhiteFixed,
         iconTheme: IconThemeData(color: themeTokens.iconWhiteFixed),
         centerTitle: false,
+        surfaceTintColor: themeTokens.surfaceTransparent,
         titleTextStyle: typographyTokens.h2.copyWith(
           color: themeTokens.textWhiteFixed,
         ),
