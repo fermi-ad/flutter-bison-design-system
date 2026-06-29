@@ -181,6 +181,15 @@ void main() {
 
       final padding = style.padding?.resolve(<WidgetState>{});
       expect(padding, equals(EdgeInsets.zero));
+
+      final shadowColor = style.shadowColor?.resolve(<WidgetState>{});
+      expect(shadowColor?.a, closeTo(0.30, 0.0001));
+
+      final surfaceTintColor = style.surfaceTintColor?.resolve(<WidgetState>{});
+      expect(surfaceTintColor?.a, isZero);
+
+      final elevation = style.elevation?.resolve(<WidgetState>{});
+      expect(elevation, equals(6));
     });
 
     testWidgets('MenuItemButton uses theme styling from BisonThemeData', (

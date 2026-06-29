@@ -191,7 +191,12 @@ class _BisonMenuState extends State<BisonMenu> {
     _syncFocusNodes();
 
     return MenuAnchor(
-      style: getBisonMenuStyle(bison.theme, bison.spacing, bison.corners),
+      style: getBisonMenuStyle(
+        bison.theme,
+        bison.spacing,
+        bison.corners,
+        useMaterialShadow: false,
+      ),
       clipBehavior: Clip.none,
       crossAxisUnconstrained: false,
       childFocusNode: _childFocusNode,
@@ -301,10 +306,18 @@ BoxDecoration getBisonMenuDecoration(
 MenuStyle getBisonMenuStyle(
   final BisonThemeTokens theme,
   final BisonSpacingTokens _,
-  final BisonCornerTokens corners,
-) {
+  final BisonCornerTokens corners, {
+  final bool useMaterialShadow = true,
+}) {
   return MenuStyle(
     backgroundColor: WidgetStatePropertyAll(theme.surfaceDefault),
+    shadowColor: useMaterialShadow
+        ? WidgetStatePropertyAll(
+            const Color(0xFF000000).withValues(alpha: 0.30),
+          )
+        : null,
+    surfaceTintColor: WidgetStatePropertyAll(theme.surfaceTransparent),
+    elevation: useMaterialShadow ? const WidgetStatePropertyAll(6) : null,
     shape: WidgetStateProperty.all(
       RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
