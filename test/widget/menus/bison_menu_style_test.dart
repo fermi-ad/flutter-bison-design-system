@@ -8,11 +8,11 @@ import 'package:bison_design_system/bison_design_system.dart'
         BisonTypographyTokens,
         BisonMenuItem;
 import 'bison_menu_common.dart' show buildMenuWithItems, buildStandardMenu;
-import '../common.dart' show getMenuStyle, getMenuItemButtonStyle;
+import '../common.dart' show getMenuItemButtonStyle;
 
 void main() {
   group('BisonMenu Container Styling Tests', () {
-    testWidgets('Menu container background color is correct', (
+    testWidgets('Menu surface background color is correct', (
       final WidgetTester tester,
     ) async {
       final theme = BisonThemeTokens.light();
@@ -22,15 +22,15 @@ void main() {
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final element = tester.element(find.byType(MenuAnchor));
-      final menuAnchorWidget = element.widget as MenuAnchor;
-      final style = getMenuStyle(element, menuAnchorWidget);
+      final surface = tester.widget<DecoratedBox>(
+        find.byKey(const Key('bison_menu_surface')),
+      );
+      final decoration = surface.decoration as BoxDecoration;
 
-      final backgroundColor = style.backgroundColor?.resolve(<WidgetState>{});
-      expect(backgroundColor, equals(theme.surfaceDefault));
+      expect(decoration.color, equals(theme.surfaceDefault));
     });
 
-    testWidgets('Menu container border radius is correct', (
+    testWidgets('Menu surface border radius is correct', (
       final WidgetTester tester,
     ) async {
       final corners = BisonCornerTokens.standard();
@@ -40,22 +40,50 @@ void main() {
       await tester.tap(find.text('Open Menu'));
       await tester.pumpAndSettle();
 
-      final menuAnchor = find.byType(MenuAnchor);
-      final menuAnchorWidget = tester.widget<MenuAnchor>(menuAnchor);
-      final style = menuAnchorWidget.style!;
-
-      final shape =
-          style.shape?.resolve(<WidgetState>{}) as RoundedRectangleBorder;
-      final borderRadius = shape.borderRadius;
-      final radius = (borderRadius as BorderRadius).topLeft;
+      final surface = tester.widget<DecoratedBox>(
+        find.byKey(const Key('bison_menu_surface')),
+      );
+      final decoration = surface.decoration as BoxDecoration;
+      final borderRadius = decoration.borderRadius as BorderRadius;
+      final radius = borderRadius.topLeft;
 
       expect(radius.x, equals(corners.cornerExtraSmall));
     });
 
-    testWidgets('Menu container vertical padding is correct', (
+    testWidgets('Menu surface uses expected drop shadows', (
       final WidgetTester tester,
     ) async {
-      final spacing = BisonSpacingTokens.standard();
+      await tester.pumpWidget(buildStandardMenu(3));
+
+      await tester.tap(find.text('Open Menu'));
+      await tester.pumpAndSettle();
+
+      final surface = tester.widget<DecoratedBox>(
+        find.byKey(const Key('bison_menu_surface')),
+      );
+      final decoration = surface.decoration as BoxDecoration;
+      final shadows = decoration.boxShadow;
+
+      expect(shadows, isNotNull);
+      expect(shadows, hasLength(2));
+
+      final first = shadows![0];
+      expect(first.offset, equals(const Offset(0, 4)));
+      expect(first.blurRadius, equals(8));
+      expect(first.spreadRadius, equals(3));
+      expect(first.color.a, closeTo(0.20, 0.0001));
+
+      final second = shadows[1];
+      expect(second.offset, equals(const Offset(0, 1)));
+      expect(second.blurRadius, equals(3));
+      expect(second.spreadRadius, equals(0));
+      expect(second.color.a, closeTo(0.30, 0.0001));
+    });
+
+    testWidgets('Menu style container uses default surface and no padding', (
+      final WidgetTester tester,
+    ) async {
+      final theme = BisonThemeTokens.light();
 
       await tester.pumpWidget(buildStandardMenu(3));
 
@@ -66,9 +94,11 @@ void main() {
       final menuAnchorWidget = tester.widget<MenuAnchor>(menuAnchor);
       final style = menuAnchorWidget.style!;
 
+      final backgroundColor = style.backgroundColor?.resolve(<WidgetState>{});
       final padding = style.padding?.resolve(<WidgetState>{});
 
-      expect(padding?.vertical, equals(spacing.tinySpacing * 2));
+      expect(backgroundColor, equals(theme.surfaceDefault));
+      expect(padding, equals(EdgeInsets.zero));
     });
   });
 

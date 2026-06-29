@@ -121,6 +121,8 @@ class BisonMenu extends StatefulWidget {
 }
 
 class _BisonMenuState extends State<BisonMenu> {
+  static const Key _menuSurfaceKey = Key('bison_menu_surface');
+
   /// Focus node for the menu trigger element.
   final FocusNode _childFocusNode = FocusNode(debugLabel: 'Menu Trigger');
 
@@ -190,35 +192,49 @@ class _BisonMenuState extends State<BisonMenu> {
 
     return MenuAnchor(
       style: getBisonMenuStyle(bison.theme, bison.spacing, bison.corners),
+      clipBehavior: Clip.none,
+      crossAxisUnconstrained: false,
       childFocusNode: _childFocusNode,
       controller: _controller,
       menuChildren: [
-        CallbackShortcuts(
-          bindings: {
-            const SingleActivator(LogicalKeyboardKey.home): _focusFirst,
-            const SingleActivator(LogicalKeyboardKey.end): _focusLast,
-            const SingleActivator(LogicalKeyboardKey.tab): () =>
-                _controller.close(),
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: widget.items.indexed.map((final element) {
-              final (index, item) = element;
-              final focusNode = _itemFocusNodes[index];
+        DecoratedBox(
+          key: _menuSurfaceKey,
+          decoration: getBisonMenuDecoration(bison.theme, bison.corners),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(bison.corners.cornerExtraSmall),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: bison.spacing.tinySpacing,
+              ),
+              child: CallbackShortcuts(
+                bindings: {
+                  const SingleActivator(LogicalKeyboardKey.home): _focusFirst,
+                  const SingleActivator(LogicalKeyboardKey.end): _focusLast,
+                  const SingleActivator(LogicalKeyboardKey.tab): () =>
+                      _controller.close(),
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: widget.items.indexed.map((final element) {
+                    final (index, item) = element;
+                    final focusNode = _itemFocusNodes[index];
 
-              return MenuItemButton(
-                focusNode: focusNode,
-                autofocus: index == 0 && focusNode.canRequestFocus,
-                style: getBisonMenuButtonStyle(
-                  bison.theme,
-                  bison.spacing,
-                  bison.typography,
+                    return MenuItemButton(
+                      focusNode: focusNode,
+                      autofocus: index == 0 && focusNode.canRequestFocus,
+                      style: getBisonMenuButtonStyle(
+                        bison.theme,
+                        bison.spacing,
+                        bison.typography,
+                      ),
+                      onPressed: item.onSelect,
+                      leadingIcon: item.icon,
+                      child: Text(item.label),
+                    );
+                  }).toList(),
                 ),
-                onPressed: item.onSelect,
-                leadingIcon: item.icon,
-                child: Text(item.label),
-              );
-            }).toList(),
+              ),
+            ),
           ),
         ),
       ],
@@ -258,9 +274,33 @@ class _BisonMenuState extends State<BisonMenu> {
   }
 }
 
+BoxDecoration getBisonMenuDecoration(
+  final BisonThemeTokens theme,
+  final BisonCornerTokens corners,
+) {
+  return BoxDecoration(
+    color: theme.surfaceDefault,
+    borderRadius: BorderRadius.circular(corners.cornerExtraSmall),
+    boxShadow: [
+      BoxShadow(
+        offset: const Offset(0, 4),
+        blurRadius: 8,
+        spreadRadius: 3,
+        color: const Color(0xFF000000).withValues(alpha: 0.20),
+      ),
+      BoxShadow(
+        offset: const Offset(0, 1),
+        blurRadius: 3,
+        spreadRadius: 0,
+        color: const Color(0xFF000000).withValues(alpha: 0.30),
+      ),
+    ],
+  );
+}
+
 MenuStyle getBisonMenuStyle(
   final BisonThemeTokens theme,
-  final BisonSpacingTokens padding,
+  final BisonSpacingTokens _,
   final BisonCornerTokens corners,
 ) {
   return MenuStyle(
@@ -272,9 +312,7 @@ MenuStyle getBisonMenuStyle(
         ),
       ),
     ),
-    padding: WidgetStatePropertyAll(
-      EdgeInsets.symmetric(vertical: padding.tinySpacing),
-    ),
+    padding: const WidgetStatePropertyAll(EdgeInsets.zero),
   );
 }
 
