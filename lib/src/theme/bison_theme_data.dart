@@ -60,6 +60,7 @@ class BisonThemeData {
       appBarTheme: AppBarThemeData(
         backgroundColor: themeTokens.surfaceSlate,
         foregroundColor: themeTokens.textWhiteFixed,
+        scrolledUnderElevation: 0,
         iconTheme: IconThemeData(color: themeTokens.iconWhiteFixed),
         centerTitle: false,
         surfaceTintColor: themeTokens.surfaceTransparent,
