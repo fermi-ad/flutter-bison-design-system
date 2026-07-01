@@ -25,10 +25,10 @@ Widget buildBisonCheckboxAllStatesUseCase(BuildContext context) {
     runSpacing: 16,
     children: [
       ...BisonCheckboxValue.values.map(
-        (final value) => BisonCheckbox(value: value, onChanged: (_) {}),
+        (value) => BisonCheckbox(value: value, onChanged: (_) {}),
       ),
       ...BisonCheckboxValue.values.map(
-        (final value) => BisonCheckbox(value: value, enabled: false),
+        (value) => BisonCheckbox(value: value, enabled: false),
       ),
     ],
   );
