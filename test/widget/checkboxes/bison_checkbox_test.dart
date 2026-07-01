@@ -76,10 +76,24 @@ void main() {
       final stateLayer = tester.widget<Container>(
         find.byKey(const Key('bison_checkbox_state_layer')),
       );
+      final focusLayer = tester.widget<Container>(
+        find.byKey(const Key('bison_checkbox_focus_layer')),
+      );
       final BoxDecoration decoration = stateLayer.decoration! as BoxDecoration;
-      final Border border = decoration.border! as Border;
+      final BoxDecoration focusDecoration =
+          focusLayer.decoration! as BoxDecoration;
+      final Border border = focusDecoration.border! as Border;
+      final stateLayerSize = tester.getSize(
+        find.byKey(const Key('bison_checkbox_state_layer')),
+      );
+      final focusLayerSize = tester.getSize(
+        find.byKey(const Key('bison_checkbox_focus_layer')),
+      );
 
       expect(border.top.color, equals(theme.borderPrimary));
+      expect(decoration.borderRadius, equals(BorderRadius.circular(4)));
+      expect(stateLayerSize, equals(const Size(26, 26)));
+      expect(focusLayerSize, equals(const Size(26, 26)));
 
       focusNode.dispose();
     });

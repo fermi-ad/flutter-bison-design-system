@@ -28,6 +28,7 @@ class BisonCheckbox extends StatefulWidget {
 class _BisonCheckboxState extends State<BisonCheckbox> {
   static const _containerKey = Key('bison_checkbox_container');
   static const _stateLayerKey = Key('bison_checkbox_state_layer');
+  static const _focusLayerKey = Key('bison_checkbox_focus_layer');
 
   bool _isHovered = false;
   bool _isFocused = false;
@@ -89,11 +90,11 @@ class _BisonCheckboxState extends State<BisonCheckbox> {
           : showHoverLayer
           ? theme.selectorSelectorHover
           : theme.surfaceTransparent,
-      borderRadius: BorderRadius.circular(
-        showHoverLayer || _isPressed || showFocusRing
-            ? bison.corners.cornerExtraSmall
-            : 100,
-      ),
+      borderRadius: BorderRadius.circular(bison.corners.cornerExtraSmall),
+    );
+
+    final focusRingDecoration = BoxDecoration(
+      borderRadius: BorderRadius.circular(bison.corners.cornerExtraSmall),
       border: showFocusRing
           ? Border.all(color: theme.borderPrimary, width: 2)
           : null,
@@ -141,34 +142,47 @@ class _BisonCheckboxState extends State<BisonCheckbox> {
             child: Container(
               key: _stateLayerKey,
               decoration: stateLayerDecoration,
-              padding: EdgeInsets.all(bison.spacing.microSpacing),
-              child: Container(
-                key: _containerKey,
-                width: 18,
-                height: 18,
-                decoration: BoxDecoration(
-                  color: containerColor,
-                  border: containerBorder,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-                child: isSelected
-                    ? Icon(
-                        Icons.check,
-                        size: 16,
-                        color: theme.selectorSelectorCheckboxCheck,
-                      )
-                    : isIndeterminate
-                    ? Center(
-                        child: Container(
-                          width: 10,
-                          height: 2,
-                          decoration: BoxDecoration(
-                            color: theme.selectorSelectorCheckboxCheck,
-                            borderRadius: BorderRadius.circular(1),
-                          ),
-                        ),
-                      )
-                    : null,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Positioned.fill(
+                    child: Container(
+                      key: _focusLayerKey,
+                      decoration: focusRingDecoration,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(bison.spacing.microSpacing),
+                    child: Container(
+                      key: _containerKey,
+                      width: 18,
+                      height: 18,
+                      decoration: BoxDecoration(
+                        color: containerColor,
+                        border: containerBorder,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                      child: isSelected
+                          ? Icon(
+                              Icons.check,
+                              size: 16,
+                              color: theme.selectorSelectorCheckboxCheck,
+                            )
+                          : isIndeterminate
+                          ? Center(
+                              child: Container(
+                                width: 10,
+                                height: 2,
+                                decoration: BoxDecoration(
+                                  color: theme.selectorSelectorCheckboxCheck,
+                                  borderRadius: BorderRadius.circular(1),
+                                ),
+                              ),
+                            )
+                          : null,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
