@@ -7,7 +7,7 @@ A Flutter Widgetbook catalog to view and test design system components.
 Start up the Widgetbook:
 
 ```sh
-flutter run -d web-server
+flutter run -d web-server --web-port=5037
 ```
 
 If you add new components or use cases, run this to regenerate the directories files:
