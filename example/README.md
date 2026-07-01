@@ -13,5 +13,5 @@ flutter run -d web-server --web-port=5037
 If you add new components or use cases, run this to regenerate the directories files:
 
 ```sh
-dart run build_runner build -d
+dart run build_runner build
 ```
