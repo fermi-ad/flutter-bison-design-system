@@ -3,14 +3,81 @@ import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter/widgets.dart';
 import 'package:bison_design_system/theme.dart' show BisonContext;
 
-enum BisonCheckboxValue { selected, unselected, indeterminate }
+/// The available visual and semantic states for a [BisonCheckbox].
+enum BisonCheckboxValue {
+  /// The checkbox is checked.
+  selected,
 
+  /// The checkbox is unchecked.
+  unselected,
+
+  /// The checkbox represents a partially selected state.
+  indeterminate,
+}
+
+/// A tri-state checkbox that follows the Bison design system.
+///
+/// The widget supports the following states through [value]:
+/// - [BisonCheckboxValue.selected]
+/// - [BisonCheckboxValue.unselected]
+/// - [BisonCheckboxValue.indeterminate]
+///
+/// Interaction is controlled by [onChanged]:
+/// - Non-null: interactive checkbox with mouse and keyboard support.
+/// - `null`: non-interactive checkbox with disabled styling.
+///
+/// ## Basic usage
+/// ```dart
+/// BisonCheckbox(
+///   value: isChecked
+///       ? BisonCheckboxValue.selected
+///       : BisonCheckboxValue.unselected,
+///   onChanged: (_) {
+///     setState(() {
+///       isChecked = !isChecked;
+///     });
+///   },
+/// )
+/// ```
+///
+/// ## Indeterminate state
+/// ```dart
+/// BisonCheckbox(
+///   value: BisonCheckboxValue.indeterminate,
+///   onChanged: (currentValue) {
+///     // Resolve to your next state in parent state management.
+///   },
+/// )
+/// ```
+///
+/// ## Disabled (pass null to onChanged)
+/// ```dart
+/// BisonCheckbox(
+///   value: BisonCheckboxValue.unselected,
+///   onChanged: null,
+/// )
+/// ```
 class BisonCheckbox extends StatefulWidget {
+  /// The current checkbox state.
   final BisonCheckboxValue value;
+
+  /// Called when the checkbox is tapped or activated via keyboard.
+  ///
+  /// The callback receives the current [value]. The parent widget is
+  /// responsible for resolving and applying the next state.
+  ///
+  /// Pass `null` to render a disabled, non-interactive checkbox.
   final ValueChanged<BisonCheckboxValue>? onChanged;
+
+  /// Optional [FocusNode] for external focus management.
   final FocusNode? focusNode;
+
+  /// Whether this checkbox should request focus automatically.
   final bool autofocus;
 
+  /// Creates a Bison checkbox.
+  ///
+  /// By default, the checkbox starts in [BisonCheckboxValue.unselected].
   const BisonCheckbox({
     super.key,
     this.value = BisonCheckboxValue.unselected,
