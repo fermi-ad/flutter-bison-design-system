@@ -224,7 +224,7 @@ class _BisonCheckboxState extends State<BisonCheckbox> {
                           : isIndeterminate
                           ? Center(
                               child: Container(
-                                width: 10,
+                                width: 12,
                                 height: 2,
                                 decoration: BoxDecoration(
                                   color: theme.selectorSelectorCheckboxCheck,
