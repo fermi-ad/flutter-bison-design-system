@@ -1,7 +1,7 @@
 import 'package:bison_design_system/bison_design_system.dart'
     show BisonThemeTokens, BisonCheckbox, BisonCheckboxValue;
 import 'package:flutter/material.dart' show Icons;
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
