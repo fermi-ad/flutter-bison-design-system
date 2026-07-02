@@ -417,7 +417,7 @@ void main() {
   // Interaction
   // -------------------------------------------------------------------------
   group('BisonSwitch - interaction', () {
-    testWidgets('onChanged fires with toggled value on tap', (
+    testWidgets('onChanged fires with current value on tap', (
       final WidgetTester tester,
     ) async {
       bool? received;
@@ -431,10 +431,10 @@ void main() {
       await tester.tap(find.byType(BisonSwitch));
       await tester.pump();
 
-      expect(received, isTrue);
+      expect(received, isFalse);
     });
 
-    testWidgets('onChanged fires true→false when value starts true', (
+    testWidgets('onChanged fires true when value starts true', (
       final WidgetTester tester,
     ) async {
       bool? received;
@@ -446,7 +446,7 @@ void main() {
       await tester.tap(find.byType(BisonSwitch));
       await tester.pump();
 
-      expect(received, isFalse);
+      expect(received, isTrue);
     });
 
     testWidgets('Enter key triggers onChanged when focused', (
@@ -468,7 +468,7 @@ void main() {
       await tester.sendKeyEvent(LogicalKeyboardKey.enter);
       await tester.pump();
 
-      expect(received, isTrue);
+      expect(received, isFalse);
     });
 
     testWidgets('Space key triggers onChanged when focused', (
@@ -490,7 +490,7 @@ void main() {
       await tester.sendKeyEvent(LogicalKeyboardKey.space);
       await tester.pump();
 
-      expect(received, isTrue);
+      expect(received, isFalse);
     });
 
     testWidgets('tapping a disabled switch (onChanged null) does not throw', (
@@ -605,7 +605,9 @@ void main() {
             builder: (final context, final setState) {
               return BisonSwitch(
                 value: value,
-                onChanged: (final v) => setState(() => value = v),
+                onChanged: (final currentValue) {
+                  setState(() => value = !currentValue);
+                },
                 onLabel: 'Enabled',
                 offLabel: 'Off',
               );

@@ -37,7 +37,7 @@ const Color _focusRingColor = Color(0xFF0A30DA);
 /// ```dart
 /// BisonSwitch(
 ///   value: _isOn,
-///   onChanged: (v) => setState(() => _isOn = v),
+///   onChanged: (currentValue) => setState(() => _isOn = !currentValue),
 /// )
 /// ```
 ///
@@ -62,7 +62,7 @@ const Color _focusRingColor = Color(0xFF0A30DA);
 /// ```dart
 /// BisonSwitch(
 ///   value: _isOn,
-///   onChanged: (v) => setState(() => _isOn = v),
+///   onChanged: (currentValue) => setState(() => _isOn = !currentValue),
 ///   label: 'Notifications',
 ///   onLabel: 'On',
 ///   offLabel: 'Off',
@@ -150,7 +150,8 @@ class BisonSwitch extends StatefulWidget {
   /// Creates an interactive or disabled switch.
   ///
   /// - When [onChanged] is non-null the switch is **interactive**: it responds
-  ///   to taps and keyboard activation and calls [onChanged] with the new value.
+  ///   to taps and keyboard activation and calls [onChanged] with the current
+  ///   [value]. The consumer decides the next state.
   /// - When [onChanged] is `null` the switch is **disabled**: it uses disabled
   ///   color tokens and ignores all interaction.
   ///
@@ -274,7 +275,7 @@ class _BisonSwitchState extends State<BisonSwitch> {
 
   void _handleTap() {
     if (_isInteractive) {
-      widget.onChanged!(!widget.value);
+      widget.onChanged!(widget.value);
     }
   }
 
