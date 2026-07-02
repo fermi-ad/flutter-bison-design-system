@@ -7,14 +7,18 @@ import 'package:bison_design_system/core_widgets.dart'
 
 @widgetbook.UseCase(name: 'Default', type: BisonCheckbox)
 Widget buildBisonCheckboxUseCase(BuildContext context) {
+  final isInteractive = context.knobs.boolean(
+    label: 'Interactive',
+    initialValue: true,
+  );
+
   return BisonCheckbox(
     value: context.knobs.object.dropdown(
       label: 'Value',
       labelBuilder: (value) => value.name,
       options: BisonCheckboxValue.values,
     ),
-    enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
-    onChanged: (_) {},
+    onChanged: isInteractive ? (_) {} : null,
   );
 }
 
@@ -28,7 +32,7 @@ Widget buildBisonCheckboxAllStatesUseCase(BuildContext context) {
         (value) => BisonCheckbox(value: value, onChanged: (_) {}),
       ),
       ...BisonCheckboxValue.values.map(
-        (value) => BisonCheckbox(value: value, enabled: false),
+        (value) => BisonCheckbox(value: value, onChanged: null),
       ),
     ],
   );
@@ -36,14 +40,16 @@ Widget buildBisonCheckboxAllStatesUseCase(BuildContext context) {
 
 @widgetbook.UseCase(name: 'Interactive', type: BisonCheckbox)
 Widget buildBisonCheckboxInteractiveUseCase(BuildContext context) {
-  final enabled = context.knobs.boolean(label: 'Enabled', initialValue: true);
+  final isInteractive = context.knobs.boolean(
+    label: 'Interactive',
+    initialValue: true,
+  );
   return ValueListenableBuilder<BisonCheckboxValue>(
     valueListenable: _interactiveCheckboxValue,
     builder: (context, value, _) {
       return BisonCheckbox(
         value: value,
-        enabled: enabled,
-        onChanged: enabled
+        onChanged: isInteractive
             ? (_) {
                 _interactiveCheckboxValue.value = _nextInteractiveCheckboxValue(
                   value,

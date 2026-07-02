@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart' show Icons;
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter/widgets.dart';
 import 'package:bison_design_system/theme.dart' show BisonContext;
 
@@ -8,7 +8,6 @@ enum BisonCheckboxValue { selected, unselected, indeterminate }
 class BisonCheckbox extends StatefulWidget {
   final BisonCheckboxValue value;
   final ValueChanged<BisonCheckboxValue>? onChanged;
-  final bool enabled;
   final FocusNode? focusNode;
   final bool autofocus;
 
@@ -16,7 +15,6 @@ class BisonCheckbox extends StatefulWidget {
     super.key,
     this.value = BisonCheckboxValue.unselected,
     this.onChanged,
-    this.enabled = true,
     this.focusNode,
     this.autofocus = false,
   });
@@ -34,27 +32,15 @@ class _BisonCheckboxState extends State<BisonCheckbox> {
   bool _isFocused = false;
   bool _isPressed = false;
 
-  bool get _isInteractive => widget.enabled && widget.onChanged != null;
+  bool get _isInteractive => widget.onChanged != null;
 
   void _setPressed(final bool value) {
     if (_isPressed == value) return;
     setState(() => _isPressed = value);
   }
 
-  BisonCheckboxValue _nextValue() {
-    switch (widget.value) {
-      case BisonCheckboxValue.selected:
-        return BisonCheckboxValue.unselected;
-      case BisonCheckboxValue.unselected:
-        return BisonCheckboxValue.selected;
-      case BisonCheckboxValue.indeterminate:
-        return BisonCheckboxValue.selected;
-    }
-  }
-
-  void _toggle() {
-    if (!_isInteractive) return;
-    widget.onChanged?.call(_nextValue());
+  void _handleTap() {
+    widget.onChanged?.call(widget.value);
   }
 
   @override
@@ -71,13 +57,13 @@ class _BisonCheckboxState extends State<BisonCheckbox> {
 
     final containerColor = isUnselected
         ? theme.surfaceTransparent
-        : widget.enabled
+        : _isInteractive
         ? theme.selectorSelectorPlain
         : theme.selectorSelectorDisabled;
 
     final containerBorder = isUnselected
         ? Border.all(
-            color: widget.enabled
+            color: _isInteractive
                 ? theme.selectorSelectorPlain
                 : theme.selectorSelectorDisabled,
             width: 2,
@@ -118,7 +104,7 @@ class _BisonCheckboxState extends State<BisonCheckbox> {
         actions: <Type, Action<Intent>>{
           ActivateIntent: CallbackAction<ActivateIntent>(
             onInvoke: (final ActivateIntent intent) {
-              _toggle();
+              _handleTap();
               return null;
             },
           ),
@@ -138,7 +124,7 @@ class _BisonCheckboxState extends State<BisonCheckbox> {
             onTapDown: _isInteractive ? (_) => _setPressed(true) : null,
             onTapUp: _isInteractive ? (_) => _setPressed(false) : null,
             onTapCancel: _isInteractive ? () => _setPressed(false) : null,
-            onTap: _toggle,
+            onTap: _handleTap,
             child: Container(
               key: _stateLayerKey,
               decoration: stateLayerDecoration,
