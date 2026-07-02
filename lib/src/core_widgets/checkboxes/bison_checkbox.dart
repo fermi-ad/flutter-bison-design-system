@@ -191,7 +191,7 @@ class _BisonCheckboxState extends State<BisonCheckbox> {
             onTapDown: _isInteractive ? (_) => _setPressed(true) : null,
             onTapUp: _isInteractive ? (_) => _setPressed(false) : null,
             onTapCancel: _isInteractive ? () => _setPressed(false) : null,
-            onTap: _handleTap,
+            onTap: _isInteractive ? _handleTap : null,
             child: Container(
               key: _stateLayerKey,
               decoration: stateLayerDecoration,
@@ -213,7 +213,9 @@ class _BisonCheckboxState extends State<BisonCheckbox> {
                       decoration: BoxDecoration(
                         color: containerColor,
                         border: containerBorder,
-                        borderRadius: BorderRadius.circular(2),
+                        borderRadius: BorderRadius.circular(
+                          bison.corners.cornerExtraSmall / 2,
+                        ),
                       ),
                       child: isSelected
                           ? Icon(
