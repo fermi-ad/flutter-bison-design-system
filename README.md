@@ -20,6 +20,14 @@ Set up the [pre-commit hook](https://pub.dev/packages/dart_pre_commit):
 $ dart tool/setup_git_hooks.dart
 ```
 
+## Widgetbook
+
+Widgetbook is an interactive component catalog that serves as live documentation for the design system.
+
+View the component catalog here: [Widgetbook](https://ad-apps-internal.fnal.gov/design-system/)
+
+Implementation and local catalog workflow details live in `example/README.md`.
+
 ### Design Tokens
 
 Design tokens are predefined values that ensure consistent theming across applications.
