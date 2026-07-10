@@ -98,9 +98,9 @@ class _InteractiveSwitchUseCaseState extends State<_InteractiveSwitchUseCase> {
       value: _value,
       onChanged: isDisabled
           ? null
-          : (v) => setState(() {
-              _value = v;
-              _persistedSwitchValue = v;
+          : (currentValue) => setState(() {
+              _value = !currentValue;
+              _persistedSwitchValue = _value;
             }),
       size: size,
       label: label,
