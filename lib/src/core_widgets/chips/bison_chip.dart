@@ -35,7 +35,6 @@ class BisonChip extends StatefulWidget {
   final ObjectChipStyle? _objectChipStyle;
 
   /// Represents a filter field for a give collection.
-  // FIXME: Not fully implemented
   const BisonChip.filter({
     super.key,
     required this.label,
@@ -51,7 +50,6 @@ class BisonChip extends StatefulWidget {
        _objectChipStyle = null;
 
   /// Represents discrete pieces of information entered by someone
-  // FIXME: Not fully implemented
   const BisonChip.input({
     super.key,
     required this.label,
@@ -67,7 +65,6 @@ class BisonChip extends StatefulWidget {
        _objectChipStyle = null;
 
   /// Help narrow a person's intent by presenting dynamically-generated suggestions
-  // FIXME: Not fully implemented
   const BisonChip.suggestion({
     super.key,
     required this.label,
@@ -126,29 +123,49 @@ class _BisonChipState extends State<BisonChip> {
   _ChipPalette _palette(final BisonThemeTokens theme) {
     switch (widget._chipType) {
       case _ChipType.filter:
+        if (widget.selected) {
+          return _ChipPalette(
+            active: theme.chipSelectedActive,
+            hovered: theme.chipSelectedHovered,
+            focusedDraggedPressed: theme.chipSelectedFocusedDraggedPressed,
+            disabled: theme.chipSelectedDisabled,
+          );
+        }
         return _ChipPalette(
-          // TODO: Add unselected states
-          active: theme.chipSelectedActive,
-          hovered: theme.chipSelectedHovered,
-          focusedDraggedPressed: theme.chipSelectedFocusedDraggedPressed,
-          disabled: theme.chipSelectedDisabled,
+          active: theme.chipUnselectedActive,
+          hovered: theme.chipUnselectedHovered,
+          focusedDraggedPressed: theme.chipUnselectedFocusedDraggedPressed,
+          disabled: theme.chipUnselectedDisabled,
         );
       case _ChipType.input:
+        if (widget.selected) {
+          return _ChipPalette(
+            active: theme.chipSelectedActive,
+            hovered: theme.chipSelectedHovered,
+            focusedDraggedPressed: theme.chipSelectedFocusedDraggedPressed,
+            disabled: theme.chipSelectedActive,
+          );
+        }
         return _ChipPalette(
-          // TODO: Add unselected states
-          active: theme.chipSelectedActive,
-          hovered: theme.chipSelectedHovered,
-          focusedDraggedPressed: theme.chipCautionFocusedDraggedPressed,
-          // FIXME: Input chips do not have a disabled state
-          disabled: theme.chipCautionDisabled,
+          active: theme.chipUnselectedActive,
+          hovered: theme.chipUnselectedHovered,
+          focusedDraggedPressed: theme.chipUnselectedFocusedDraggedPressed,
+          disabled: theme.chipUnselectedActive,
         );
       case _ChipType.suggestion:
+        if (widget.selected) {
+          return _ChipPalette(
+            active: theme.chipSelectedActive,
+            hovered: theme.chipSelectedHovered,
+            focusedDraggedPressed: theme.chipSelectedFocusedDraggedPressed,
+            disabled: theme.chipSelectedDisabled,
+          );
+        }
         return _ChipPalette(
-          // TODO: Add unselected states
-          active: theme.chipSelectedActive,
-          hovered: theme.chipSelectedHovered,
-          focusedDraggedPressed: theme.chipSelectedFocusedDraggedPressed,
-          disabled: theme.chipSelectedDisabled,
+          active: theme.chipUnselectedActive,
+          hovered: theme.chipUnselectedHovered,
+          focusedDraggedPressed: theme.chipUnselectedFocusedDraggedPressed,
+          disabled: theme.chipUnselectedDisabled,
         );
       case _ChipType.object:
         switch (widget._objectChipStyle ?? ObjectChipStyle.normal) {
