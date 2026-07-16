@@ -23,6 +23,7 @@ enum BisonDividerOrientation {
 ///   orientation: BisonDividerOrientation.vertical,
 /// )
 /// ```
+///
 class BisonDivider extends StatelessWidget {
   /// orientation of the divider.
   final BisonDividerOrientation orientation;
@@ -39,7 +40,7 @@ class BisonDivider extends StatelessWidget {
       return SizedBox(
         width: dividerThickness,
         height: double.infinity,
-        child: Container(color: dividerColor),
+        child: ColoredBox(color: dividerColor),
       );
     }
 
@@ -47,7 +48,7 @@ class BisonDivider extends StatelessWidget {
     return SizedBox(
       height: dividerThickness,
       width: double.infinity,
-      child: Container(color: dividerColor),
+      child: ColoredBox(color: dividerColor),
     );
   }
 }
