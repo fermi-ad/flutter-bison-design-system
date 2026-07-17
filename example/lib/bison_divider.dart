@@ -13,7 +13,32 @@ Widget buildBisonDivider(BuildContext context) {
     labelBuilder: (o) => o.name,
   );
 
-  return BisonDivider(
-    orientation: orientation,
+  const sizes = [100.0, 200.0, 400.0];
+  const spacing = 16.0;
+
+  if (orientation == BisonDividerOrientation.vertical) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      spacing: spacing,
+      children: [
+        for (final size in sizes)
+          SizedBox(
+            height: size,
+            child: BisonDivider(orientation: orientation),
+          ),
+      ],
+    );
+  }
+
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    spacing: spacing,
+    children: [
+      for (final size in sizes)
+        SizedBox(
+          width: size,
+          child: BisonDivider(orientation: orientation),
+        ),
+    ],
   );
 }
