@@ -87,13 +87,14 @@ class _BisonRadioButtonState extends State<BisonRadioButton> {
   @override
   Widget build(final BuildContext context) {
     final theme = context.bison.theme;
+    final showHoverLayer = _isHovered && !_isPressed;
 
     final indicatorColor = _isInteractive
         ? theme.selectorSelectorPlain
         : theme.selectorSelectorDisabled;
     final stateLayerColor = _isPressed
         ? theme.selectorSelectorPressed
-        : _isHovered
+        : showHoverLayer
         ? theme.selectorSelectorHover
         : theme.surfaceTransparent;
 

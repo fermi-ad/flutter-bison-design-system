@@ -14,8 +14,6 @@ import 'package:bison_design_system_catalog/bison_button.dart'
     as _bison_design_system_catalog_bison_button;
 import 'package:bison_design_system_catalog/bison_checkbox.dart'
     as _bison_design_system_catalog_bison_checkbox;
-import 'package:bison_design_system_catalog/bison_checkbox_group.dart'
-    as _bison_design_system_catalog_bison_checkbox_group;
 import 'package:bison_design_system_catalog/bison_chip.dart'
     as _bison_design_system_catalog_bison_chip;
 import 'package:bison_design_system_catalog/bison_dialog.dart'
@@ -105,16 +103,6 @@ final directories = <_widgetbook.WidgetbookNode>[
                 name: 'Interactive',
                 builder: _bison_design_system_catalog_bison_checkbox
                     .buildBisonCheckboxInteractiveUseCase,
-              ),
-            ],
-          ),
-          _widgetbook.WidgetbookComponent(
-            name: 'BisonCheckboxGroup',
-            useCases: [
-              _widgetbook.WidgetbookUseCase(
-                name: 'Interactive',
-                builder: _bison_design_system_catalog_bison_checkbox_group
-                    .buildBisonCheckboxGroupUseCase,
               ),
             ],
           ),
@@ -245,16 +233,6 @@ final directories = <_widgetbook.WidgetbookNode>[
                 name: 'Default',
                 builder: _bison_design_system_catalog_bison_radio_button
                     .buildBisonRadioButtonUseCase,
-              ),
-            ],
-          ),
-          _widgetbook.WidgetbookComponent(
-            name: 'BisonRadioGroup',
-            useCases: [
-              _widgetbook.WidgetbookUseCase(
-                name: 'Interactive Group',
-                builder: _bison_design_system_catalog_bison_radio_button
-                    .buildBisonRadioButtonInteractiveUseCase,
               ),
             ],
           ),

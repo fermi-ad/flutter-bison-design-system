@@ -2,8 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:widgetbook/widgetbook.dart' show KnobsExtension;
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
-import 'package:bison_design_system/core_widgets.dart'
-    show BisonRadioButton, BisonRadioGroup, BisonRadioGroupItem;
+import 'package:bison_design_system/core_widgets.dart' show BisonRadioButton;
 
 @widgetbook.UseCase(name: 'Default', type: BisonRadioButton)
 Widget buildBisonRadioButtonUseCase(BuildContext context) {
@@ -29,30 +28,3 @@ Widget buildBisonRadioButtonAllStatesUseCase(BuildContext context) {
     ],
   );
 }
-
-@widgetbook.UseCase(name: 'Interactive Group', type: BisonRadioGroup)
-Widget buildBisonRadioButtonInteractiveUseCase(BuildContext context) {
-  return ValueListenableBuilder<int>(
-    valueListenable: _selectedIndex,
-    builder: (context, selectedIndex, _) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          BisonRadioGroup(
-            selectedIndex: selectedIndex,
-            items: _labels
-                .map((label) => BisonRadioGroupItem(label: label))
-                .toList(),
-            onChanged: (index) {
-              _selectedIndex.value = index;
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
-
-final ValueNotifier<int> _selectedIndex = ValueNotifier<int>(0);
-const List<String> _labels = ['Alpha', 'Beta', 'Gamma'];
