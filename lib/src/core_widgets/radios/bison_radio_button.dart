@@ -111,6 +111,8 @@ class _BisonRadioButtonState extends State<BisonRadioButton> {
             : SystemMouseCursors.basic,
         shortcuts: const <ShortcutActivator, Intent>{
           SingleActivator(LogicalKeyboardKey.space): ActivateIntent(),
+          SingleActivator(LogicalKeyboardKey.enter):
+              DoNothingAndStopPropagationIntent(),
         },
         actions: <Type, Action<Intent>>{
           ActivateIntent: CallbackAction<ActivateIntent>(
@@ -119,6 +121,7 @@ class _BisonRadioButtonState extends State<BisonRadioButton> {
               return null;
             },
           ),
+          DoNothingAndStopPropagationIntent: DoNothingAction(consumesKey: true),
         },
         onShowHoverHighlight: (final value) {
           if (_isHovered == value) return;

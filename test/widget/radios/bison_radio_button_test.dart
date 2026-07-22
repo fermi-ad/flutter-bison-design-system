@@ -1,5 +1,6 @@
 import 'package:bison_design_system/bison_design_system.dart'
     show BisonRadioButton, BisonThemeTokens;
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -125,6 +126,38 @@ void main() {
 
       expect(callCount, 1);
       expect(selected, isTrue);
+    });
+
+    testWidgets('enter does not trigger onChanged', (
+      final WidgetTester tester,
+    ) async {
+      int callCount = 0;
+      bool selected = false;
+
+      Future<void> pump() async {
+        await tester.pumpWidget(
+          buildScaffold(
+            BisonRadioButton(
+              autofocus: true,
+              selected: selected,
+              onChanged: (final currentValue) {
+                callCount += 1;
+                selected = !currentValue;
+              },
+            ),
+          ),
+        );
+      }
+
+      await pump();
+      await tester.pump();
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.pump();
+      await pump();
+
+      expect(callCount, 0);
+      expect(selected, isFalse);
     });
   });
 }

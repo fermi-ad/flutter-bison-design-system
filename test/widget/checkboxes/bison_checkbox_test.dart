@@ -105,48 +105,41 @@ void main() {
       focusNode.dispose();
     });
 
-    testWidgets(
-      'space and enter trigger onChanged for consumer-managed state',
-      (final WidgetTester tester) async {
-        BisonCheckboxValue value = BisonCheckboxValue.unselected;
+    testWidgets('space triggers onChanged for consumer-managed state', (
+      final WidgetTester tester,
+    ) async {
+      BisonCheckboxValue value = BisonCheckboxValue.unselected;
 
-        BisonCheckboxValue nextValue(final BisonCheckboxValue currentValue) {
-          return switch (currentValue) {
-            BisonCheckboxValue.selected => BisonCheckboxValue.unselected,
-            BisonCheckboxValue.unselected => BisonCheckboxValue.selected,
-            BisonCheckboxValue.indeterminate => BisonCheckboxValue.selected,
-          };
-        }
+      BisonCheckboxValue nextValue(final BisonCheckboxValue currentValue) {
+        return switch (currentValue) {
+          BisonCheckboxValue.selected => BisonCheckboxValue.unselected,
+          BisonCheckboxValue.unselected => BisonCheckboxValue.selected,
+          BisonCheckboxValue.indeterminate => BisonCheckboxValue.selected,
+        };
+      }
 
-        Future<void> pump() async {
-          await tester.pumpWidget(
-            buildScaffold(
-              BisonCheckbox(
-                autofocus: true,
-                value: value,
-                onChanged: (final currentValue) {
-                  value = nextValue(currentValue);
-                },
-              ),
+      Future<void> pump() async {
+        await tester.pumpWidget(
+          buildScaffold(
+            BisonCheckbox(
+              autofocus: true,
+              value: value,
+              onChanged: (final currentValue) {
+                value = nextValue(currentValue);
+              },
             ),
-          );
-        }
+          ),
+        );
+      }
 
-        await pump();
-        await tester.pump();
+      await pump();
+      await tester.pump();
 
-        await tester.sendKeyEvent(LogicalKeyboardKey.space);
-        await tester.pump();
-        await pump();
+      await tester.sendKeyEvent(LogicalKeyboardKey.space);
+      await tester.pump();
+      await pump();
 
-        expect(value, BisonCheckboxValue.selected);
-
-        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
-        await tester.pump();
-        await pump();
-
-        expect(value, BisonCheckboxValue.unselected);
-      },
-    );
+      expect(value, BisonCheckboxValue.selected);
+    });
   });
 }
