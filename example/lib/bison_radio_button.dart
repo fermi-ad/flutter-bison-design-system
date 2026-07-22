@@ -28,3 +28,24 @@ Widget buildBisonRadioButtonAllStatesUseCase(BuildContext context) {
     ],
   );
 }
+
+@widgetbook.UseCase(name: 'Interactive', type: BisonRadioButton)
+Widget buildBisonRadioButtonInteractiveUseCase(BuildContext context) {
+  final isEnabled = context.knobs.boolean(label: 'Enabled', initialValue: true);
+
+  return ValueListenableBuilder<bool>(
+    valueListenable: _interactiveRadioSelected,
+    builder: (context, selected, _) {
+      return BisonRadioButton(
+        selected: selected,
+        onChanged: isEnabled
+            ? (_) {
+                _interactiveRadioSelected.value = true;
+              }
+            : null,
+      );
+    },
+  );
+}
+
+final ValueNotifier<bool> _interactiveRadioSelected = ValueNotifier(false);

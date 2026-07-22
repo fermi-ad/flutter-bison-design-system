@@ -234,6 +234,11 @@ final directories = <_widgetbook.WidgetbookNode>[
                 builder: _bison_design_system_catalog_bison_radio_button
                     .buildBisonRadioButtonUseCase,
               ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Interactive',
+                builder: _bison_design_system_catalog_bison_radio_button
+                    .buildBisonRadioButtonInteractiveUseCase,
+              ),
             ],
           ),
         ],
