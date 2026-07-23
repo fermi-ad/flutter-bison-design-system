@@ -1,70 +1,64 @@
-import 'package:bison_design_system/bison_design_system.dart' show BisonChip;
+import 'package:bison_design_system/bison_design_system.dart' show BisonChip, BisonThemeTokens;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../common.dart' show buildScaffold;
 
 Color? _getChipBackgroundColor(WidgetTester tester) {
-  final container = tester.widget<Container>(find.byType(Container).first);
+  final container = tester.widget<Container>(
+    find.descendant(of: find.byType(BisonChip), matching: find.byType(Container)).first,
+  );
   final decoration = container.decoration as BoxDecoration;
   return decoration.color;
 }
 
 void main() {
   group('BisonChip', () {
-    testWidgets(
-      'filter chip background differs between selected and unselected',
-      (final WidgetTester tester) async {
-        await tester.pumpWidget(
-          buildScaffold(const BisonChip.filter(label: 'Test', selected: false)),
-        );
-        final unselectedColor = _getChipBackgroundColor(tester);
+    final theme = BisonThemeTokens.light();
 
-        await tester.pumpWidget(
-          buildScaffold(const BisonChip.filter(label: 'Test', selected: true)),
-        );
-        final selectedColor = _getChipBackgroundColor(tester);
+    testWidgets('filter chip background differs between selected and unselected', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(const BisonChip.filter(label: 'Test', selected: false)),
+      );
+      final unselectedColor = _getChipBackgroundColor(tester);
 
-        expect(selectedColor, isNot(equals(unselectedColor)));
-      },
-    );
+      await tester.pumpWidget(buildScaffold(const BisonChip.filter(label: 'Test', selected: true)));
+      final selectedColor = _getChipBackgroundColor(tester);
 
-    testWidgets(
-      'input chip background differs between selected and unselected',
-      (final WidgetTester tester) async {
-        await tester.pumpWidget(
-          buildScaffold(const BisonChip.input(label: 'Test', selected: false)),
-        );
-        final unselectedColor = _getChipBackgroundColor(tester);
+      expect(unselectedColor, theme.chipUnselectedActive);
+      expect(selectedColor, theme.chipSelectedActive);
+    });
 
-        await tester.pumpWidget(
-          buildScaffold(const BisonChip.input(label: 'Test', selected: true)),
-        );
-        final selectedColor = _getChipBackgroundColor(tester);
+    testWidgets('input chip background differs between selected and unselected', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(buildScaffold(const BisonChip.input(label: 'Test', selected: false)));
+      final unselectedColor = _getChipBackgroundColor(tester);
 
-        expect(selectedColor, isNot(equals(unselectedColor)));
-      },
-    );
+      await tester.pumpWidget(buildScaffold(const BisonChip.input(label: 'Test', selected: true)));
+      final selectedColor = _getChipBackgroundColor(tester);
 
-    testWidgets(
-      'suggestion chip background differs between selected and unselected',
-      (final WidgetTester tester) async {
-        await tester.pumpWidget(
-          buildScaffold(
-            const BisonChip.suggestion(label: 'Test', selected: false),
-          ),
-        );
-        final unselectedColor = _getChipBackgroundColor(tester);
+      expect(unselectedColor, theme.chipUnselectedActive);
+      expect(selectedColor, theme.chipSelectedActive);
+    });
 
-        await tester.pumpWidget(
-          buildScaffold(
-            const BisonChip.suggestion(label: 'Test', selected: true),
-          ),
-        );
-        final selectedColor = _getChipBackgroundColor(tester);
+    testWidgets('suggestion chip background differs between selected and unselected', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(const BisonChip.suggestion(label: 'Test', selected: false)),
+      );
+      final unselectedColor = _getChipBackgroundColor(tester);
 
-        expect(selectedColor, isNot(equals(unselectedColor)));
-      },
-    );
+      await tester.pumpWidget(
+        buildScaffold(const BisonChip.suggestion(label: 'Test', selected: true)),
+      );
+      final selectedColor = _getChipBackgroundColor(tester);
+
+      expect(unselectedColor, theme.chipUnselectedActive);
+      expect(selectedColor, theme.chipSelectedActive);
+    });
   });
 }
