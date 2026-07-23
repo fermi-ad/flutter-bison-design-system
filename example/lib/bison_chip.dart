@@ -226,7 +226,7 @@ Widget buildBisonChipFilterUseCase(BuildContext context) {
     label: context.knobs.string(label: 'Chip Label', initialValue: 'Filter'),
     selected: context.knobs.boolean(label: 'Selected', initialValue: false),
     enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
-    onLeftPressed: () => {},
+    onLeftPressed: () {},
   );
 }
 
@@ -236,7 +236,7 @@ Widget buildBisonChipInputUseCase(BuildContext context) {
     label: context.knobs.string(label: 'Chip Label', initialValue: 'Input'),
     selected: context.knobs.boolean(label: 'Selected', initialValue: false),
     enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
-    onLeftPressed: () => {},
+    onLeftPressed: () {},
   );
 }
 
@@ -246,6 +246,6 @@ Widget buildBisonChipSuggestionUseCase(BuildContext context) {
     label: context.knobs.string(label: 'Chip Label', initialValue: 'Suggestion'),
     selected: context.knobs.boolean(label: 'Selected', initialValue: false),
     enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
-    onLeftPressed: () => {},
+    onLeftPressed: () {},
   );
 }
