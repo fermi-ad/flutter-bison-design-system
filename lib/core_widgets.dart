@@ -12,3 +12,5 @@ export 'src/core_widgets/inputs/bison_text_field.dart'
     show BisonTextField, BisonTextFieldSize;
 export 'src/core_widgets/switches/bison_switch.dart'
     show BisonSwitch, BisonSwitchSize;
+export 'src/core_widgets/dividers/bison_divider.dart'
+    show BisonDivider, BisonDividerOrientation;

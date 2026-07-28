@@ -18,6 +18,8 @@ import 'package:bison_design_system_catalog/bison_chip.dart'
     as _bison_design_system_catalog_bison_chip;
 import 'package:bison_design_system_catalog/bison_dialog.dart'
     as _bison_design_system_catalog_bison_dialog;
+import 'package:bison_design_system_catalog/bison_divider.dart'
+    as _bison_design_system_catalog_bison_divider;
 import 'package:bison_design_system_catalog/bison_icon_button.dart'
     as _bison_design_system_catalog_bison_icon_button;
 import 'package:bison_design_system_catalog/bison_menu.dart'
@@ -144,6 +146,21 @@ final directories = <_widgetbook.WidgetbookNode>[
                 name: 'Trigger Dialog',
                 builder: _bison_design_system_catalog_bison_dialog
                     .buildBisonDialogTrigger,
+              ),
+            ],
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookFolder(
+        name: 'dividers',
+        children: [
+          _widgetbook.WidgetbookComponent(
+            name: 'BisonDivider',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Default',
+                builder: _bison_design_system_catalog_bison_divider
+                    .buildBisonDivider,
               ),
             ],
           ),
