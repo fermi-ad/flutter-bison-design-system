@@ -22,7 +22,37 @@ void main() {
       expect(find.text('Title'), findsOneWidget);
     });
 
-    testWidgets('hides optional fields when null', (
+    testWidgets('shows trailing icon button and actions when provided', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildScaffold(
+          BisonCard.stackedWithImage(
+            avatar: const CircleAvatar(child: Text('A')),
+            headerText: 'Header',
+            media: Container(color: Colors.grey),
+            title: 'Title',
+            trailingIconButton: IconButton(
+              icon: const Icon(Icons.more_vert),
+              onPressed: () {},
+            ),
+            primaryAction: TextButton(
+              onPressed: () {},
+              child: const Text('Action'),
+            ),
+            secondaryAction: TextButton(
+              onPressed: () {},
+              child: const Text('Cancel'),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byIcon(Icons.more_vert), findsOneWidget);
+      expect(find.byType(TextButton), findsNWidgets(2));
+    });
+
+    testWidgets('hides trailing icon button and actions when not provided', (
       final WidgetTester tester,
     ) async {
       await tester.pumpWidget(
