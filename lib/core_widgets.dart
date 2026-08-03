@@ -14,3 +14,4 @@ export 'src/core_widgets/switches/bison_switch.dart'
     show BisonSwitch, BisonSwitchSize;
 export 'src/core_widgets/dividers/bison_divider.dart'
     show BisonDivider, BisonDividerOrientation;
+export 'src/core_widgets/radios/bison_radio_button.dart' show BisonRadioButton;
