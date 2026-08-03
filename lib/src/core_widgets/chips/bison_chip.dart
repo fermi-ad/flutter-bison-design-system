@@ -58,10 +58,10 @@ class BisonChip extends StatefulWidget {
     this.leftIcon,
     this.rightIcon,
     this.selected = false,
-    this.enabled = true,
     this.focusNode,
     this.autofocus = false,
-  }) : _chipType = _ChipType.input,
+  }) : enabled = true,
+       _chipType = _ChipType.input,
        _objectChipStyle = null;
 
   /// Help narrow a person's intent by presenting dynamically-generated suggestions

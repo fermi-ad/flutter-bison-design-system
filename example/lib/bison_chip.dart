@@ -235,7 +235,6 @@ Widget buildBisonChipInputUseCase(BuildContext context) {
   return BisonChip.input(
     label: context.knobs.string(label: 'Chip Label', initialValue: 'Input'),
     selected: context.knobs.boolean(label: 'Selected', initialValue: false),
-    enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
     onLeftPressed: () {},
   );
 }
@@ -243,7 +242,10 @@ Widget buildBisonChipInputUseCase(BuildContext context) {
 @widgetbook.UseCase(name: 'Suggestion', type: BisonChip)
 Widget buildBisonChipSuggestionUseCase(BuildContext context) {
   return BisonChip.suggestion(
-    label: context.knobs.string(label: 'Chip Label', initialValue: 'Suggestion'),
+    label: context.knobs.string(
+      label: 'Chip Label',
+      initialValue: 'Suggestion',
+    ),
     selected: context.knobs.boolean(label: 'Selected', initialValue: false),
     enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
     onLeftPressed: () {},
