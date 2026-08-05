@@ -58,3 +58,23 @@ Widget buildBisonCardUseCase(BuildContext context) {
     secondaryAction: TextButton(onPressed: () {}, child: Text(secondaryLabel)),
   );
 }
+
+@widgetbook.UseCase(name: 'Horizontal with Image', type: BisonCard)
+Widget buildBisonCardHorizontalUseCase(BuildContext context) {
+  final headerText = context.knobs.string(
+    label: 'Header Text',
+    initialValue: 'Header',
+  );
+
+  final subheadText = context.knobs.string(
+    label: 'Subhead Text',
+    initialValue: 'Subhead',
+  );
+
+  return BisonCard.horizontalWithImage(
+    avatar: const CircleAvatar(child: Text('B')),
+    headerText: headerText,
+    subheadText: subheadText,
+    media: Container(color: Colors.blueGrey),
+  );
+}

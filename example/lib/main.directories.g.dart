@@ -94,6 +94,11 @@ final directories = <_widgetbook.WidgetbookNode>[
                 builder: _bison_design_system_catalog_bison_card
                     .buildBisonCardUseCase,
               ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Horizontal with Image',
+                builder: _bison_design_system_catalog_bison_card
+                    .buildBisonCardHorizontalUseCase,
+              ),
             ],
           ),
         ],
