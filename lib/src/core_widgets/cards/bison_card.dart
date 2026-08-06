@@ -17,7 +17,8 @@ enum _CardType { stackedWithImage, horizontalWithImage }
 ///   subtitle: 'Card Subtitle',
 ///   supportingText: 'Supporting text goes here.',
 ///   primaryAction: TextButton(onPressed: () {}, child: Text('Action')),
-/// )
+///   secondaryAction: TextButton(onPressed: () {}, child: Text('Cancel')),
+/// );
 /// ```
 ///
 /// ## Horizontal with image

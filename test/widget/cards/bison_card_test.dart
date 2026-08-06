@@ -49,7 +49,8 @@ void main() {
       );
 
       expect(find.byIcon(Icons.more_vert), findsOneWidget);
-      expect(find.byType(TextButton), findsNWidgets(2));
+      expect(find.widgetWithText(TextButton, 'Action'), findsOneWidget);
+      expect(find.widgetWithText(TextButton, 'Cancel'), findsOneWidget);
     });
 
     testWidgets('hides trailing icon button and actions when not provided', (
