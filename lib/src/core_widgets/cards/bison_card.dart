@@ -1,5 +1,8 @@
+import 'package:flutter/material.dart' show IconButton, Icons;
 import 'package:flutter/widgets.dart';
 import 'package:bison_design_system/theme.dart' show BisonContext, BisonTokens;
+import 'package:bison_design_system/core_widgets.dart'
+    show BisonMenu, BisonMenuItem;
 
 enum _CardType { stackedWithImage, horizontalWithImage }
 
@@ -11,7 +14,10 @@ enum _CardType { stackedWithImage, horizontalWithImage }
 ///   avatar: CircleAvatar(child: Text('A')),
 ///   headerText: 'Header',
 ///   subheadText: 'Subhead',
-///   trailingIconButton: IconButton(icon: Icon(Icons.more_vert), onPressed: () {}),
+///   menuItems: [
+///     BisonMenuItem(label: 'Edit', onSelect: () {}),
+///     BisonMenuItem(label: 'Delete', onSelect: () {}),
+///   ],
 ///   media: Image.network('https://example.com/image.png'),
 ///   title: 'Card Title',
 ///   subtitle: 'Card Subtitle',
@@ -43,8 +49,11 @@ class BisonCard extends StatelessWidget {
   /// Secondary text in the header row, displayed below [headerText].
   final String? subheadText;
 
-  /// Trailing icon button in the header row (e.g. three-dot menu).
-  final Widget? trailingIconButton;
+  /// Menu items for the trailing three-dot menu in the header row.
+  ///
+  /// When non-null and non-empty, a three-dot [IconButton] is rendered that
+  /// opens a [BisonMenu] with these items.
+  final List<BisonMenuItem>? menuItems;
 
   /// Widget slot for image/illustration content.
   ///
@@ -75,7 +84,7 @@ class BisonCard extends StatelessWidget {
     required this.avatar,
     required this.headerText,
     this.subheadText,
-    this.trailingIconButton,
+    this.menuItems,
     required Widget this.media,
     required String this.title,
     this.subtitle,
@@ -94,16 +103,15 @@ class BisonCard extends StatelessWidget {
     required this.avatar,
     required this.headerText,
     this.subheadText,
+    this.menuItems,
     this.media,
   }) : _cardType = _CardType.horizontalWithImage,
-       trailingIconButton = null,
        title = null,
        subtitle = null,
        supportingText = null,
        primaryAction = null,
        secondaryAction = null;
 
-  @override
   @override
   Widget build(BuildContext context) {
     final bison = context.bison;
@@ -150,7 +158,18 @@ class BisonCard extends StatelessWidget {
             ],
           ),
         ),
-        ?trailingIconButton,
+        if (menuItems != null && menuItems!.isNotEmpty)
+          BisonMenu(
+            builder:
+                (context, focusNode, {required toggleMenu, required isOpen}) {
+                  return IconButton(
+                    focusNode: focusNode,
+                    icon: const Icon(Icons.more_vert),
+                    onPressed: toggleMenu,
+                  );
+                },
+            items: menuItems!,
+          ),
       ],
     );
   }

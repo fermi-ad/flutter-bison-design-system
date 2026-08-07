@@ -1,4 +1,5 @@
-import 'package:bison_design_system/bison_design_system.dart' show BisonCard;
+import 'package:bison_design_system/bison_design_system.dart'
+    show BisonCard, BisonMenuItem;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -32,10 +33,7 @@ void main() {
             headerText: 'Header',
             media: Container(color: Colors.grey),
             title: 'Title',
-            trailingIconButton: IconButton(
-              icon: const Icon(Icons.more_vert),
-              onPressed: () {},
-            ),
+            menuItems: [BisonMenuItem(label: 'Edit', onSelect: () {})],
             primaryAction: TextButton(
               onPressed: () {},
               child: const Text('Action'),

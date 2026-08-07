@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart' show KnobsExtension;
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
-import 'package:bison_design_system/core_widgets.dart' show BisonCard;
+import 'package:bison_design_system/core_widgets.dart'
+    show BisonCard, BisonMenuItem;
 
 @widgetbook.UseCase(name: 'Default', type: BisonCard)
 Widget buildBisonCardUseCase(BuildContext context) {
@@ -46,10 +47,10 @@ Widget buildBisonCardUseCase(BuildContext context) {
     avatar: const CircleAvatar(child: Text('A')),
     headerText: headerText,
     subheadText: subheadText,
-    trailingIconButton: IconButton(
-      icon: const Icon(Icons.more_vert),
-      onPressed: () {},
-    ),
+    menuItems: [
+      BisonMenuItem(label: 'Edit', onSelect: () {}),
+      BisonMenuItem(label: 'Delete', onSelect: () {}),
+    ],
     media: Container(color: Colors.blueGrey),
     title: title,
     subtitle: subtitle,
