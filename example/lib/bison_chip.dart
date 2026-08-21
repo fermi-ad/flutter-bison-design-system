@@ -219,3 +219,35 @@ Future<void> _buildObjectDialog(
     secondaryAction: BisonDialogAction(label: 'Snooze', onPressed: () {}),
   );
 }
+
+@widgetbook.UseCase(name: 'Filter', type: BisonChip)
+Widget buildBisonChipFilterUseCase(BuildContext context) {
+  return BisonChip.filter(
+    label: context.knobs.string(label: 'Chip Label', initialValue: 'Filter'),
+    selected: context.knobs.boolean(label: 'Selected', initialValue: false),
+    enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
+    onLeftPressed: () {},
+  );
+}
+
+@widgetbook.UseCase(name: 'Input', type: BisonChip)
+Widget buildBisonChipInputUseCase(BuildContext context) {
+  return BisonChip.input(
+    label: context.knobs.string(label: 'Chip Label', initialValue: 'Input'),
+    selected: context.knobs.boolean(label: 'Selected', initialValue: false),
+    onLeftPressed: () {},
+  );
+}
+
+@widgetbook.UseCase(name: 'Suggestion', type: BisonChip)
+Widget buildBisonChipSuggestionUseCase(BuildContext context) {
+  return BisonChip.suggestion(
+    label: context.knobs.string(
+      label: 'Chip Label',
+      initialValue: 'Suggestion',
+    ),
+    selected: context.knobs.boolean(label: 'Selected', initialValue: false),
+    enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
+    onLeftPressed: () {},
+  );
+}
