@@ -165,7 +165,6 @@ class _BisonCheckboxState extends State<BisonCheckbox> {
             ? SystemMouseCursors.click
             : SystemMouseCursors.basic,
         shortcuts: const <ShortcutActivator, Intent>{
-          SingleActivator(LogicalKeyboardKey.enter): ActivateIntent(),
           SingleActivator(LogicalKeyboardKey.space): ActivateIntent(),
         },
         actions: <Type, Action<Intent>>{
