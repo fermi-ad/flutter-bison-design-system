@@ -3,7 +3,7 @@ import 'package:widgetbook/widgetbook.dart' show KnobsExtension;
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 import 'package:bison_design_system/core_widgets.dart'
-    show BisonCard, BisonMenuItem;
+    show BisonButton, BisonCard, BisonMenuItem;
 
 @widgetbook.UseCase(name: 'Default', type: BisonCard)
 Widget buildBisonCardUseCase(BuildContext context) {
@@ -55,8 +55,14 @@ Widget buildBisonCardUseCase(BuildContext context) {
     title: title,
     subtitle: subtitle,
     supportingText: supportingText,
-    primaryAction: TextButton(onPressed: () {}, child: Text(primaryLabel)),
-    secondaryAction: TextButton(onPressed: () {}, child: Text(secondaryLabel)),
+    primaryAction: BisonButton.filled(
+      buttonLabel: primaryLabel,
+      onPressed: () {},
+    ),
+    secondaryAction: BisonButton.outlined(
+      buttonLabel: secondaryLabel,
+      onPressed: () {},
+    ),
   );
 }
 

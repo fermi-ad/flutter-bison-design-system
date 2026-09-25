@@ -22,8 +22,14 @@ enum _CardType { stackedWithImage, horizontalWithImage }
 ///   title: 'Card Title',
 ///   subtitle: 'Card Subtitle',
 ///   supportingText: 'Supporting text goes here.',
-///   primaryAction: TextButton(onPressed: () {}, child: Text('Action')),
-///   secondaryAction: TextButton(onPressed: () {}, child: Text('Cancel')),
+///   primaryAction: BisonButton.filled(
+///     buttonLabel: 'Action',
+///     onPressed: () {},
+///   ),
+///   secondaryAction: BisonButton.outlined(
+///     buttonLabel: 'Cancel',
+///     onPressed: () {},
+///   ),
 /// );
 /// ```
 ///
@@ -34,7 +40,7 @@ enum _CardType { stackedWithImage, horizontalWithImage }
 ///   headerText: 'Header',
 ///   subheadText: 'Subhead',
 ///   media: Image.network('https://example.com/thumb.png'),
-/// )
+/// );
 /// ```
 class BisonCard extends StatelessWidget {
   /// Which card layout variant to render.
@@ -120,7 +126,7 @@ class BisonCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: bison.theme.surfaceDefault,
         border: Border.all(color: bison.theme.borderPlain),
-        borderRadius: BorderRadius.circular(bison.corners.cornerLarge),
+        borderRadius: BorderRadius.circular(bison.corners.cornerSmall),
       ),
       child: switch (_cardType) {
         _CardType.stackedWithImage => _buildStacked(bison),
@@ -130,10 +136,9 @@ class BisonCard extends StatelessWidget {
 
     return switch (_cardType) {
       _CardType.stackedWithImage => card,
-      _CardType.horizontalWithImage => SizedBox(
-        width: 400,
-        height: 120,
-        child: card,
+      _CardType.horizontalWithImage => ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 400),
+        child: SizedBox(height: 120, child: card),
       ),
     };
   }
@@ -186,9 +191,7 @@ class BisonCard extends StatelessWidget {
         ),
 
         // Media area
-        ClipRRect(
-          child: SizedBox(width: double.infinity, height: 222, child: media),
-        ),
+        SizedBox(width: double.infinity, height: 222, child: media),
 
         // Title + Subtitle
         Padding(
@@ -260,7 +263,7 @@ class BisonCard extends StatelessWidget {
           if (media != null) ...[
             SizedBox(width: bison.spacing.smallSpacing),
             ClipRRect(
-              borderRadius: BorderRadius.circular(bison.corners.cornerLarge),
+              borderRadius: BorderRadius.circular(bison.corners.cornerSmall),
               child: SizedBox(width: 80, height: 80, child: media),
             ),
           ],
