@@ -152,11 +152,11 @@ class BisonCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(headerText, style: bison.typography.bodyLarge),
+              Text(headerText, style: bison.typography.h1),
               if (subheadText != null)
                 Text(
                   subheadText!,
-                  style: bison.typography.bodySmall.copyWith(
+                  style: bison.typography.capitalizedLabel.copyWith(
                     color: bison.theme.textMuted,
                   ),
                 ),
@@ -230,7 +230,7 @@ class BisonCard extends StatelessWidget {
             ),
             child: Text(
               supportingText!,
-              style: bison.typography.bodySmall,
+              style: bison.typography.bodyLarge,
               maxLines: 4,
               overflow: TextOverflow.ellipsis,
             ),
