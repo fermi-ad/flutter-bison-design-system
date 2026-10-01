@@ -1,5 +1,6 @@
 export 'src/core_widgets/buttons/bison_button.dart' show BisonButton;
 export 'src/core_widgets/buttons/bison_icon_button.dart' show BisonIconButton;
+export 'src/core_widgets/cards/bison_card.dart' show BisonCard;
 export 'src/core_widgets/checkboxes/bison_checkbox.dart'
     show BisonCheckbox, BisonCheckboxValue;
 export 'src/core_widgets/dialogs/bison_dialog.dart'

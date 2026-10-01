@@ -28,7 +28,10 @@ class BisonDivider extends StatelessWidget {
   /// orientation of the divider.
   final BisonDividerOrientation orientation;
 
-  const BisonDivider({super.key, this.orientation = BisonDividerOrientation.horizontal});
+  const BisonDivider({
+    super.key,
+    this.orientation = BisonDividerOrientation.horizontal,
+  });
 
   @override
   Widget build(BuildContext context) {
