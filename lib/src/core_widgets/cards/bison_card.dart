@@ -151,6 +151,7 @@ class BisonCard extends StatelessWidget {
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(headerText, style: bison.typography.h1),
               if (subheadText != null)
