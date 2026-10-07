@@ -235,6 +235,22 @@ void main() {
       expect(overlayColor, equals(theme.surfaceHovered));
     });
 
+    testWidgets('Menu item side has no border in focused state', (
+      final WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(buildStandardMenu(3));
+
+      await tester.tap(find.text('Open Menu'));
+      await tester.pumpAndSettle();
+
+      final element = tester.element(find.byType(MenuItemButton).first);
+      final menuItemWidget = element.widget as MenuItemButton;
+      final style = getMenuItemButtonStyle(element, menuItemWidget);
+
+      final side = style.side?.resolve(<WidgetState>{WidgetState.focused});
+      expect(side, equals(BorderSide.none));
+    });
+
     testWidgets('Selected overlay color is correct', (
       final WidgetTester tester,
     ) async {

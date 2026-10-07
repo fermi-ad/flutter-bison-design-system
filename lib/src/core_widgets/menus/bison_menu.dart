@@ -344,6 +344,7 @@ ButtonStyle getBisonMenuButtonStyle(
 ) {
   return ButtonStyle(
     backgroundColor: WidgetStatePropertyAll(theme.surfaceTransparent),
+    side: const WidgetStatePropertyAll(BorderSide.none),
     overlayColor: WidgetStateProperty.resolveWith<Color>((
       final Set<WidgetState> states,
     ) {
