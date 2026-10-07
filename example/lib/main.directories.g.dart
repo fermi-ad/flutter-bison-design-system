@@ -18,6 +18,8 @@ import 'package:bison_design_system_catalog/bison_checkbox.dart'
     as _bison_design_system_catalog_bison_checkbox;
 import 'package:bison_design_system_catalog/bison_chip.dart'
     as _bison_design_system_catalog_bison_chip;
+import 'package:bison_design_system_catalog/bison_data_table.dart'
+    as _bison_design_system_catalog_bison_data_table;
 import 'package:bison_design_system_catalog/bison_dialog.dart'
     as _bison_design_system_catalog_bison_dialog;
 import 'package:bison_design_system_catalog/bison_divider.dart'
@@ -275,6 +277,21 @@ final directories = <_widgetbook.WidgetbookNode>[
                 name: 'Switch',
                 builder:
                     _bison_design_system_catalog_bison_switch.buildBisonSwitch,
+              ),
+            ],
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookFolder(
+        name: 'tables',
+        children: [
+          _widgetbook.WidgetbookComponent(
+            name: 'BisonDataTable',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Default',
+                builder: _bison_design_system_catalog_bison_data_table
+                    .buildBisonDataTable,
               ),
             ],
           ),
