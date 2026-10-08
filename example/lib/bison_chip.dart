@@ -219,3 +219,144 @@ Future<void> _buildObjectDialog(
     secondaryAction: BisonDialogAction(label: 'Snooze', onPressed: () {}),
   );
 }
+
+/// Filter chips narrow a collection: several can be selected at once and each
+/// toggles independently. Here they filter a device list by severity.
+@widgetbook.UseCase(name: 'Filter a Device List', type: BisonChip)
+Widget buildBisonChipFilterUseCase(BuildContext context) {
+  return _FilterChipDemo(
+    enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
+  );
+}
+
+class _FilterChipDemo extends StatefulWidget {
+  final bool enabled;
+
+  const _FilterChipDemo({required this.enabled});
+
+  @override
+  State<_FilterChipDemo> createState() => _FilterChipDemoState();
+}
+
+class _FilterChipDemoState extends State<_FilterChipDemo> {
+  final Set<String> _selectedSeverities = {'Alarms'};
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: .center,
+      spacing: 8.0,
+      children: [
+        for (final severity in const ['Alarms', 'Warnings', 'Bypassed'])
+          BisonChip.filter(
+            label: severity,
+            selected: _selectedSeverities.contains(severity),
+            enabled: widget.enabled,
+            leftIcon: _selectedSeverities.contains(severity)
+                ? const Icon(Icons.check)
+                : null,
+            onLeftPressed: () => setState(() {
+              if (_selectedSeverities.contains(severity)) {
+                _selectedSeverities.remove(severity);
+              } else {
+                _selectedSeverities.add(severity);
+              }
+            }),
+          ),
+      ],
+    );
+  }
+}
+
+/// Input chips represent discrete pieces of information entered by someone,
+/// such as devices added to an alarm notification list. Each chip can be
+/// removed with its trailing icon. Input chips have no disabled state.
+@widgetbook.UseCase(name: 'Input Entered Devices', type: BisonChip)
+Widget buildBisonChipInputUseCase(BuildContext context) {
+  return const _InputChipDemo();
+}
+
+class _InputChipDemo extends StatefulWidget {
+  const _InputChipDemo();
+
+  @override
+  State<_InputChipDemo> createState() => _InputChipDemoState();
+}
+
+class _InputChipDemoState extends State<_InputChipDemo> {
+  final List<String> _enteredDevices = ['M:OUTTMP', 'G:AMANDA', 'B:VIMIN'];
+
+  @override
+  Widget build(BuildContext context) {
+    if (_enteredDevices.isEmpty) {
+      return const Text('All devices removed.');
+    }
+    return Row(
+      mainAxisAlignment: .center,
+      spacing: 8.0,
+      children: [
+        for (final device in _enteredDevices)
+          BisonChip.input(
+            label: device,
+            rightIcon: const Icon(Icons.close),
+            onRightPressed: () => setState(() {
+              _enteredDevices.remove(device);
+            }),
+          ),
+      ],
+    );
+  }
+}
+
+/// Suggestion chips present dynamically-generated options that help narrow a
+/// person's intent, such as completing a device search query. Choosing one
+/// suggestion selects it and deselects the others.
+@widgetbook.UseCase(name: 'Suggest Search Queries', type: BisonChip)
+Widget buildBisonChipSuggestionUseCase(BuildContext context) {
+  return _SuggestionChipDemo(
+    enabled: context.knobs.boolean(label: 'Enabled', initialValue: true),
+  );
+}
+
+class _SuggestionChipDemo extends StatefulWidget {
+  final bool enabled;
+
+  const _SuggestionChipDemo({required this.enabled});
+
+  @override
+  State<_SuggestionChipDemo> createState() => _SuggestionChipDemoState();
+}
+
+class _SuggestionChipDemoState extends State<_SuggestionChipDemo> {
+  String? _chosenQuery;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: .center,
+      spacing: 8.0,
+      children: [
+        Text('Search: ${_chosenQuery ?? ''}'),
+        Row(
+          mainAxisAlignment: .center,
+          spacing: 8.0,
+          children: [
+            for (final suggestion in const [
+              'Outdoor temperature',
+              'Alarm limits',
+              'Recent devices',
+            ])
+              BisonChip.suggestion(
+                label: suggestion,
+                selected: _chosenQuery == suggestion,
+                enabled: widget.enabled,
+                onLeftPressed: () => setState(() {
+                  _chosenQuery = suggestion;
+                }),
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+}

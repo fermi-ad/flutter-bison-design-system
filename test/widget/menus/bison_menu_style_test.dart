@@ -235,6 +235,40 @@ void main() {
       expect(overlayColor, equals(theme.surfaceHovered));
     });
 
+    testWidgets('Menu item border styles and animation duration are correct', (
+      final WidgetTester tester,
+    ) async {
+      final theme = BisonThemeTokens.light();
+
+      await tester.pumpWidget(buildStandardMenu(3));
+
+      await tester.tap(find.text('Open Menu'));
+      await tester.pumpAndSettle();
+
+      final element = tester.element(find.byType(MenuItemButton).first);
+      final menuItemWidget = element.widget as MenuItemButton;
+      final style = getMenuItemButtonStyle(element, menuItemWidget);
+
+      final focusedSide = style.side?.resolve(<WidgetState>{
+        WidgetState.focused,
+      });
+      expect(
+        focusedSide,
+        equals(BorderSide(color: theme.borderPrimary, width: 1.0)),
+      );
+
+      final unfocusedSide = style.side?.resolve(<WidgetState>{});
+      expect(
+        unfocusedSide,
+        equals(BorderSide(color: theme.borderPlain, width: 1.0)),
+      );
+
+      expect(
+        style.animationDuration,
+        equals(const Duration(milliseconds: 100)),
+      );
+    });
+
     testWidgets('Selected overlay color is correct', (
       final WidgetTester tester,
     ) async {
