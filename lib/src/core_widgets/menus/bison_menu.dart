@@ -348,7 +348,7 @@ ButtonStyle getBisonMenuButtonStyle(
   final BisonTypographyTokens typo,
 ) {
   return ButtonStyle(
-    animationDuration: const Duration(milliseconds: 100),
+    animationDuration: Duration.zero,
     backgroundColor: WidgetStatePropertyAll(theme.surfaceTransparent),
     side: WidgetStateProperty.resolveWith<BorderSide>((
       final Set<WidgetState> states,

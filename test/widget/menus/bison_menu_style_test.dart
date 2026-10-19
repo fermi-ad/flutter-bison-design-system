@@ -263,10 +263,7 @@ void main() {
         equals(BorderSide(color: theme.borderPlain, width: 1.0)),
       );
 
-      expect(
-        style.animationDuration,
-        equals(const Duration(milliseconds: 100)),
-      );
+      expect(style.animationDuration, equals(Duration.zero));
     });
 
     testWidgets('Selected overlay color is correct', (
