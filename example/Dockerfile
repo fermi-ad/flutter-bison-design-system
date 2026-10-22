@@ -1,5 +1,5 @@
 # Use NGINX as the base image, use alpine for size gains
-FROM nginx:1.23-alpine
+FROM nginx:1.31.7-alpine
 
 # Copy built web files to container
 COPY ./build/web /usr/share/nginx/html
