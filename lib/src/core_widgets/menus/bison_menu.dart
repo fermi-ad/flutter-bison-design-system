@@ -358,6 +358,19 @@ ButtonStyle getBisonMenuButtonStyle(
       }
       return BorderSide(color: theme.borderPlain, width: 1.0);
     }),
+    backgroundBuilder: (final context, final states, final child) {
+      if (!states.contains(WidgetState.focused)) {
+        return child ?? const SizedBox.shrink();
+      }
+      return DecoratedBox(
+        decoration: ShapeDecoration(
+          shape: RoundedRectangleBorder(
+            side: BorderSide(color: theme.borderPrimary, width: 1.0),
+          ),
+        ),
+        child: child,
+      );
+    },
     overlayColor: WidgetStateProperty.resolveWith<Color>((
       final Set<WidgetState> states,
     ) {
