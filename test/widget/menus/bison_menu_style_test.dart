@@ -258,10 +258,7 @@ void main() {
       );
 
       final unfocusedSide = style.side?.resolve(<WidgetState>{});
-      expect(
-        unfocusedSide,
-        equals(BorderSide(color: theme.borderPlain, width: 1.0)),
-      );
+      expect(unfocusedSide, equals(BorderSide.none));
 
       expect(style.animationDuration, equals(Duration.zero));
     });

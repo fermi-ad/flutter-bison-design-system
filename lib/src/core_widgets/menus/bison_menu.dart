@@ -356,7 +356,7 @@ ButtonStyle getBisonMenuButtonStyle(
       if (states.contains(WidgetState.focused)) {
         return BorderSide(color: theme.borderPrimary, width: 1.0);
       }
-      return BorderSide(color: theme.borderPlain, width: 1.0);
+      return BorderSide.none;
     }),
     backgroundBuilder: (final context, final states, final child) {
       if (!states.contains(WidgetState.focused)) {
