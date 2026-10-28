@@ -76,12 +76,55 @@ void main() {
         ),
       );
 
-      // Perform a secondary tap (right‑click) on the anchor.
+      // Perform a secondary tap (right-click) on the anchor.
       await tester.tap(find.text('Right Click'), buttons: 2);
       await tester.pumpAndSettle();
 
       expect(find.text('Right Item'), findsOneWidget);
     });
+
+    testWidgets(
+      'secondary trigger retains first item focus and supports arrow navigation',
+      (final WidgetTester tester) async {
+        final items = [
+          BisonMenuItem(label: 'Right Item 1', onSelect: () {}),
+          BisonMenuItem(label: 'Right Item 2', onSelect: () {}),
+        ];
+
+        await tester.pumpWidget(
+          buildScaffold(
+            BisonMenu(
+              builder:
+                  (
+                    final context,
+                    final focusNode, {
+                    required final isOpen,
+                    required final toggleMenu,
+                  }) => Focus(
+                    focusNode: focusNode,
+                    child: const Text('Right Click'),
+                  ),
+              items: items,
+              triggerAction: BisonMenuTriggerAction.secondary,
+            ),
+          ),
+        );
+
+        await tester.tap(find.text('Right Click'), buttons: 2);
+        await tester.pumpAndSettle();
+
+        final firstFocus = Focus.of(tester.element(find.text('Right Item 1')));
+        final secondFocus = Focus.of(tester.element(find.text('Right Item 2')));
+        expect(firstFocus.hasFocus, isTrue);
+        expect(secondFocus.hasFocus, isFalse);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+        await tester.pumpAndSettle();
+
+        expect(firstFocus.hasFocus, isFalse);
+        expect(secondFocus.hasFocus, isTrue);
+      },
+    );
 
     testWidgets('selecting a menu item triggers its callback', (
       final WidgetTester tester,

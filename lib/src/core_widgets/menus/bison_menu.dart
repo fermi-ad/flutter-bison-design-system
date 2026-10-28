@@ -191,6 +191,11 @@ class _BisonMenuState extends State<BisonMenu> {
     _syncFocusNodes();
 
     return MenuAnchor(
+      onOpen: () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted && _controller.isOpen) _focusFirst();
+        }, debugLabel: 'BisonMenu.focusFirstItem');
+      },
       style: getBisonMenuStyle(
         bison.theme,
         bison.spacing,
@@ -226,7 +231,7 @@ class _BisonMenuState extends State<BisonMenu> {
 
                     return MenuItemButton(
                       focusNode: focusNode,
-                      autofocus: index == 0 && focusNode.canRequestFocus,
+                      autofocus: false,
                       style: getBisonMenuButtonStyle(
                         bison.theme,
                         bison.spacing,
@@ -343,7 +348,29 @@ ButtonStyle getBisonMenuButtonStyle(
   final BisonTypographyTokens typo,
 ) {
   return ButtonStyle(
+    animationDuration: Duration.zero,
     backgroundColor: WidgetStatePropertyAll(theme.surfaceTransparent),
+    side: WidgetStateProperty.resolveWith<BorderSide>((
+      final Set<WidgetState> states,
+    ) {
+      if (states.contains(WidgetState.focused)) {
+        return BorderSide(color: theme.borderPrimary, width: 1.0);
+      }
+      return BorderSide.none;
+    }),
+    backgroundBuilder: (final context, final states, final child) {
+      if (!states.contains(WidgetState.focused)) {
+        return child ?? const SizedBox.shrink();
+      }
+      return DecoratedBox(
+        decoration: ShapeDecoration(
+          shape: RoundedRectangleBorder(
+            side: BorderSide(color: theme.borderPrimary, width: 1.0),
+          ),
+        ),
+        child: child,
+      );
+    },
     overlayColor: WidgetStateProperty.resolveWith<Color>((
       final Set<WidgetState> states,
     ) {

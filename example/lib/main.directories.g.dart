@@ -147,9 +147,24 @@ final directories = <_widgetbook.WidgetbookNode>[
                     .buildBisonChipDeviceUseCase,
               ),
               _widgetbook.WidgetbookUseCase(
+                name: 'Filter a Device List',
+                builder: _bison_design_system_catalog_bison_chip
+                    .buildBisonChipFilterUseCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
                 name: 'Grouping Navigation',
                 builder: _bison_design_system_catalog_bison_chip
                     .buildBisonChiGroupUseCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Input Entered Devices',
+                builder: _bison_design_system_catalog_bison_chip
+                    .buildBisonChipInputUseCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Suggest Search Queries',
+                builder: _bison_design_system_catalog_bison_chip
+                    .buildBisonChipSuggestionUseCase,
               ),
             ],
           ),
