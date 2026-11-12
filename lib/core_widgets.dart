@@ -16,3 +16,4 @@ export 'src/core_widgets/inputs/bison_text_field.dart'
 export 'src/core_widgets/switches/bison_switch.dart'
     show BisonSwitch, BisonSwitchSize;
 export 'src/core_widgets/radios/bison_radio_button.dart' show BisonRadioButton;
+export 'src/core_widgets/tables/bison_data_table.dart' show BisonDataTable;
